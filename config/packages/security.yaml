@@ -19,8 +19,8 @@ security:
             provider: db
             security: true
             form_login:
-                login_path: login
-                check_path: login
+                login_path: security.login
+                check_path: security.login
                 username_parameter: _username
                 password_parameter: _password
                 csrf_token_generator: security.csrf.token_manager
