@@ -2,4 +2,16 @@
 
 {% block body %}
     <h1>event.index</h1>
+
+    {% for event in events %}
+        <p>
+            {{ event.name }} - {{ event.description }}
+            {% if app.user %}
+                <a href="{{ path('event.update', {id: event.id}) }}">Edit</a> -
+                <a href="{{ path('event.delete', {id: event.id}) }}">Delete</a>
+            {% endif %}
+        </p>
+    {% else %}
+        <p>Pas d'évènement</p>
+    {% endfor %}
 {% endblock %}
