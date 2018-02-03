@@ -55,7 +55,7 @@ class Association
     private $aboutUs;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\TeamMember", mappedBy="association", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\TeamMember", mappedBy="association", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $teamMembers;
 
@@ -229,6 +229,7 @@ class Association
     public function removeTeamMember(TeamMember $teamMember)
     {
         if($this->teamMembers->contains($teamMember)) {
+            $teamMember->setAssociation(null);
             $this->teamMembers->removeElement($teamMember);
         }
 

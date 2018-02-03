@@ -8,3 +8,8 @@
     <button type="submit">Mettre à jour</button>
     {{ form_end(form) }}
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('admin/content.js') }}"></script>
+{% endblock %}
