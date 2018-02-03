@@ -1,5 +1,10 @@
 {% extends 'admin/base.html.twig' %}
 
 {% block admin_body %}
-    <p>Hello</p>
+    <h1>Edit homepage content</h1>
+
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <button type="submit">Mettre à jour</button>
+    {{ form_end(form) }}
 {% endblock %}

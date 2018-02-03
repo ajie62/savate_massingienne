@@ -8,7 +8,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Association;
 use App\Entity\User;
+use App\Form\AssociationType;
 use App\Form\UserType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -100,9 +102,32 @@ class AdminController extends AbstractController
         ]);
     }
 
-    public function content()
+    /**
+     * @Route("/content", name="admin.content")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function content(Request $request)
     {
-        return $this->render('admin/content.html.twig');
+        $association = $this->em->getRepository(Association::class)->find(1);
+
+        if (is_null($association)) {
+            $association = new Association();
+        }
+
+        $form = $this->createForm(AssociationType::class, $association);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->em->persist($association);
+            $this->em->flush();
+
+            return $this->redirectToRoute('admin.content');
+        }
+
+        return $this->render('admin/content.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 
     public function events()
