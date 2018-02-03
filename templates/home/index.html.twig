@@ -2,4 +2,10 @@
 
 {% block body %}
     <h1>home.index</h1>
+
+    {{ association.textIntro }}<br>
+    {{ association.textInfo }}<br>
+    {% for teamMember in association.teamMembers %}
+        <p><strong>Membre d'équipe {{ loop.index }} : </strong>{{ teamMember.firstname }} - {{ teamMember.job }}</p>
+    {% endfor %}
 {% endblock %}
