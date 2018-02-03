@@ -10,11 +10,14 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="user")
+ * @UniqueEntity(fields={"username"}, message="Ce nom d'utilisateur existe déjà.")
+ * @UniqueEntity(fields={"email"}, message="Cette adresse mail est déjà utilisée.")
  */
 class User implements UserInterface
 {
@@ -41,6 +44,11 @@ class User implements UserInterface
     private $lastname;
 
     /**
+     * @ORM\Column(type="string")
+     */
+    private $email;
+
+    /**
      * @ORM\Column(type="array")
      */
     private $roles;
@@ -52,7 +60,7 @@ class User implements UserInterface
 
     public function __construct()
     {
-        $this->roles = new ArrayCollection();
+        $this->roles = ['ROLE_USER'];
     }
 
     /**
@@ -121,6 +129,24 @@ class User implements UserInterface
     public function setLastname($lastname): void
     {
         $this->lastname = $lastname;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param mixed $email
+     * @return User
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+        return $this;
     }
 
     /**
