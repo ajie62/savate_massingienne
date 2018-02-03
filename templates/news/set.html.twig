@@ -1,12 +1,10 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>news.delete</h1>
-
-    <p>Voulez-vous vraiment supprimer l'actu ?</p>
+    <h1>{{ isNewNews ? 'news.create' : 'news.update' }}</h1>
 
     {{ form_start(form) }}
     {{ form_widget(form) }}
-    <button type="submit">Supprimer</button>
+    <button type="submit">Submit</button>
     {{ form_end(form) }}
 {% endblock %}

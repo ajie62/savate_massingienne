@@ -2,4 +2,16 @@
 
 {% block body %}
     <h1>news.index</h1>
+
+    {% for news in newsCollection %}
+        <p>
+            {{ news.name }} - {{ news.content }}
+            {% if app.user %}
+                <a href="{{ path('news.update', {id: news.id}) }}">Edit</a> -
+                <a href="{{ path('news.delete', {id: news.id}) }}">Delete</a>
+            {% endif %}
+        </p>
+    {% else %}
+        <p>Pas de news</p>
+    {% endfor %}
 {% endblock %}
