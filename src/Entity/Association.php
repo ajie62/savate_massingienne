@@ -55,16 +55,16 @@ class Association
     private $aboutUs;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\OneToMany(targetEntity="App\Entity\TeamMember", mappedBy="association", cascade={"persist", "remove"}, orphanRemoval=true)
      */
-    private $team;
+    private $teamMembers;
 
     /**
      * Association constructor.
      */
     public function __construct()
     {
-        $this->team = new ArrayCollection();
+        $this->teamMembers = new ArrayCollection();
     }
 
     /**
@@ -196,28 +196,43 @@ class Association
     /**
      * @return mixed
      */
-    public function getTeam()
+    public function getTeamMembers()
     {
-        return $this->team;
+        return $this->teamMembers;
     }
 
     /**
-     * @param mixed $team
+     * @param mixed $teamMembers
      * @return Association
      */
-    public function setTeam($team)
+    public function setTeamMembers($teamMembers)
     {
-        $this->team = $team;
+        $this->teamMembers = $teamMembers;
         return $this;
     }
 
     /**
-     * @param User $user
+     * @param TeamMember $teamMember
      * @return $this
      */
-    public function addToTeam(User $user)
+    public function addTeamMember(TeamMember $teamMember)
     {
-        $this->team->add($user);
+        $teamMember->setAssociation($this);
+        $this->teamMembers->add($teamMember);
+        return $this;
+    }
+
+    /**
+     * @param TeamMember $teamMember
+     * @return $this
+     */
+    public function removeTeamMember(TeamMember $teamMember)
+    {
+        if($this->teamMembers->contains($teamMember)) {
+            $teamMember->setAssociation(null);
+            $this->teamMembers->removeElement($teamMember);
+        }
+
         return $this;
     }
 }
