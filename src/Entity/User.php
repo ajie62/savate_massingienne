@@ -8,6 +8,7 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -25,7 +26,7 @@ class User implements UserInterface
     private $id;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", unique=true)
      */
     private $username;
 
@@ -39,10 +40,10 @@ class User implements UserInterface
      */
     private $password;
 
-    /**
-     * @ORM\Column(type="string")
-     */
-    private $salt;
+    public function __construct()
+    {
+        $this->roles = new ArrayCollection();
+    }
 
     /**
      * @return mixed
@@ -121,21 +122,11 @@ class User implements UserInterface
      */
     public function getSalt()
     {
-        return $this->salt;
+        return null;
     }
 
-    /**
-     * @param mixed $salt
-     * @return User
-     */
-    public function setSalt($salt)
-    {
-        $this->salt = $salt;
-        return $this;
-    }
 
     public function eraseCredentials()
     {
-        // TODO: Implement eraseCredentials() method.
     }
 }
