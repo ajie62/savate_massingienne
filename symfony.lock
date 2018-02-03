@@ -77,6 +77,15 @@
     "psr/simple-cache": {
         "version": "1.0.0"
     },
+    "sensio/framework-extra-bundle": {
+        "version": "4.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "4.0",
+            "ref": "aaddfdf43cdecd4cf91f992052d76c2cadc04543"
+        }
+    },
     "symfony/cache": {
         "version": "v4.0.4"
     },
@@ -176,6 +185,18 @@
             "ref": "34eb245ce4194e7ae713558084180e2c532e7afd"
         }
     },
+    "symfony/twig-bridge": {
+        "version": "v4.0.4"
+    },
+    "symfony/twig-bundle": {
+        "version": "3.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "3.3",
+            "ref": "f75ac166398e107796ca94cc57fa1edaa06ec47f"
+        }
+    },
     "symfony/web-server-bundle": {
         "version": "3.3",
         "recipe": {
@@ -187,6 +208,9 @@
     },
     "symfony/yaml": {
         "version": "v4.0.4"
+    },
+    "twig/twig": {
+        "version": "v2.4.4"
     },
     "zendframework/zend-code": {
         "version": "3.3.0"
