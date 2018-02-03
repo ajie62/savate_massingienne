@@ -39,13 +39,4 @@ class UserController extends AbstractController
     {
         return $this->render('user/update.html.twig');
     }
-
-    /**
-     * @Route("/user/{id}/delete", name="user.delete")
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function delete()
-    {
-        return $this->render('user/delete.html.twig');
-    }
 }
