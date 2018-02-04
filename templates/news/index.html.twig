@@ -4,14 +4,16 @@
     <h1>news.index</h1>
 
     {% for news in newsCollection %}
-        <p>
-            {{ news.name }} - {{ news.content }}
-            {% if app.user %}
-                <a href="{{ path('news.update', {id: news.id}) }}">Edit</a> -
-                <a href="{{ path('news.delete', {id: news.id}) }}">Delete</a>
-            {% endif %}
-        </p>
+        <p>Id: {{ news.id }}</p>
+        <p>Name: {{ news.name }}</p>
+        <p>Creation: {{ news.createdAt|date('d/m/Y - H:i') }}</p>
+        {{ news.updatedAt ? ('<p> Last update: ' ~ news.updatedAt|date('d/m/Y - H:i') ~ '</p>')|raw }}
+        <p>Content: {{ news.content }}</p>
+        <a href="{{ url('news.read', {id: news.id}) }}">Read</a>
     {% else %}
         <p>Pas de news</p>
     {% endfor %}
+
+    <a href="{{ url('admin.index') }}">Back</a>
+    
 {% endblock %}

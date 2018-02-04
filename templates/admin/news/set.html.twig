@@ -1,10 +1,12 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/base.html.twig' %}
 
-{% block body %}
+{% block admin_body %}
     <h1>{{ isNewNews ? 'news.create' : 'news.update' }}</h1>
 
     {{ form_start(form) }}
     {{ form_widget(form) }}
     <button type="submit">Submit</button>
     {{ form_end(form) }}
+
+    <a href="{{ url('admin.news') }}">Back</a>
 {% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block admin_body %}
+    <h1>admin.news</h1>
+
+    {% for news in listNews %}
+        <ul>
+            <li>Name: {{ news.name }}</li>
+            <li>Creation: {{ news.createdAt|date('d/m/Y - H:i') }}</li>
+            {{ news.updatedAt ? ('<li> Last update: ' ~ news.updatedAt|date('d/m/Y - H:i') ~ '</li>')|raw }}
+            <li>Content: {{ news.content }}</li>
+            <li>
+                <a href="{{ url('admin.news_read', {id: news.id}) }}">Read</a> -
+                <a href="{{ url('admin.news_update', {id: news.id}) }}">Edit</a>  -
+                <a href="{{ url('admin.news_delete', {id: news.id}) }}">Delete</a>
+            </li>
+        </ul>
+    {% else %}
+        <p>No news</p>
+    {% endfor %}
+
+    <a href="{{ url('admin.news_create') }}">Create news</a>
+    <a href="{{ url('admin.index') }}">Back</a>
+
+{% endblock %}
