@@ -9,6 +9,7 @@
 namespace App\Controller;
 
 use App\Entity\Association;
+use App\Entity\Event;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -32,13 +33,15 @@ class AppController extends AbstractController
     public function index()
     {
         $association = $this->em->getRepository(Association::class)->find(1);
+        $events = $this->em->getRepository(Event::class)->findAll();
 
         if (is_null($association)) {
             $association = new Association();
         }
 
         return $this->render('home/index.html.twig', [
-            'association' => $association
+            'association' => $association,
+            'events' => $events
         ]);
     }
 }
