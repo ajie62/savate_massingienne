@@ -10,9 +10,11 @@ namespace App\Controller;
 
 use App\Entity\Association;
 use App\Entity\Event;
+use App\Entity\News;
 use App\Entity\User;
 use App\Form\AssociationType;
 use App\Form\EventType;
+use App\Form\NewsType;
 use App\Form\UserType;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -266,9 +268,117 @@ class AdminController extends AbstractController
         ]);
     }
 
+    /**
+     * List all the news
+     *
+     * @Route("/news", name="admin.news")
+     * @return Response
+     */
     public function news()
     {
-        return $this->render('admin/news.html.twig');
+        $news = $this->em->getRepository(News::class)->findAll();
+
+        return $this->render('admin/news/news.html.twig', [
+            'listNews' => $news
+        ]);
+    }
+
+    /**
+     * Create a news
+     *
+     * @Route("/news/create", name="admin.news_create")
+     * @param Request $request
+     * @return Response
+     */
+    public function create(Request $request): Response
+    {
+        return $this->setNews($request, new News());
+    }
+
+    /**
+     * Read a news
+     *
+     * @Route("/news/{id}", name="admin.news_read", requirements={"id" = "\d+"})
+     * @param News $news
+     * @return Response
+     */
+    public function read(News $news): Response
+    {
+        return $this->render('admin/news/read.html.twig', [
+            'news' => $news
+        ]);
+    }
+
+    /**
+     * Update a news
+     *
+     * @Route("/news/{id}/update", name="admin.news_update", requirements={"id" = "\d+"})
+     * @param Request $request
+     * @param News $news
+     * @return Response
+     */
+    public function update(Request $request, News $news): Response
+    {
+        return $this->setNews($request, $news);
+    }
+
+    /**
+     * Delete a news
+     *
+     * @Route("/news/{id}/delete", name="admin.news_delete", requirements={"id" = "\d+"})
+     * @Method({"GET", "DELETE"})
+     * @param Request $request
+     * @param News $news
+     * @return Response
+     */
+    public function delete(Request $request, News $news): Response
+    {
+        $form = $this->getDeleteForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid() && $request->isMethod('DELETE')) {
+            $this->em->remove($news);
+            $this->em->flush();
+
+            return $this->redirectToRoute('admin.news');
+        }
+
+        return $this->render('admin/news/delete.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * Used for news creation or edition
+     *
+     * @param Request $request
+     * @param News $news
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     */
+    private function setNews(Request $request, News $news)
+    {
+        $isNewNews = $news->getId() === null;
+
+        $form = $this->createForm(NewsType::class, $news);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            if (!$isNewNews) {
+                $news->setUpdatedAt(new \DateTime());
+            }
+
+            $this->em->persist($news);
+            $this->em->flush();
+
+            return $this->redirectToRoute('admin.news_read', [
+                'id' => $news->getId(),
+            ]);
+        }
+
+        return $this->render('admin/news/set.html.twig', [
+            'form' => $form->createView(),
+            'isNewNews' => $isNewNews,
+        ]);
     }
 
     public function team()

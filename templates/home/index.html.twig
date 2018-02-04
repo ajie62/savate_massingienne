@@ -14,9 +14,15 @@
     {% endfor %}
 
     {% for event in events %}
-        {{ event.name }}
+        <p>{{ event.name }}</p>
     {% else %}
         <p>Aucun évènement à afficher</p>
+    {% endfor %}
+
+    {% for news in newsList %}
+        <p>{{ news.name }}</p>
+    {% else %}
+        <p>Aucune actualité à afficher</p>
     {% endfor %}
 
 {% endblock %}

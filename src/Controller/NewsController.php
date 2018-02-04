@@ -26,7 +26,6 @@ class NewsController extends AbstractController
 
     public function __construct(EntityManagerInterface $entityManager)
     {
-
         $this->em = $entityManager;
     }
 
@@ -44,16 +43,6 @@ class NewsController extends AbstractController
     }
 
     /**
-     * @Route("/news/create", name="news.create")
-     * @param Request $request
-     * @return Response
-     */
-    public function create(Request $request): Response
-    {
-        return $this->setNews($request, new News());
-    }
-
-    /**
      * @Route("/news/{id}", name="news.read", requirements={"id" = "\d+"})
      * @param News $news
      * @return Response
@@ -63,77 +52,5 @@ class NewsController extends AbstractController
         return $this->render('news/read.html.twig', [
             'news' => $news
         ]);
-    }
-
-    /**
-     * @Route("/news/{id}/update", name="news.update", requirements={"id" = "\d+"})
-     * @param Request $request
-     * @param News $news
-     * @return Response
-     */
-    public function update(Request $request, News $news): Response
-    {
-        return $this->setNews($request, $news);
-    }
-
-    /**
-     * @Route("/news/{id}/delete", name="news.delete", requirements={"id" = "\d+"})
-     * @Method({"GET", "DELETE"})
-     * @param Request $request
-     * @param News $news
-     * @return Response
-     */
-    public function delete(Request $request, News $news): Response
-    {
-        $form = $this->getDeleteForm();
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid() && $request->isMethod('DELETE')) {
-            $this->em->remove($news);
-            $this->em->flush();
-
-            return $this->redirectToRoute('news.index');
-        }
-
-        return $this->render('news/delete.html.twig', [
-            'form' => $form->createView()
-        ]);
-    }
-
-    /**
-     * @param Request $request
-     * @param News $news
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
-     */
-    private function setNews(Request $request, News $news)
-    {
-        $isNewNews = $news->getId() === null;
-
-        $form = $this->createForm(NewsType::class, $news);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->em->persist($news);
-            $this->em->flush();
-
-            return $this->redirectToRoute('news.read', [
-                'id' => $news->getId(),
-            ]);
-        }
-
-        return $this->render('news/set.html.twig', [
-            'form' => $form->createView(),
-            'isNewNews' => $isNewNews,
-        ]);
-    }
-
-    /**
-     * @return \Symfony\Component\Form\FormInterface
-     */
-    private function getDeleteForm()
-    {
-        $form = $this->createFormBuilder()->setMethod('DELETE')->getForm();
-
-        return $form;
     }
 }

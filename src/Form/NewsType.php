@@ -20,12 +20,8 @@ class NewsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', TextType::class, [
-                'required' => true,
-            ])
-            ->add('content', TextareaType::class, [
-                'required' => true,
-            ])
+            ->add('name', TextType::class, ['required' => true])
+            ->add('content', TextareaType::class, ['required' => true])
         ;
     }
 

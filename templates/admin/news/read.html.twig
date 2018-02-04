@@ -1,6 +1,6 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/base.html.twig' %}
 
-{% block body %}
+{% block admin_body %}
     <h1>news.read</h1>
 
     <h2>{{ news.name }}</h2>
@@ -10,5 +10,5 @@
     </small>
     <p>{{ news.content }}</p>
 
-    <a href="{{ url('news.index') }}">Back</a>
+    <a href="{{ url('admin.news') }}">Back</a>
 {% endblock %}
