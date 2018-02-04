@@ -7,8 +7,8 @@
         <p>
             {{ event.name }} - {{ event.description }}
             {% if app.user %}
-                <a href="{{ path('event.update', {id: event.id}) }}">Edit</a> -
-                <a href="{{ path('event.delete', {id: event.id}) }}">Delete</a>
+                <a href="{{ path('admin.event_update', {id: event.id}) }}">Edit</a> -
+                <a href="{{ path('admin.event_delete', {id: event.id, redirect: 'event.index'}) }}">Delete</a>
             {% endif %}
         </p>
     {% else %}

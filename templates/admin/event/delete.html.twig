@@ -2,10 +2,11 @@
 
 {% block body %}
     <h1>event.delete</h1>
-    <p>Voulez-vous vraiment supprimer l'évènement ?</p>
+    <p>Do you really want to delete this event?</p>
 
     {{ form_start(form) }}
     {{ form_widget(form) }}
-    <button type="submit">Supprimer</button>
+    <a href="{{ url('admin.event') }}">Back</a>
+    <button type="submit">Delete</button>
     {{ form_end(form) }}
 {% endblock %}

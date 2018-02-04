@@ -11,7 +11,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\EventRepository")
  * @ORM\Table(name="event")
  */
 class Event
@@ -29,9 +29,25 @@ class Event
     private $name;
 
     /**
+     * @ORM\Column(type="datetime")
+     */
+    private $startingDate;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $endingDate;
+
+    /**
      * @ORM\Column(type="text")
      */
     private $description;
+
+    public function __construct()
+    {
+        $this->startingDate = new \DateTime();
+        $this->endingDate = new \DateTime();
+    }
 
     /**
      * @return mixed
@@ -66,6 +82,42 @@ class Event
     public function setName($name)
     {
         $this->name = $name;
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getStartingDate(): \DateTime
+    {
+        return $this->startingDate;
+    }
+
+    /**
+     * @param mixed $startingDate
+     * @return Event
+     */
+    public function setStartingDate($startingDate)
+    {
+        $this->startingDate = $startingDate;
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getEndingDate(): \DateTime
+    {
+        return $this->endingDate;
+    }
+
+    /**
+     * @param mixed $endingDate
+     * @return Event
+     */
+    public function setEndingDate($endingDate)
+    {
+        $this->endingDate = $endingDate;
         return $this;
     }
 

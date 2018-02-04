@@ -1,0 +1,27 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block admin_body %}
+    <h1>admin.event</h1>
+
+    {# include located in templates/includes #}
+    <h2>Events in progress</h2>
+    {% for event in eventsInProgress %}
+        {{ include('includes/event.html.twig') }}
+    {% else %}
+        <p>No event in progress</p>
+    {% endfor %}
+
+    <h2>Upcoming events</h2>
+    {% for event in upcomingEvents %}
+        {{ include('includes/event.html.twig') }}
+    {% else %}
+        <p>No upcoming event</p>
+    {% endfor %}
+
+    <h2>Past events</h2>
+    {% for event in pastEvents %}
+        {{ include('includes/event.html.twig') }}
+    {% else %}
+        <p>No past event</p>
+    {% endfor %}
+{% endblock %}

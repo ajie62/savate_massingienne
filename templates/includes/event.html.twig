@@ -1,0 +1,11 @@
+<ul>
+    <li>ID: {{ event.id }}</li>
+    <li>Name: {{ event.name }}</li>
+    <li>Starting date: {{ event.startingDate|date('d/m/Y - H:i') }}</li>
+    <li>Ending date: {{ event.endingDate|date('d/m/Y - H:i') }}</li>
+    <li>Description: {{ event.description }}</li>
+    <li>
+        <a href="{{ url('admin.event_update', {id: event.id}) }}">Edit</a>  -
+        <a href="{{ url('admin.event_delete', {id: event.id}) }}">Delete</a>
+    </li>
+</ul>
