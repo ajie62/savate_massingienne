@@ -8,12 +8,17 @@
     {{ form_row(form.username) }}
     {{ form_row(form.firstname) }}
     {{ form_row(form.lastname) }}
-    {{ form_row(form.email) }}
-    {{ form_row(form.licenseNumber) }}
+
+    {% if is_granted('ROLE_SUPER_ADMIN') %}
+        {{ form_row(form.email) }}
+        {{ form_row(form.licenseNumber) }}
+    {% endif %}
 
     {% if form.roles is defined and is_granted('ROLE_SUPER_ADMIN') %}
         {{ form_row(form.roles) }}
     {% endif %}
+
+    {{ form_rest(form) }}
     <button type="submit">Mettre à jour</button>
     {{ form_end(form) }}
 

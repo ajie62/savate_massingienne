@@ -18,18 +18,18 @@ use App\Form\NewsType;
 use App\Form\UserType;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * Class AdminController
- *
  * @Route("/admin")
+ *
  * @package App\Controller
  */
 class AdminController extends AbstractController
@@ -49,7 +49,11 @@ class AdminController extends AbstractController
     }
 
     /**
+     * Admin index
      * @Route(path="/", name="admin.index")
+     *
+     * Members with ROLE_SUPER_ADMIN and ROLE_ADMIN can access this page.
+     * @Security("is_granted('ROLE_ADMIN')")
      */
     public function index()
     {
@@ -57,7 +61,12 @@ class AdminController extends AbstractController
     }
 
     /**
+     * Admin 'members' section
      * @Route("/members", name="admin.members")
+     *
+     * Members with ROLE_SUPER_ADMIN and ROLE_ADMIN can access this page.
+     * @Security("is_granted('ROLE_ADMIN')")
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function members()
@@ -70,19 +79,23 @@ class AdminController extends AbstractController
     }
 
     /**
+     * Update members information
      * @Route("/member/{id}/update", name="admin.update_member")
+     *
+     * Members with ROLE_SUPER_ADMIN and ROLE_ADMIN can update members information.
+     * @Security("is_granted('ROLE_ADMIN')")
+     *
      * @param Request $request
      * @param User $user
-     * @param AuthorizationCheckerInterface $authorizationChecker
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function updateMember(Request $request, User $user, AuthorizationCheckerInterface $authorizationChecker)
+    public function updateMember(Request $request, User $user)
     {
         # Building form with additional fields
         $form = $this->createForm(UserType::class, $user)->add('licenseNumber', TextType::class, ['required' => false]);
 
-        # Check if the active user has ROLE_SUPER_ADMIN & the targeted user for update is not the active user
-        if ($authorizationChecker->isGranted('ROLE_SUPER_ADMIN') && $user !== $this->getUser()) {
+        # If the targeted user for update is not the active user
+        if ($user !== $this->getUser()) {
             # Add a field 'roles' to the form
             $form->add('roles', ChoiceType::class, [
                 'choices' => [
@@ -99,6 +112,7 @@ class AdminController extends AbstractController
         }
 
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
             # Check if roles field exists (i.e user is logged in as ROLE_USER_ADMIN)
             if ($form->has('roles')) {
@@ -108,12 +122,11 @@ class AdminController extends AbstractController
                 $user->setRoles([$role]);
             }
 
-            # set the updatedAt datetime
+            # Set the updatedAt datetime
             $user->setUpdatedAt(new \DateTime());
-
             # Flush
             $this->em->flush();
-            # Redirection
+            # Redirection to admin.index
             return $this->redirectToRoute('admin.index');
         }
 
@@ -123,24 +136,36 @@ class AdminController extends AbstractController
     }
 
     /**
+     * Delete a member
      * @Route("/member/{id}/delete", name="admin.delete_member")
+     *
+     * Members with ROLE_SUPER_ADMIN can delete a member.
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     *
      * @param Request $request
      * @param User $user
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteMember(Request $request, User $user)
     {
+        # Members with ROLE_SUPER_ADMIN can't delete their own account
         if ($this->getUser() === $user) {
+            # Thus, they are redirected to admin.index
             return $this->redirectToRoute('admin.index');
         }
 
+        # Building the delete form.
         $form = $this->createFormBuilder()->setMethod("DELETE")->getForm();
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            # Removing the user
             $this->em->remove($user);
+            # Flush
             $this->em->flush();
 
+            # Redirection to admin.index
             return $this->redirectToRoute("admin.index");
         }
 
@@ -150,25 +175,37 @@ class AdminController extends AbstractController
     }
 
     /**
+     * Website's content management section
      * @Route("/content", name="admin.content")
+     *
+     * Members with ROLE_SUPER_ADMIN and ROLE_ADMIN can access this page.
+     * @Security("is_granted('ROLE_ADMIN')")
+     *
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function content(Request $request)
     {
+        # Fetching unique Association entity from the database
         $association = $this->em->getRepository(Association::class)->find(1);
 
+        # If no Association entity were found, create one
         if (is_null($association)) {
             $association = new Association();
         }
 
+        # Form creation, based on AssociationType
         $form = $this->createForm(AssociationType::class, $association);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            # Persist
             $this->em->persist($association);
+            # Flush
             $this->em->flush();
 
+            # Redirection to the same page
             return $this->redirectToRoute('admin.content');
         }
 
@@ -179,15 +216,20 @@ class AdminController extends AbstractController
 
     /**
      * List all the events
-     *
      * @Route("/event", name="admin.event")
+     *
+     * Members with ROLE_SUPER_ADMIN and ROLE_ADMIN can access this page.
+     * @Security("is_granted('ROLE_ADMIN')")
+     *
      * @return Response
      */
     public function events()
     {
-        $eventsRepository = $this->em->getRepository(Event::class);
+        # Getting the EventRepository
+        $eventRepository = $this->em->getRepository(Event::class);
 
-        $upcomingEvents = $eventsRepository
+        # Fetching upcoming events
+        $upcomingEvents = $eventRepository
             ->getBaseQuery('evt')
             ->orderBy('evt.startingDate', 'ASC')
             ->andWhere('evt.startingDate > CURRENT_DATE()')
@@ -195,7 +237,8 @@ class AdminController extends AbstractController
             ->getResult()
         ;
 
-        $pastEvents = $eventsRepository
+        # Fetching past events
+        $pastEvents = $eventRepository
             ->getBaseQuery('evt')
             ->orderBy('evt.startingDate', 'ASC')
             ->andWhere('evt.startingDate < CURRENT_DATE()')
@@ -203,7 +246,8 @@ class AdminController extends AbstractController
             ->getResult()
         ;
 
-        $eventsInProgress = $eventsRepository
+        # Fetching events in progress
+        $eventsInProgress = $eventRepository
             ->getBaseQuery('evt')
             ->andWhere('evt.startingDate <= CURRENT_DATE()')
             ->andWhere('evt.endingDate >= CURRENT_DATE()')
@@ -221,8 +265,11 @@ class AdminController extends AbstractController
 
     /**
      * Create an event
-     *
      * @Route("/event/create", name="admin.event_create")
+     *
+     * Members with ROLE_SUPER_ADMIN and ROLE_ADMIN can create an event.
+     * @Security("is_granted('ROLE_ADMIN')")
+     *
      * @param Request $request
      * @return Response
      */
@@ -233,8 +280,11 @@ class AdminController extends AbstractController
 
     /**
      * Update an event
-     *
      * @Route("/event/{id}/update", name="admin.event_update", requirements={"id" = "\d+"})
+     *
+     * Members with ROLE_SUPER_ADMIN and ROLE_ADMIN can update an event.
+     * @Security("is_granted('ROLE_ADMIN')")
+     *
      * @param Request $request
      * @param Event $event
      * @return Response
@@ -246,8 +296,11 @@ class AdminController extends AbstractController
 
     /**
      * Delete an event
-     *
      * @Route("/event/{id}/delete", name="admin.event_delete", requirements={"id" = "\d+"})
+     *
+     * Members with ROLE_SUPER_ADMIN can delete an event.
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     *
      * @Method({"GET", "DELETE"})
      * @param Request $request
      * @param Event $event
@@ -259,13 +312,18 @@ class AdminController extends AbstractController
         $redirectRoute = $request->query->get('redirect', 'admin.event');
         $redirectRoute = in_array($redirectRoute, $availableRedirectRoutes) ? $redirectRoute : $availableRedirectRoutes[0];
 
+        # Getting the delete form
         $form = $this->getDeleteForm();
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid() && $request->isMethod('DELETE')) {
+            # Remove event
             $this->em->remove($event);
+            # Flush
             $this->em->flush();
 
+            # Redirection to the redirect route
             return $this->redirectToRoute($redirectRoute);
         }
 
@@ -283,15 +341,21 @@ class AdminController extends AbstractController
      */
     private function setEvent(Request $request, Event $event)
     {
+        # Check if the event (in the method argument) is new
         $isNewEvent = $event->getId() === null;
 
+        # Form creation based on EventType
         $form = $this->createForm(EventType::class, $event);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            # Persist
             $this->em->persist($event);
+            # Flush
             $this->em->flush();
 
+            # Redirection to admin.event
             return $this->redirectToRoute('admin.event');
         }
 
@@ -303,23 +367,28 @@ class AdminController extends AbstractController
 
     /**
      * List all the news
-     *
      * @Route("/news", name="admin.news")
+     *
+     * Members with ROLE_SUPER_ADMIN and ROLE_ADMIN can access this page.
+     * @Security("is_granted('ROLE_ADMIN')")
+     *
      * @return Response
      */
     public function news()
     {
+        # Fetching all the news from the database
         $news = $this->em->getRepository(News::class)->findAll();
 
-        return $this->render('admin/news/news.html.twig', [
-            'listNews' => $news
-        ]);
+        return $this->render('admin/news/news.html.twig', ['listNews' => $news]);
     }
 
     /**
      * Create a news
-     *
      * @Route("/news/create", name="admin.news_create")
+     *
+     * Members with ROLE_SUPER_ADMIN and ROLE_ADMIN can create a news.
+     * @Security("is_granted('ROLE_ADMIN')")
+     *
      * @param Request $request
      * @return Response
      */
@@ -330,22 +399,26 @@ class AdminController extends AbstractController
 
     /**
      * Read a news
-     *
      * @Route("/news/{id}", name="admin.news_read", requirements={"id" = "\d+"})
+     *
+     * Mmbers with ROLE_SUPER_ADMIN and ROLE_ADMIN can read a news.
+     * @Security("is_granted('ROLE_ADMIN')")
+     *
      * @param News $news
      * @return Response
      */
     public function read(News $news): Response
     {
-        return $this->render('admin/news/read.html.twig', [
-            'news' => $news
-        ]);
+        return $this->render('admin/news/read.html.twig', ['news' => $news]);
     }
 
     /**
      * Update a news
-     *
      * @Route("/news/{id}/update", name="admin.news_update", requirements={"id" = "\d+"})
+     *
+     * Members with ROLE_SUPER_ADMIN and ROLE_ADMIN can update a news
+     * @Security("is_granted('ROLE_ADMIN')")
+     *
      * @param Request $request
      * @param News $news
      * @return Response
@@ -357,8 +430,11 @@ class AdminController extends AbstractController
 
     /**
      * Delete a news
-     *
      * @Route("/news/{id}/delete", name="admin.news_delete", requirements={"id" = "\d+"})
+     *
+     * Members with ROLE_SUPER_ADMIN can delete a news.
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     *
      * @Method({"GET", "DELETE"})
      * @param Request $request
      * @param News $news
@@ -366,13 +442,18 @@ class AdminController extends AbstractController
      */
     public function delete(Request $request, News $news): Response
     {
+        # Getting the delete form
         $form = $this->getDeleteForm();
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid() && $request->isMethod('DELETE')) {
+            # Remove the news
             $this->em->remove($news);
+            # Flush
             $this->em->flush();
 
+            # Redirection to admin.news
             return $this->redirectToRoute('admin.news');
         }
 

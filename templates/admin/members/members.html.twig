@@ -31,7 +31,9 @@
                 <td>
                     <a href="{{ path('admin.update_member', {id: member.id}) }}">edit</a>
                     {% if is_granted('ROLE_SUPER_ADMIN') %}
-                        - <a href="{{ path('admin.delete_member', {id: member.id}) }}">delete</a>
+                        {% if member.roles[0] != 'ROLE_SUPER_ADMIN' %}
+                            - <a href="{{ path('admin.delete_member', {id: member.id}) }}">delete</a>
+                        {% endif %}
                     {% endif %}
                 </td>
             </tr>
