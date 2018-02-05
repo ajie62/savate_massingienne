@@ -9,11 +9,14 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="license")
  * @ORM\Entity(repositoryClass="App\Repository\LicenseRepository")
+ * @UniqueEntity(fields={"user", "year"})
  */
 class License
 {
@@ -30,7 +33,7 @@ class License
     private $year;
 
     /**
-     * @ORM\Column(type="string")
+     * @var null|UploadedFile
      */
     private $licenseFile;
 
@@ -39,6 +42,14 @@ class License
      */
     private $uploadedAt;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="licenses")
+     */
+    private $user;
+
+    /**
+     * License constructor.
+     */
     public function __construct()
     {
         $this->uploadedAt = new \DateTime();
@@ -92,13 +103,37 @@ class License
         $this->licenseFile = $licenseFile;
     }
 
+    /**
+     * @return \DateTime
+     */
     public function getUploadedAt()
     {
         return $this->uploadedAt;
     }
 
+    /**
+     * @param $uploadedAt
+     */
     public function setUploadedAt($uploadedAt)
     {
         $this->uploadedAt = $uploadedAt;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param mixed $user
+     * @return License
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+        return $this;
     }
 }
