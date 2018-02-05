@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>user.read</h1>
+
+    <h2>{{ user.firstname|capitalize }}</h2>
+    {% if self %}
+        <a href="{{ url('user.update') }}">Edit profile</a>
+    {% endif %}
+
+    <ul>
+        <li>Username: {{ user.username }}</li>
+        <li>First name: {{ user.firstname }}</li>
+        <li>Last name: {{ user.lastname }}</li>
+        <li>License number: {{ user.licenseNumber ?? 'undefined' }}</li>
+        <li>Email: {{ user.email }}</li>
+        <li>Member since: {{ user.memberSince|date('d/m/Y - H:i') }}</li>
+    </ul>
+{% endblock %}
