@@ -67,6 +67,11 @@ class User implements UserInterface
      */
     private $memberSince;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $updatedAt;
+
     public function __construct()
     {
         $this->roles = ['ROLE_USER'];
@@ -228,6 +233,24 @@ class User implements UserInterface
     public function setMemberSince(\DateTime $memberSince): User
     {
         $this->memberSince = $memberSince;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * @param mixed $updatedAt
+     * @return User
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
         return $this;
     }
 

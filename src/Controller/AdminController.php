@@ -16,7 +16,6 @@ use App\Form\AssociationType;
 use App\Form\EventType;
 use App\Form\NewsType;
 use App\Form\UserType;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,6 +24,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * Class AdminController
@@ -64,7 +64,7 @@ class AdminController extends AbstractController
     {
         $membersList = $this->em->getRepository(User::class)->findAll();
 
-        return $this->render('admin/members.html.twig', [
+        return $this->render('admin/members/members.html.twig', [
             'membersList' => $membersList
         ]);
     }
@@ -73,20 +73,47 @@ class AdminController extends AbstractController
      * @Route("/member/{id}/update", name="admin.update_member")
      * @param Request $request
      * @param User $user
+     * @param AuthorizationCheckerInterface $authorizationChecker
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function updateMember(Request $request, User $user)
+    public function updateMember(Request $request, User $user, AuthorizationCheckerInterface $authorizationChecker)
     {
-        $form = $this->createForm(UserType::class, $user)
-        ->add('licenseNumber', TextType::class, [
-            'required' => false
-        ]);
+        # Building form with additional fields
+        $form = $this->createForm(UserType::class, $user)->add('licenseNumber', TextType::class, ['required' => false]);
+
+        # Check if the active user has ROLE_SUPER_ADMIN & the targeted user for update is not the active user
+        if ($authorizationChecker->isGranted('ROLE_SUPER_ADMIN') && $user !== $this->getUser()) {
+            # Add a field 'roles' to the form
+            $form->add('roles', ChoiceType::class, [
+                'choices' => [
+                    'Utilisateur' => "ROLE_USER",
+                    'Modérateur' => 'ROLE_ADMIN',
+                    'Administrateur' => 'ROLE_SUPER_ADMIN'
+                ],
+                'data' => $user->getRoles()[0] ?? null,
+                'mapped' => false,
+                'preferred_choices' => [
+                    'Utilisateur' => 'ROLE_USER'
+                ]
+            ]);
+        }
+
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->em->persist($user);
-            $this->em->flush();
+            # Check if roles field exists (i.e user is logged in as ROLE_USER_ADMIN)
+            if ($form->has('roles')) {
+                # Get chosen role
+                $role = $form->get('roles')->getData();
+                # Assign role to user
+                $user->setRoles([$role]);
+            }
 
+            # set the updatedAt datetime
+            $user->setUpdatedAt(new \DateTime());
+
+            # Flush
+            $this->em->flush();
+            # Redirection
             return $this->redirectToRoute('admin.index');
         }
 
