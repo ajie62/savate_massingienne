@@ -4,7 +4,7 @@ security:
         db:
             entity:
                 class: App\Entity\User
-                property: username
+                property: email
 
     encoders:
         App\Entity\User:
@@ -23,8 +23,8 @@ security:
             form_login:
                 login_path: security.login
                 check_path: security.login
-                username_parameter: _username
-                password_parameter: _password
+                username_parameter: login[email]
+                password_parameter: login[password]
                 csrf_token_generator: security.csrf.token_manager
                 default_target_path: /
             logout:
@@ -33,3 +33,7 @@ security:
 
     role_hierarchy:
         ROLE_ADMIN: [ROLE_USER]
+        ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_USER]
+
+    access_control:
+        - { path: ^/admin, roles: ROLE_ADMIN }

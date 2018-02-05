@@ -9,6 +9,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\LoginType;
 use App\Form\RegistrationType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -55,12 +56,17 @@ class SecurityController extends AbstractController
      */
     public function login(AuthenticationUtils $authenticationUtils)
     {
+        # Last email entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
+        # Last error if there is one
         $lastError = $authenticationUtils->getLastAuthenticationError();
 
+        # Create the login form
+        $form = $this->createForm(LoginType::class, ['username' => $lastUsername]);
+
         return $this->render('security/login.html.twig', [
+            'form' => $form->createView(),
             'error' => $lastError,
-            'last_username' => $lastUsername
         ]);
     }
 

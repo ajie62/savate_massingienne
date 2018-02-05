@@ -12,6 +12,8 @@
             <th>First name</th>
             <th>Last name</th>
             <th>License number</th>
+            <th>Role</th>
+            <th>Last Update</th>
             <th>Action</th>
         </tr>
         </thead>
@@ -24,9 +26,11 @@
                 <td>{{ member.firstname }}</td>
                 <td>{{ member.lastname }}</td>
                 <td>{{ member.licenseNumber ? member.licenseNumber : 'n/a' }}</td>
+                <td>{% if member.roles[0] == 'ROLE_SUPER_ADMIN' %}Admin{% elseif member.roles[0] == 'ROLE_ADMIN' %}Modérateur{% else %}Utilisateur{% endif %}</td>
+                <td>{{ member.updatedAt ? member.updatedAt|date('d/m/Y - H:i') }}</td>
                 <td>
                     <a href="{{ path('admin.update_member', {id: member.id}) }}">edit</a>
-                    {% if is_granted('ROLE_ADMIN') %}
+                    {% if is_granted('ROLE_SUPER_ADMIN') %}
                         - <a href="{{ path('admin.delete_member', {id: member.id}) }}">delete</a>
                     {% endif %}
                 </td>
