@@ -20,6 +20,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class User implements UserInterface
 {
+    const USER = "ROLE_USER";
+    const MODERATEUR = "ROLE_MODERATEUR";
+    const ADMIN = "ROLE_SUPER_ADMIN";
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")

@@ -26,10 +26,13 @@
                 <td>{{ member.firstname }}</td>
                 <td>{{ member.lastname }}</td>
                 <td>{{ member.licenseNumber ? member.licenseNumber : 'n/a' }}</td>
-                <td>{% if member.roles[0] == 'ROLE_SUPER_ADMIN' %}Admin{% elseif member.roles[0] == 'ROLE_ADMIN' %}Modérateur{% else %}Utilisateur{% endif %}</td>
+                <td>{% if member.roles[0] == 'ROLE_SUPER_ADMIN' %}Admin{% elseif member.roles[0] == 'ROLE_MODERATEUR' %}Modérateur{% else %}Utilisateur{% endif %}</td>
                 <td>{{ member.updatedAt ? member.updatedAt|date('d/m/Y - H:i') }}</td>
                 <td>
-                    <a href="{{ path('admin.update_member', {id: member.id}) }}">edit</a>
+                    {% if not (app.user.roles[0] == "ROLE_MODERATEUR" and member.roles[0] == "ROLE_SUPER_ADMIN") %}
+                        <a href="{{ path('admin.update_member', {id: member.id}) }}">edit</a>
+                    {% endif %}
+
                     {% if is_granted('ROLE_SUPER_ADMIN') %}
                         {% if member.roles[0] != 'ROLE_SUPER_ADMIN' %}
                             - <a href="{{ path('admin.delete_member', {id: member.id}) }}">delete</a>

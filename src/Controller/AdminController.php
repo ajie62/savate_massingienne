@@ -12,19 +12,19 @@ use App\Entity\Association;
 use App\Entity\Event;
 use App\Entity\News;
 use App\Entity\User;
+use App\Form\AdminUserType;
 use App\Form\AssociationType;
 use App\Form\EventType;
 use App\Form\NewsType;
-use App\Form\UserType;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\LogicException;
 
 /**
  * Class AdminController
@@ -87,34 +87,32 @@ class AdminController extends AbstractController
      *
      * @param Request $request
      * @param User $user
+     * @param AuthorizationCheckerInterface $authorizationChecker
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function updateMember(Request $request, User $user)
+    public function updateMember(Request $request, User $user, AuthorizationCheckerInterface $authorizationChecker)
     {
-        # Building form with additional fields
-        $form = $this->createForm(UserType::class, $user)->add('licenseNumber', TextType::class, ['required' => false]);
+        # Get the target user
+        $targetUser = $user;
+        # Get the active user
+        $activeUser = $this->getUser();
 
-        # If the targeted user for update is not the active user
-        if ($user !== $this->getUser()) {
-            # Add a field 'roles' to the form
-            $form->add('roles', ChoiceType::class, [
-                'choices' => [
-                    'Utilisateur' => "ROLE_USER",
-                    'Modérateur' => 'ROLE_ADMIN',
-                    'Administrateur' => 'ROLE_SUPER_ADMIN'
-                ],
-                'data' => $user->getRoles()[0] ?? null,
-                'mapped' => false,
-                'preferred_choices' => [
-                    'Utilisateur' => 'ROLE_USER'
-                ]
-            ]);
+        # If the active user role is ROLE_MODERATEUR and the target user's is ROLE_SUPER_ADMIN
+        if ($activeUser->getRoles()[0] == User::MODERATEUR && $targetUser->getRoles()[0] == User::ADMIN) {
+            # Throw a new exception: a ROLE_MODERATEUR can't update a ROLE_SUPER_ADMIN member
+            throw new LogicException("Cannot update admin information.");
         }
+
+        # Create form with options (used in AdminUserType)
+        $form = $this->createForm(AdminUserType::class, $user, [
+            'securityChecker' => $authorizationChecker,
+            'user' => $this->getUser()
+        ]);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            # Check if roles field exists (i.e user is logged in as ROLE_USER_ADMIN)
+            # Check if roles field exists
             if ($form->has('roles')) {
                 # Get chosen role
                 $role = $form->get('roles')->getData();
