@@ -8,19 +8,27 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
 use App\Form\UserType;
 use App\Service\UserService;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * Class UserController
+ *
+ * @package App\Controller
+ */
 class UserController extends AbstractController
 {
     /**
-     * @Route("/list", name="user.list")
+     * List website's all members
+     * @Route("/user/list", name="user.list")
+     *
+     * Only authenticated members can see the members list.
+     * @Security("is_granted('IS_AUTHENTICATED_REMEMBERED')")
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function list()
@@ -29,17 +37,28 @@ class UserController extends AbstractController
     }
 
     /**
+     * User profile
      * @Route("/profile/{username}", name="user.profile", defaults={"username" = null})
+     *
+     * Only authenticated members can visit users profile.
+     * @Security("is_granted('IS_AUTHENTICATED_REMEMBERED')")
+     *
      * @param $username
      * @param UserService $userService
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function profile($username, UserService $userService)
     {
+        # If the $username argument and the current user username are the same
         if ($username == $this->getUser()->getUsername()) {
+            # Redirection to user.profile with $username argument set to null
             return $this->redirectToRoute('user.profile', ['username' => null]);
         }
+
         $self = false;
+
+        # Fetching the user from the database with username
+        # The UserService determines if $self is set to true or false
         $user = $userService->getUserByUsername($username, $self);
 
         return $this->render('user/profile.html.twig', [
@@ -49,21 +68,32 @@ class UserController extends AbstractController
     }
 
     /**
+     * Update user
      * @Route("/user/update", name="user.update")
+     *
+     * Only members can update their profile.
+     * @Security("is_granted('IS_AUTHENTICATED_REMEMBERED')")
+     *
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function update(Request $request)
     {
+        # Getting the current user
         $user = $this->getUser();
 
+        # Form creation based on UserType
         $form = $this->createForm(UserType::class, $user);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            # Getting the entity manager
             $em = $this->getDoctrine()->getManager();
+            # Flush
             $em->flush();
 
+            # Redirection to user.profile
             return $this->redirectToRoute('user.profile', ['username' => $user->getUsername()]);
         }
 
