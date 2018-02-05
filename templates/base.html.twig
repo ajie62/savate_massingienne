@@ -13,8 +13,8 @@
                 <li><a href="{{ path('news.index') }}">Actu</a></li>
                 <li><a href="{{ path('security.login') }}">Connexion</a></li>
                 {% if app.user %}
-                    <li><a href="{{ path('user.read', {username: app.user.username}) }}">Profil</a></li>
-                    <li><a href="#">Admin</a></li>
+                    <li><a href="{{ path('user.profile', {username: app.user.username}) }}">Profil</a></li>
+                    <li><a href="{{ path('admin.index') }}">Admin</a></li>
                     <li><a href="{{ path('security.logout') }}">Déconnexion</a></li>
                 {% endif %}
             </ul>

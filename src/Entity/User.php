@@ -8,7 +8,6 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -58,9 +57,20 @@ class User implements UserInterface
      */
     private $password;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $licenseNumber;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $memberSince;
+
     public function __construct()
     {
         $this->roles = ['ROLE_USER'];
+        $this->memberSince = new \DateTime();
     }
 
     /**
@@ -182,6 +192,42 @@ class User implements UserInterface
     public function setPassword($password)
     {
         $this->password = $password;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLicenseNumber()
+    {
+        return $this->licenseNumber;
+    }
+
+    /**
+     * @param mixed $licenseNumber
+     * @return User
+     */
+    public function setLicenseNumber($licenseNumber)
+    {
+        $this->licenseNumber = $licenseNumber;
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getMemberSince(): \DateTime
+    {
+        return $this->memberSince;
+    }
+
+    /**
+     * @param \DateTime $memberSince
+     * @return User
+     */
+    public function setMemberSince(\DateTime $memberSince): User
+    {
+        $this->memberSince = $memberSince;
         return $this;
     }
 

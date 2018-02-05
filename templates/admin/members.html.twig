@@ -3,13 +3,38 @@
 {% block admin_body %}
     <h1>Members</h1>
 
-    {% for member in membersList %}
-        Id: {{ member.id }} - Username: {{ member.username }} {{ '- ' ~ member.firstname|default('null') }} {{ '- ' ~ member.lastname|default('null') }}
-        - <a href="{{ path('admin.update_member', {id: member.id}) }}">edit</a>
-        {% if not (app.user == member) %}
-            - <a href="{{ path('admin.delete_member', {id: member.id}) }}">delete</a>
-        {% endif %}
+    {% if membersList %}
+    <table>
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Username</th>
+            <th>First name</th>
+            <th>Last name</th>
+            <th>License number</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for member in membersList %}
+            <tr>
+                <td>{{ member.id }}</td>
+                <td>{{ member.username }}</td>
+                <td>{{ member.firstname }}</td>
+                <td>{{ member.lastname }}</td>
+                <td>{{ member.licenseNumber ? member.licenseNumber : 'n/a' }}</td>
+                <td>
+                    <a href="{{ path('admin.update_member', {id: member.id}) }}">edit</a>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        - <a href="{{ path('admin.delete_member', {id: member.id}) }}">delete</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
     {% else %}
         Pas de membre
-    {% endfor %}
+    {% endif %}
 {% endblock %}
