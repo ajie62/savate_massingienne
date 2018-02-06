@@ -16,4 +16,25 @@
         <li>Email: {{ user.email }}</li>
         <li>Member since: {{ user.memberSince|date('d/m/Y - H:i') }}</li>
     </ul>
+
+    <h2 class="text-center">Licences</h2>
+    {% set licenses = user.licenses %}
+    {% if self %}
+        {% if licenses|length == 0 %}
+            <p>You don't have licenses yet.</p>
+        {% else %}
+            <ul>
+                {% for license in licenses %}
+                    <li><a href="{{ asset('licenses/' ~ license.name) }} " target="_blank" title="See in the browser">License {{ license.year }}/{{ license.year + 1 }}</a></li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% else %}
+        {% set userLicenseNumber = user.licenses|length %}
+        {% if userLicenseNumber == 0 %}
+            <p class="text-center">{{ user.firstname }} doesn't have licenses yet.</p>
+        {% else %}
+            <p class="text-center">{{ user.firstname }} owns {{ userLicenseNumber > 1 ? userLicenseNumber ~ " licenses" : userLicenseNumber ~ " license" }}.</p>
+        {% endif %}
+    {% endif %}
 {% endblock %}

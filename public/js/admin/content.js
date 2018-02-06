@@ -13,8 +13,8 @@ $(function() {
     });
 
     // Delete
-    $('button.js-delete-team-member').on('click', function() {
-       $(this).closest('.team-member').remove();
+    $("body").on('click', '.js-delete-team-member', function() {
+        $(this).closest('.team-member').remove();
     });
 
 })

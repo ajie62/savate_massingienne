@@ -7,7 +7,7 @@
     <p>
         You're about to delete the
         {{ license.year }}/{{ license.year + 1 }}
-        license that belongs to {{ license.user.firstname|capitalize }}.
+        license that belongs to <strong>{{ license.user == app.user ? 'you' : license.user.username|capitalize }}</strong>.
         Do you confirm?
     </p>
 

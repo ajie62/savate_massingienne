@@ -69,7 +69,10 @@
                                 <td>Licence {{ license.year }}</td>
                                 <td><a href="{{ asset('licenses/' ~ license.name) }}"
                                        target="_blank">See</a></td>
-                                <td><a href="{{ path("admin.member.delete_license", {"id": license.id}) }}">Delete</a>
+                                <td>
+                                    {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                        <a href="{{ path("admin.member.delete_license", {"id": license.id}) }}">Delete</a>
+                                    {% endif %}
                                 </td>
                             </tr>
                         {% endfor %}

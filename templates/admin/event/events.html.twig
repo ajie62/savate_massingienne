@@ -24,4 +24,7 @@
     {% else %}
         <p>No past event</p>
     {% endfor %}
+
+    <a href="{{ path('admin.index') }}">Back</a>
+    <a href="{{ path('admin.event_create') }}">New event</a>
 {% endblock %}
