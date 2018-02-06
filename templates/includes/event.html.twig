@@ -2,9 +2,4 @@
     {{ event.name }} - {{ event.description }}
     {% if is_granted('ROLE_ADMIN') %}<a href="{{ path('admin.event_update', {id: event.id}) }}">Edit</a>{% endif %}
     {% if is_granted('ROLE_SUPER_ADMIN') %}<a href="{{ path('admin.event_delete', {id: event.id, redirect: 'event.index'}) }}">Delete</a>{% endif %}
-
-    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-    {% set isAttendant = app.user in event.users %}
-<p>{{ isAttendant ? 'I\'m in' }}<a href="{{ url('event.subscribe', {id: event.id}) }}">{{ isAttendant ? 'Unsubscribe' : 'Subscribe' }}</a></p>
-{% endif %}
 </p>

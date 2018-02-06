@@ -13,6 +13,10 @@
     <h2>Upcoming events</h2>
     {% for event in upcomingEvents %}
         {% include 'includes/event.html.twig' %}
+        {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+            {% set isAttendant = app.user in event.users %}
+            <p>{{ isAttendant ? 'I\'m in ' }}<a href="{{ url('event.subscribe', {id: event.id}) }}">{{ isAttendant ? 'Unsubscribe' : 'Subscribe' }}</a></p>
+        {% endif %}
     {% else %}
         <p>No upcoming event</p>
     {% endfor %}

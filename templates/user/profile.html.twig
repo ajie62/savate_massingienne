@@ -17,7 +17,7 @@
         <li>Member since: {{ user.memberSince|date('d/m/Y - H:i') }}</li>
     </ul>
 
-    <h2 class="text-center">Licences</h2>
+    <h2>Licences</h2>
     {% set licenses = user.licenses %}
     {% if self %}
         {% if licenses|length == 0 %}
@@ -35,6 +35,30 @@
             <p class="text-center">{{ user.firstname }} doesn't have licenses yet.</p>
         {% else %}
             <p class="text-center">{{ user.firstname }} owns {{ userLicenseNumber > 1 ? userLicenseNumber ~ " licenses" : userLicenseNumber ~ " license" }}.</p>
+        {% endif %}
+    {% endif %}
+
+    {% if self %}
+        <h2>My events</h2>
+    {% else %}
+        <h2>Events</h2>
+    {% endif %}
+
+    {% if upcomingEvents %}
+        {% for event in upcomingEvents %}
+            <h4>{{ event.name }} <small>- {{ event.startingDate|date('d/m/Y') }}</small></h4>
+            <p>Users attending: </p>
+            <ul>
+                {% for user in event.users %}
+                    <li><a href="{{ path('user.profile', {'username': user.username}) }}">{{ user.firstname }}</a></li>
+                {% endfor %}
+            </ul>
+        {% endfor %}
+    {% else %}
+        {% if self %}
+            <p>Vous ne participez à aucun évènement. <a href="{{ path('event.index') }}">Voir les évènements</a></p>
+        {% else %}
+            <p>Ne participe à aucun évènement.</p>
         {% endif %}
     {% endif %}
 {% endblock %}
