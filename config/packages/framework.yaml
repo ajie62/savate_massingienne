@@ -1,5 +1,4 @@
 parameters:
-    #
     licenses_dir: '%kernel.project_dir%/public/licenses'
 
 framework:

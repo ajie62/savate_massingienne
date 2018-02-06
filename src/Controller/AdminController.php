@@ -180,7 +180,7 @@ class AdminController extends AbstractController
             # Give it a unique name, ending with the .pdf format
             $license->setName(sha1(uniqid()).'.pdf');
             # Move it to the license directory with the new name
-            $licenseFile->move($this->licenseDir, $license->getName());
+            $licenseFile->move($this->licensesDir, $license->getName());
             # Add the license to the user
             $user->addLicense($license);
             # Persist
@@ -194,6 +194,51 @@ class AdminController extends AbstractController
 
         return $this->render('admin/members/uploadLicense.html.twig', [
             'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * Delete a member's license
+     * @Route("/members/delete-license/{id}", name="admin.member.delete_license")
+     * @ParamConverter(name="license", class="App\Entity\License", options={"id" = "id"})
+     *
+     * Members with ROLE_SUPER_ADMIN can delete a license.
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     *
+     * @param License $license
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     */
+    public function deleteLicense(License $license, Request $request)
+    {
+        # Confirmation form creation
+        $confirmationForm = $this->createFormBuilder();
+        # Get the form
+        $form = $confirmationForm->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            # Get the license filename
+            $filename = $this->licensesDir.DIRECTORY_SEPARATOR.$license->getName();
+            # Remove it
+            $this->em->remove($license);
+            # Flush
+            $this->em->flush();
+
+            # If the file exists
+            if (file_exists($filename)) {
+                # Delete it
+                unlink($filename);
+            }
+
+            # Redirection to admin.members
+            return $this->redirectToRoute('admin.members');
+        }
+
+        return $this->render('admin/members/deleteLicense.html.twig', [
+            'form' => $form->createView(),
+            'license' => $license
         ]);
     }
 

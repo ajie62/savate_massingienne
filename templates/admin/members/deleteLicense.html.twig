@@ -1,0 +1,20 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block admin_body %}
+
+    <h1>admin.delete_license</h1>
+
+    <p>
+        You're about to delete the
+        {{ license.year }}/{{ license.year + 1 }}
+        license that belongs to {{ license.user.firstname|capitalize }}.
+        Do you confirm?
+    </p>
+
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <button type="submit">Confirm</button>
+    {{ form_end(form) }}
+
+{% endblock %}
+

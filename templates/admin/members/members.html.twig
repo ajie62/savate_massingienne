@@ -15,38 +15,65 @@
             <th>Last License</th>
             <th>Role</th>
             <th>Last Update</th>
+            <th>Licenses</th>
             <th>Action</th>
         </tr>
         </thead>
 
         <tbody>
         {% for member in membersList %}
-            <tr>
+            <tr class="top">
                 <td>{{ member.id }}</td>
-                <td>{{ member.username }}</td>
-                <td>{{ member.firstname }}</td>
-                <td>{{ member.lastname }}</td>
+                <td>{{ member.username|capitalize }}</td>
+                <td>{{ member.firstname|capitalize }}</td>
+                <td>{{ member.lastname|capitalize }}</td>
                 <td>{{ member.licenseNumber ? member.licenseNumber : 'n/a' }}</td>
                 <td>
                     {% set lastLicense = licensesManager.getLastUserLicense(member) %}
+
                     {% if lastLicense is not null %}
-                        <a href="#">{{ lastLicense.year }}</a>
+                        <a href="{{ asset('licenses/' ~ lastLicense.name) }}" target="_blank">{{ lastLicense.year }}</a>
+                        {% if is_granted('ROLE_SUPER_ADMIN') %}
+                            - <a href="{{ path('admin.member.delete_license', {id: lastLicense.id}) }}">Delete</a>
+                        {% endif %}
                     {% else %}
-                        -
+                        No license
+                        {% if is_granted('ROLE_SUPER_ADMIN') %}
+                            - <a href="{{ path('admin.member.upload_license', {id: member.id}) }}">Upload</a>
+                        {% endif %}
                     {% endif %}
                 </td>
                 <td>{% if member.roles[0] == 'ROLE_SUPER_ADMIN' %}Admin{% elseif member.roles[0] == 'ROLE_MODERATEUR' %}Modérateur{% else %}Utilisateur{% endif %}</td>
                 <td>{{ member.updatedAt ? member.updatedAt|date('d/m/Y - H:i') }}</td>
+                <td class="toggle-license">{{ member.licenses|length }}</td>
                 <td>
+                    {# A moderateur can't edit a super admin #}
                     {% if not (app.user.roles[0] == "ROLE_MODERATEUR" and member.roles[0] == "ROLE_SUPER_ADMIN") %}
                         <a href="{{ path('admin.update_member', {id: member.id}) }}">edit</a>
                     {% endif %}
 
+                    {# If the current user is a super admin #}
                     {% if is_granted('ROLE_SUPER_ADMIN') %}
+                        {# And the member role isn't super admin#}
                         {% if member.roles[0] != 'ROLE_SUPER_ADMIN' %}
                             - <a href="{{ path('admin.delete_member', {id: member.id}) }}">delete</a>
                         {% endif %}
                     {% endif %}
+                </td>
+            </tr>
+            <tr class="bottom hidden">
+                <td colspan="7">
+                    <table>
+                        {% for license in member.licenses %}
+                            <tr>
+                                <td>Licence {{ license.year }}</td>
+                                <td><a href="{{ asset('licenses/' ~ license.name) }}"
+                                       target="_blank">See</a></td>
+                                <td><a href="{{ path("admin.member.delete_license", {"id": license.id}) }}">Delete</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
                 </td>
             </tr>
         {% endfor %}
@@ -55,4 +82,9 @@
     {% else %}
         Pas de membre
     {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/admin/content.js') }}"></script>
 {% endblock %}

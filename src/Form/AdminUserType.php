@@ -34,7 +34,7 @@ class AdminUserType extends AbstractType
         if ($securityChecker->isGranted('ROLE_SUPER_ADMIN') || $targetUser == $activeUser) {
             # Add two new fields: licenseNumber & email
             $builder
-                ->add('licenseNumber', TextType::class)
+                ->add('licenseNumber', TextType::class, ['required' => false])
                 ->add('email', EmailType::class)
             ;
         }
