@@ -8,6 +8,7 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -62,6 +63,12 @@ class User implements UserInterface
     private $password;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\License", mappedBy="user", cascade={"persist"})
+     * @ORM\JoinColumn(name="license_id", referencedColumnName="id", nullable=true)
+     */
+    private $licenses;
+
+    /**
      * @ORM\Column(type="string", nullable=true)
      */
     private $licenseNumber;
@@ -76,10 +83,14 @@ class User implements UserInterface
      */
     private $updatedAt;
 
+    /**
+     * User constructor.
+     */
     public function __construct()
     {
         $this->roles = ['ROLE_USER'];
         $this->memberSince = new \DateTime();
+        $this->licenses = new ArrayCollection();
     }
 
     /**
@@ -207,6 +218,35 @@ class User implements UserInterface
     /**
      * @return mixed
      */
+    public function getLicenses()
+    {
+        return $this->licenses;
+    }
+
+    /**
+     * @param mixed $licenses
+     * @return User
+     */
+    public function setLicenses($licenses)
+    {
+        $this->licenses = $licenses;
+        return $this;
+    }
+
+    /**
+     * @param License $license
+     * @return User
+     */
+    public function addLicense(License $license): self
+    {
+        $license->setUser($this);
+        $this->getLicenses()->add($license);
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getLicenseNumber()
     {
         return $this->licenseNumber;
@@ -265,7 +305,6 @@ class User implements UserInterface
     {
         return null;
     }
-
 
     public function eraseCredentials()
     {
