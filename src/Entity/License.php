@@ -28,6 +28,11 @@ class License
     private $id;
 
     /**
+     * @ORM\Column(type="string")
+     */
+    private $name;
+
+    /**
      * @ORM\Column(type="string", length=4, nullable=false)
      */
     private $year;
@@ -52,7 +57,8 @@ class License
      */
     public function __construct()
     {
-        $this->uploadedAt = new \DateTime();
+        $this->setYear(date('Y'));
+        $this->uploadedAt = new \DateTime('', new \DateTimeZone('Europe/Paris'));
     }
 
     /**
@@ -69,6 +75,24 @@ class License
     public function setId($id): void
     {
         $this->id = $id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param mixed $name
+     * @return License
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+        return $this;
     }
 
     /**

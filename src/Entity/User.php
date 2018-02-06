@@ -19,7 +19,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @UniqueEntity(fields={"username"}, message="Ce nom d'utilisateur existe déjà.")
  * @UniqueEntity(fields={"email"}, message="Cette adresse mail est déjà utilisée.")
  */
-class User implements UserInterface
+class User implements UserInterface, \Serializable
 {
     const USER = "ROLE_USER";
     const MODERATEUR = "ROLE_MODERATEUR";
@@ -308,5 +308,39 @@ class User implements UserInterface
 
     public function eraseCredentials()
     {
+    }
+
+    /**
+     * String representation of object
+     * @link http://php.net/manual/en/serializable.serialize.php
+     * @return string the string representation of the object or null
+     * @since 5.1.0
+     */
+    public function serialize()
+    {
+        return serialize([
+            $this->id,
+            $this->username,
+            $this->password
+        ]);
+    }
+
+    /**
+     * Constructs the object
+     * @link http://php.net/manual/en/serializable.unserialize.php
+     * @param string $serialized <p>
+     * The string representation of the object.
+     * </p>
+     * @return void
+     * @since 5.1.0
+     */
+    public function unserialize($serialized)
+    {
+       list(
+           $this->id,
+           $this->username,
+           $this->password
+           ) = unserialize($serialized)
+       ;
     }
 }

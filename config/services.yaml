@@ -30,3 +30,9 @@ services:
         arguments:
             $entityManager: '@doctrine.orm.entity_manager'
             $tokenStorage: '@security.token_storage'
+
+    # Argument $license_dir
+    App\Controller\AdminController:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+            $licenses_dir: '%licenses_dir%'
