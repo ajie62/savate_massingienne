@@ -3,15 +3,17 @@
 {% block body %}
     <h1>event.index</h1>
 
-    {% for event in events %}
-        <p>
-            {{ event.name }} - {{ event.description }}
-            {% if app.user %}
-                <a href="{{ path('admin.event_update', {id: event.id}) }}">Edit</a> -
-                <a href="{{ path('admin.event_delete', {id: event.id, redirect: 'event.index'}) }}">Delete</a>
-            {% endif %}
-        </p>
+    <h2>In progress</h2>
+    {% for event in eventsInProgress %}
+        {% include 'includes/event.html.twig' %}
     {% else %}
-        <p>Pas d'évènement</p>
+        <p>No event in progress</p>
+    {% endfor %}
+
+    <h2>Upcoming events</h2>
+    {% for event in upcomingEvents %}
+        {% include 'includes/event.html.twig' %}
+    {% else %}
+        <p>No upcoming event</p>
     {% endfor %}
 {% endblock %}

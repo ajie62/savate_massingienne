@@ -35,10 +35,45 @@ class EventController extends AbstractController
      */
     public function index(): Response
     {
-        $events = $this->em->getRepository(Event::class)->findAll();
+        # Event Repository
+        $eventRepo = $this->em->getRepository(Event::class);
+        # Fetching upcoming events
+        $upcomingEvents = $eventRepo->getUpcomingEvents();
+        # Fetching events in progress
+        $eventsInProgress = $eventRepo->getEventsInProgress();
 
         return $this->render('event/index.html.twig', [
-            'events' => $events
+            'upcomingEvents' => $upcomingEvents,
+            'eventsInProgress' => $eventsInProgress
         ]);
+    }
+
+    /**
+     * @Route("/event/{id}/subscribe", name="event.subscribe")
+     *
+     * @param Event $event
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function subscribe(Event $event)
+    {
+        # Get the current user
+        $user = $this->getUser();
+
+        # If the user has already subscribed
+        if ($event->getUsers()->contains($user)) {
+            # Unsubscribe
+            $event->removeUser($user);
+        } else {
+            # Subscribe
+            $event->addUser($user);
+        }
+
+        # Persist
+        $this->em->persist($event);
+        # Flush
+        $this->em->flush();
+
+        # Redirection to event.index
+        return $this->redirectToRoute('event.index');
     }
 }

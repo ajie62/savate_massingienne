@@ -8,22 +8,58 @@
 
 namespace App\Repository;
 
+use App\Entity\User;
 use Doctrine\ORM\EntityRepository;
 
 class EventRepository extends EntityRepository
 {
-    public function getBaseQuery($alias)
+    /**
+     * Returns an array of upcoming events.
+     *
+     * @param User|null $user
+     * @return array
+     */
+    public function getUpcomingEvents(User $user = null)
     {
-        return $this->createQueryBuilder($alias);
-    }
+        $q = $this->createQueryBuilder('evt')
+            ->orderBy('evt.startingDate', 'ASC')
+            ->andWhere('evt.startingDate >= CURRENT_TIME()')
+            ->andWhere('evt.endingDate > evt.startingDate')
+        ;
 
-    public function getUpcomingEvents($q = null, $alias = 'evt')
-    {
-        if($q === null) {
-            $q = $this->getBaseQuery($alias);
+        # If the $user argument is given
+        if(!is_null($user)) {
+            # Find the upcoming events he subscribed to
+            $q->andWhere(':user MEMBER OF evt.users')->setParameter('user', $user->getId());
         }
 
-        $q->where('evt.startingDate > CURRENT_DATE()');
-        return $q;
+        return $q->getQuery()->getResult();
+    }
+
+    /**
+     * Returns an array of events which have already taken place.
+     *
+     * @return array
+     */
+    public function getPastEvents()
+    {
+        return $this->createQueryBuilder('evt')
+            ->orderBy('evt.endingDate', 'DESC')
+            ->andWhere('evt.endingDate < CURRENT_DATE()')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEventsInProgress()
+    {
+        return $this->createQueryBuilder('evt')
+            ->orderBy('evt.endingDate', 'ASC')
+            ->andWhere('evt.startingDate <= CURRENT_DATE()')
+            ->andWhere('evt.endingDate >= CURRENT_DATE()')
+            ->getQuery()
+            ->getResult();
     }
 }

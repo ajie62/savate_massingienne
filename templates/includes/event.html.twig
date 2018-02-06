@@ -1,11 +1,10 @@
-<ul>
-    <li>ID: {{ event.id }}</li>
-    <li>Name: {{ event.name }}</li>
-    <li>Starting date: {{ event.startingDate|date('d/m/Y - H:i') }}</li>
-    <li>Ending date: {{ event.endingDate|date('d/m/Y - H:i') }}</li>
-    <li>Description: {{ event.description }}</li>
-    <li>
-        <a href="{{ url('admin.event_update', {id: event.id}) }}">Edit</a>  -
-        <a href="{{ path('admin.event_delete', {id: event.id, redirect: 'admin.event'}) }}">Delete</a>
-    </li>
-</ul>
+<p>
+    {{ event.name }} - {{ event.description }}
+    {% if is_granted('ROLE_ADMIN') %}<a href="{{ path('admin.event_update', {id: event.id}) }}">Edit</a>{% endif %}
+    {% if is_granted('ROLE_SUPER_ADMIN') %}<a href="{{ path('admin.event_delete', {id: event.id, redirect: 'event.index'}) }}">Delete</a>{% endif %}
+
+    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+    {% set isAttendant = app.user in event.users %}
+<p>{{ isAttendant ? 'I\'m in' }}<a href="{{ url('event.subscribe', {id: event.id}) }}">{{ isAttendant ? 'Unsubscribe' : 'Subscribe' }}</a></p>
+{% endif %}
+</p>

@@ -334,34 +334,12 @@ class AdminController extends AbstractController
     {
         # Getting the EventRepository
         $eventRepository = $this->em->getRepository(Event::class);
-
         # Fetching upcoming events
-        $upcomingEvents = $eventRepository
-            ->getBaseQuery('evt')
-            ->orderBy('evt.startingDate', 'ASC')
-            ->andWhere('evt.startingDate > CURRENT_DATE()')
-            ->getQuery()
-            ->getResult()
-        ;
-
+        $upcomingEvents = $eventRepository->getUpcomingEvents();
         # Fetching past events
-        $pastEvents = $eventRepository
-            ->getBaseQuery('evt')
-            ->orderBy('evt.startingDate', 'ASC')
-            ->andWhere('evt.startingDate < CURRENT_DATE()')
-            ->getQuery()
-            ->getResult()
-        ;
-
+        $pastEvents = $eventRepository->getPastEvents();
         # Fetching events in progress
-        $eventsInProgress = $eventRepository
-            ->getBaseQuery('evt')
-            ->andWhere('evt.startingDate <= CURRENT_DATE()')
-            ->andWhere('evt.endingDate >= CURRENT_DATE()')
-            ->orderBy('evt.endingDate', 'ASC')
-            ->getQuery()
-            ->getResult()
-        ;
+        $eventsInProgress = $eventRepository->getEventsInProgress();
 
         return $this->render('admin/event/events.html.twig', [
             'upcomingEvents' => $upcomingEvents,
