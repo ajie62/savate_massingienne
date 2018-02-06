@@ -8,6 +8,7 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -43,10 +44,14 @@ class Event
      */
     private $description;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="events", cascade={"persist"})
+     */
+    private $users;
+
     public function __construct()
     {
-        $this->startingDate = new \DateTime();
-        $this->endingDate = new \DateTime();
+        $this->users = new ArrayCollection();
     }
 
     /**
@@ -137,5 +142,41 @@ class Event
     {
         $this->description = $description;
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsers()
+    {
+        return $this->users;
+    }
+
+    /**
+     * Add user
+     *
+     * @param User $user
+     */
+    public function addUser(User $user)
+    {
+        if ($this->users->contains($user)) {
+            return;
+        }
+
+        $this->users->add($user);
+    }
+
+    /**
+     * Remove user
+     *
+     * @param User $user
+     */
+    public function removeUser(User $user)
+    {
+        if (!$this->users->contains($user)) {
+            return;
+        }
+
+        $this->users->removeElement($user);
     }
 }

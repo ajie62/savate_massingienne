@@ -84,6 +84,11 @@ class User implements UserInterface, \Serializable
     private $updatedAt;
 
     /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Event", mappedBy="users")
+     */
+    private $events;
+
+    /**
      * User constructor.
      */
     public function __construct()
@@ -91,6 +96,7 @@ class User implements UserInterface, \Serializable
         $this->roles = ['ROLE_USER'];
         $this->memberSince = new \DateTime();
         $this->licenses = new ArrayCollection();
+        $this->events = new ArrayCollection();
     }
 
     /**
@@ -295,6 +301,24 @@ class User implements UserInterface, \Serializable
     public function setUpdatedAt($updatedAt)
     {
         $this->updatedAt = $updatedAt;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEvents()
+    {
+        return $this->events;
+    }
+
+    /**
+     * @param mixed $events
+     * @return User
+     */
+    public function setEvents($events)
+    {
+        $this->events = $events;
         return $this;
     }
 
