@@ -93,7 +93,7 @@ class Event
     /**
      * @return \DateTime
      */
-    public function getStartingDate(): \DateTime
+    public function getStartingDate()
     {
         return $this->startingDate;
     }
@@ -111,7 +111,7 @@ class Event
     /**
      * @return \DateTime
      */
-    public function getEndingDate(): \DateTime
+    public function getEndingDate()
     {
         return $this->endingDate;
     }
