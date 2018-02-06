@@ -8,6 +8,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Event;
 use App\Form\UserType;
 use App\Service\UserService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -61,9 +62,13 @@ class UserController extends AbstractController
         # The UserService determines if $self is set to true or false
         $user = $userService->getUserByUsername($username, $self);
 
+        # Fetching user's upcoming events
+        $upcomingEvents = $this->getDoctrine()->getRepository(Event::class)->getUpcomingEvents($user);
+
         return $this->render('user/profile.html.twig', [
             'user' => $user,
-            'self' => $self
+            'self' => $self,
+            'upcomingEvents' => $upcomingEvents
         ]);
     }
 
