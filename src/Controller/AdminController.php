@@ -10,16 +10,20 @@ namespace App\Controller;
 
 use App\Entity\Association;
 use App\Entity\Event;
+use App\Entity\License;
 use App\Entity\News;
 use App\Entity\User;
 use App\Form\AdminUserType;
 use App\Form\AssociationType;
 use App\Form\EventType;
+use App\Form\LicenseType;
 use App\Form\NewsType;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -40,12 +44,20 @@ class AdminController extends AbstractController
     private $em;
 
     /**
+     * The directory containing uploaded licenses.
+     * @var string
+     */
+    private $licensesDir;
+
+    /**
      * AdminController constructor.
      * @param EntityManagerInterface $entityManager
+     * @param $licenses_dir
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct($entityManager, $licenses_dir)
     {
         $this->em = $entityManager;
+        $this->licensesDir = $licenses_dir;
     }
 
     /**
@@ -71,10 +83,15 @@ class AdminController extends AbstractController
      */
     public function members()
     {
+        # Fetch the members list from the database
         $membersList = $this->em->getRepository(User::class)->findAll();
 
+        # Get the license repository
+        $licensesManager = $this->em->getRepository(License::class);
+
         return $this->render('admin/members/members.html.twig', [
-            'membersList' => $membersList
+            'membersList' => $membersList,
+            'licensesManager' => $licensesManager
         ]);
     }
 
@@ -124,11 +141,58 @@ class AdminController extends AbstractController
             $user->setUpdatedAt(new \DateTime());
             # Flush
             $this->em->flush();
+
             # Redirection to admin.index
             return $this->redirectToRoute('admin.index');
         }
 
         return $this->render('admin/members/update.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * Upload a license for a member
+     * @Route("/member/{id}/new-license", name="admin.member.upload_license")
+     *
+     * Members with ROLE_SUPER_ADMIN can upload a license for a member.
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     *
+     * @param Request $request
+     * @param User $user
+     * @return Response
+     */
+    public function uploadLicense(Request $request, User $user)
+    {
+        # Create a new license
+        $license = new License();
+        # Gives the license a user_id
+        $license->setUser($user);
+        # Form creation based on LicenseType
+        $form = $this->createForm(LicenseType::class, $license);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var UploadedFile $licenseFile */
+            # Get the license file
+            $licenseFile = $license->getLicenseFile();
+            # Give it a unique name, ending with the .pdf format
+            $license->setName(sha1(uniqid()).'.pdf');
+            # Move it to the license directory with the new name
+            $licenseFile->move($this->licenseDir, $license->getName());
+            # Add the license to the user
+            $user->addLicense($license);
+            # Persist
+            $this->em->persist($user);
+            # Flush
+            $this->em->flush();
+
+            # Redirection to admin.members
+            return $this->redirectToRoute('admin.members');
+        }
+
+        return $this->render('admin/members/uploadLicense.html.twig', [
             'form' => $form->createView()
         ]);
     }

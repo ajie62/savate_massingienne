@@ -12,6 +12,7 @@
             <th>First name</th>
             <th>Last name</th>
             <th>License number</th>
+            <th>Last License</th>
             <th>Role</th>
             <th>Last Update</th>
             <th>Action</th>
@@ -26,6 +27,14 @@
                 <td>{{ member.firstname }}</td>
                 <td>{{ member.lastname }}</td>
                 <td>{{ member.licenseNumber ? member.licenseNumber : 'n/a' }}</td>
+                <td>
+                    {% set lastLicense = licensesManager.getLastUserLicense(member) %}
+                    {% if lastLicense is not null %}
+                        <a href="#">{{ lastLicense.year }}</a>
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
                 <td>{% if member.roles[0] == 'ROLE_SUPER_ADMIN' %}Admin{% elseif member.roles[0] == 'ROLE_MODERATEUR' %}Modérateur{% else %}Utilisateur{% endif %}</td>
                 <td>{{ member.updatedAt ? member.updatedAt|date('d/m/Y - H:i') }}</td>
                 <td>
