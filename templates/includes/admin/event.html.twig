@@ -1,13 +1,25 @@
 <ul>
-    <li>ID: {{ event.id }}</li>
-    <li>Name: {{ event.name }}</li>
-    <li>Starting date: {{ event.startingDate|date('d/m/Y - H:i') }}</li>
-    <li>Ending date: {{ event.endingDate|date('d/m/Y - H:i') }}</li>
-    <li>Description: {{ event.description }}</li>
+    <li>ID : {{ event.id }}</li>
+    <li>Créé le : {{ event.createdAt|date('d/m/Y à H:i') }}</li>
+    {{ event.updatedAt ? ('<li> Mis à jour le : '~ event.updatedAt|date('d/m/Y à H:i') ~'</li>')|raw }}
+    <li>Nom : {{ event.name }}</li>
+    <li>Date de début : {{ event.startingDate|date('d/m/Y à H:i') }}</li>
+    <li>Date de fin : {{ event.endingDate|date('d/m/Y à H:i') }}</li>
+    <li>Description : {{ event.description }}</li>
+    {% if event.users %}
+        <li>
+            Participants :
+            {% for user in event.users %}
+                {{ user.firstname }}
+            {% else %}
+                Aucun
+            {% endfor %}
+        </li>
+    {% endif %}
     <li>
-        <a href="{{ url('admin.event_update', {id: event.id}) }}">Edit</a>
+        <a href="{{ url('admin.event_update', {id: event.id}) }}">Éditer</a>
         {% if is_granted('ROLE_SUPER_ADMIN') %}
-            <a href="{{ path('admin.event_delete', {id: event.id, redirect: 'admin.event'}) }}">Delete</a>
+            <a href="{{ path('admin.event_delete', {id: event.id, redirect: 'admin.event'}) }}">Supprimer</a>
         {% endif %}
     </li>
 </ul>

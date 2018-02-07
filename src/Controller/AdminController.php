@@ -413,7 +413,8 @@ class AdminController extends AbstractController
         }
 
         return $this->render('admin/event/delete.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'event' => $event
         ]);
     }
 
@@ -435,6 +436,11 @@ class AdminController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            # When the event is updated, set its updatedAt attribute
+            if (!$isNewEvent) {
+                $event->setUpdatedAt(new \DateTime());
+            }
+
             # Persist
             $this->em->persist($event);
             # Flush
@@ -447,6 +453,7 @@ class AdminController extends AbstractController
         return $this->render('admin/event/set.html.twig', [
             'form' => $form->createView(),
             'isNewEvent' => $isNewEvent,
+            'event' => $event
         ]);
     }
 

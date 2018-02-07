@@ -10,6 +10,8 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use App\Validator\Constraints as MyAssert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\EventRepository")
@@ -26,21 +28,42 @@ class Event
 
     /**
      * @ORM\Column(type="string")
+     * @Assert\NotBlank()
+     * @Assert\Length(
+     *     min="5",
+     *     minMessage="Le champ doit comporter plus de 5 caractères.",
+     *     max="255",
+     *     maxMessage="Le champ doit comporter moins de 255 caractères."
+     * )
      */
     private $name;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\NotNull(message="Merci de renseigner une date valide.")
+     * @Assert\Range(
+     *     min="+2 days",
+     *     minMessage="Votre évènement doit commencer dans 2 jours ou plus."
+     * )
      */
     private $startingDate;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\NotNull(message="Merci de renseigner une date valide.")
+     * @MyAssert\IsGreaterThanStarting
      */
     private $endingDate;
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\NotBlank()
+     * @Assert\Length(
+     *     min="50",
+     *     minMessage="La description doit contenir 50 caractères minimum.",
+     *     max="2000",
+     *     maxMessage="La description doit contenir 2000 caractères maximum."
+     * )
      */
     private $description;
 
@@ -49,9 +72,22 @@ class Event
      */
     private $users;
 
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $createdAt;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $updatedAt;
+
     public function __construct()
     {
+        $this->startingDate = new \DateTime();
+        $this->endingDate = new \DateTime();
         $this->users = new ArrayCollection();
+        $this->createdAt = new \DateTime();
     }
 
     /**
@@ -178,5 +214,41 @@ class Event
         }
 
         $this->users->removeElement($user);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @param mixed $createdAt
+     * @return Event
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * @param mixed $updatedAt
+     * @return Event
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+        return $this;
     }
 }

@@ -1,30 +1,30 @@
 {% extends 'admin/base.html.twig' %}
 
 {% block admin_body %}
-    <h1>admin.event</h1>
+    <h1>Évènements</h1>
 
-    {# include located in templates/includes #}
-    <h2>Events in progress</h2>
+    {# include located in templates/includes/admin #}
+    <h2>En cours</h2>
     {% for event in eventsInProgress %}
         {{ include('includes/admin/event.html.twig') }}
     {% else %}
-        <p>No event in progress</p>
+        <p>Aucun évènement en cours.</p>
     {% endfor %}
 
-    <h2>Upcoming events</h2>
+    <h2>À venir</h2>
     {% for event in upcomingEvents %}
         {{ include('includes/admin/event.html.twig') }}
     {% else %}
-        <p>No upcoming event</p>
+        <p>Aucun évènement à venir.</p>
     {% endfor %}
 
-    <h2>Past events</h2>
+    <h2>Terminés</h2>
     {% for event in pastEvents %}
         {{ include('includes/admin/event.html.twig') }}
     {% else %}
-        <p>No past event</p>
+        <p>Aucun évènement terminé.</p>
     {% endfor %}
 
-    <a href="{{ path('admin.index') }}">Back</a>
-    <a href="{{ path('admin.event_create') }}">New event</a>
+    <a href="{{ path('admin.index') }}">Retour</a>
+    <a href="{{ path('admin.event_create') }}">Nouvel évènement</a>
 {% endblock %}
