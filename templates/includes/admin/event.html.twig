@@ -1,5 +1,7 @@
 <ul>
     <li>ID : {{ event.id }}</li>
+    <li>Créé le : {{ event.createdAt|date('d/m/Y à H:i') }}</li>
+    {{ event.updatedAt ? ('<li> Mis à jour le : '~ event.updatedAt|date('d/m/Y à H:i') ~'</li>')|raw }}
     <li>Nom : {{ event.name }}</li>
     <li>Date de début : {{ event.startingDate|date('d/m/Y à H:i') }}</li>
     <li>Date de fin : {{ event.endingDate|date('d/m/Y à H:i') }}</li>

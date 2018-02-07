@@ -436,6 +436,11 @@ class AdminController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            # When the event is updated, set its updatedAt attribute
+            if (!$isNewEvent) {
+                $event->setUpdatedAt(new \DateTime());
+            }
+
             # Persist
             $this->em->persist($event);
             # Flush
