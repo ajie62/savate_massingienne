@@ -55,6 +55,7 @@ class UserController extends AbstractController
      *
      * @param $username
      * @param UserService $userService
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function profile($username, UserService $userService, Request $request)
@@ -66,7 +67,6 @@ class UserController extends AbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
-
         $self = false;
 
         # Fetching the user from the database with username
@@ -75,39 +75,52 @@ class UserController extends AbstractController
 
         $formView = null;
 
+        # If current user
         if ($self) {
+            # Create the upload file form
             $form = $this->createFormBuilder($user, [
                 'validation_groups' => ['img_edition']
             ]);
-
+            # Add a FileType field to it
             $form->add('uploadedFile', FileType::class, [
                 'label' => false,
                 'required' => true,
             ]);
 
+            # Get the form and its view
             $form = $form->getForm();
             $formView = $form->createView();
 
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
+                # Get the file that was uploaded by the user
                 $uploadedFile = $user->getUploadedFile();
+                # If it's an instance of UploadedFile
                 if ($uploadedFile instanceof UploadedFile) {
+                    # And if there's already an image path defined for the user
                     if ($user->getImagePath()) {
+                        # And if the file exists in the images directory
                         if (file_exists($this->imagesDir.DIRECTORY_SEPARATOR.$user->getImagePath())) {
+                            # Delete it
                             @unlink($this->imagesDir.DIRECTORY_SEPARATOR.$user->getImagePath());
                         }
                     }
 
+                    # Create a unique name for the file
                     $name = sha1(uniqid(true)).'.'.$uploadedFile->guessExtension();
+                    # Move the file in the images directory with the new name
                     $uploadedFile->move($this->imagesDir, $name);
+                    # Set the image path with the new name
                     $user->setImagePath($name);
+                    # And set the uploadedFile attr to null
                     $user->setUploadedFile(null);
 
                     # Flush
                     $em->flush();
                 }
 
+                # Redirection to user.profile
                 return $this->redirectToRoute('user.profile');
             }
         }

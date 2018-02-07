@@ -12,12 +12,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="user")
  * @UniqueEntity(fields={"username"}, message="Ce nom d'utilisateur existe déjà.")
  * @UniqueEntity(fields={"email"}, message="Cette adresse mail est déjà utilisée.")
+ * @UniqueEntity(fields={"licenseNumber"}, message="Ce numéro de licence est déjà utilisé.")
  */
 class User implements UserInterface, \Serializable
 {
@@ -34,21 +36,44 @@ class User implements UserInterface, \Serializable
 
     /**
      * @ORM\Column(type="string", unique=true)
+     * @Assert\NotBlank()
+     * @Assert\Length(
+     *     min="2",
+     *     minMessage="Ce champ doit être composé de {{ limit }} caractères minimum.",
+     *     max="20",
+     *     maxMessage="Ce champ doit être composé de {{ limit }} caractères maximum.",
+     * )
      */
     private $username;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", type="string", length=255)
+     * @Assert\NotBlank()
+     * @Assert\Length(
+     *     min="2",
+     *     minMessage="Ce champ doit être composé de {{ limit }} caractères minimum.",
+     *     max="20",
+     *     maxMessage="Ce champ doit être composé de {{ limit }} caractères maximum.",
+     * )
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string")
+     * @Assert\NotBlank()
+     * @Assert\Length(
+     *     min="2",
+     *     minMessage="Ce champ doit être composé de {{ limit }} caractères minimum.",
+     *     max="20",
+     *     maxMessage="Ce champ doit être composé de {{ limit }} caractères maximum.",
+     * )
      */
     private $lastname;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", length=60, unique=true)
+     * @Assert\NotBlank()
+     * @Assert\Email()
      */
     private $email;
 
@@ -58,7 +83,7 @@ class User implements UserInterface, \Serializable
     private $roles;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", type="string", length=64)
      */
     private $password;
 
@@ -70,6 +95,13 @@ class User implements UserInterface, \Serializable
 
     /**
      * @ORM\Column(type="string", nullable=true)
+     * @Assert\Length(
+     *     min="5",
+     *     minMessage="Le numéro de licence est composé de {{ limit }} chiffres minimum.",
+     *     max="10",
+     *     maxMessage="Le numéro de licence est composé de {{ limit }} chiffres maximum."
+     * )
+     * @Assert\Regex(pattern="/^\d+$/", match=true, message="Le numéro de licence ne doit contenir que des chiffres.")
      */
     private $licenseNumber;
 
@@ -88,6 +120,13 @@ class User implements UserInterface, \Serializable
      */
     private $events;
 
+    /**
+     * @Assert\Image(
+     *     groups={"img_edition"},
+     *     mimeTypes={"image/jpg", "image/jpeg", "image/gif", "image/png"},
+     *     mimeTypesMessage="L'image doit être au format jpg, jpeg, png ou gif."
+     * )
+     */
     private $uploadedFile;
 
     /**
