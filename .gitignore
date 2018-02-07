@@ -16,3 +16,4 @@
 ###< symfony/phpunit-bridge ###
 /public/licenses
 /public/images
+/public/media
