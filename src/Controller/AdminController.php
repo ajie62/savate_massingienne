@@ -413,7 +413,8 @@ class AdminController extends AbstractController
         }
 
         return $this->render('admin/event/delete.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'event' => $event
         ]);
     }
 
@@ -447,6 +448,7 @@ class AdminController extends AbstractController
         return $this->render('admin/event/set.html.twig', [
             'form' => $form->createView(),
             'isNewEvent' => $isNewEvent,
+            'event' => $event
         ]);
     }
 

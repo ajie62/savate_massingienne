@@ -1,23 +1,23 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>event.index</h1>
+    <h1>Évènements</h1>
 
-    <h2>In progress</h2>
+    <h2>En cours</h2>
     {% for event in eventsInProgress %}
         {% include 'includes/event.html.twig' %}
     {% else %}
-        <p>No event in progress</p>
+        <p>Aucun évènement en cours.</p>
     {% endfor %}
 
-    <h2>Upcoming events</h2>
+    <h2>À venir</h2>
     {% for event in upcomingEvents %}
         {% include 'includes/event.html.twig' %}
         {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
             {% set isAttendant = app.user in event.users %}
-            <p>{{ isAttendant ? 'I\'m in ' }}<a href="{{ url('event.subscribe', {id: event.id}) }}">{{ isAttendant ? 'Unsubscribe' : 'Subscribe' }}</a></p>
+            <p><a href="{{ url('event.subscribe', {id: event.id}) }}">{{ isAttendant ? 'Ne participe plus' : 'Je participe' }}</a></p>
         {% endif %}
     {% else %}
-        <p>No upcoming event</p>
+        <p>Aucun évènement à venir.</p>
     {% endfor %}
 {% endblock %}
