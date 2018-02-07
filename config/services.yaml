@@ -36,3 +36,7 @@ services:
         arguments:
             $entityManager: '@doctrine.orm.entity_manager'
             $licenses_dir: '%licenses_dir%'
+
+    App\Controller\UserController:
+        arguments:
+            $images_dir: '%images_dir%'
