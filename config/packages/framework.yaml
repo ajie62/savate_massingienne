@@ -1,5 +1,6 @@
 parameters:
     licenses_dir: '%kernel.project_dir%/public/licenses'
+    images_dir: '%kernel.project_dir%/public/images'
 
 framework:
     secret: '%env(APP_SECRET)%'

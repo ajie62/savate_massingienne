@@ -88,12 +88,21 @@ class User implements UserInterface, \Serializable
      */
     private $events;
 
+    private $uploadedFile;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="image_path", type="string", nullable=true)
+     */
+    private $imagePath;
+
     /**
      * User constructor.
      */
     public function __construct()
     {
-        $this->roles = ['ROLE_USER'];
+        $this->roles = [self::USER];
         $this->memberSince = new \DateTime();
         $this->licenses = new ArrayCollection();
         $this->events = new ArrayCollection();
@@ -319,6 +328,42 @@ class User implements UserInterface, \Serializable
     public function setEvents($events)
     {
         $this->events = $events;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUploadedFile()
+    {
+        return $this->uploadedFile;
+    }
+
+    /**
+     * @param mixed $uploadedFile
+     * @return User
+     */
+    public function setUploadedFile($uploadedFile)
+    {
+        $this->uploadedFile = $uploadedFile;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getImagePath()
+    {
+        return $this->imagePath;
+    }
+
+    /**
+     * @param string $imagePath
+     * @return User
+     */
+    public function setImagePath($imagePath)
+    {
+        $this->imagePath = $imagePath;
         return $this;
     }
 
