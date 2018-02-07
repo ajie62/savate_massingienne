@@ -32,3 +32,22 @@ framework:
 
         # APCu (not recommended with heavy random-write workloads as memory fragmentation can cause perf issues)
         #app: cache.adapter.apcu
+
+liip_imagine:
+    resolvers:
+        default:
+            web_path: ~
+    filter_sets:
+        cache: ~
+        # name of the filter set
+        img_profile_thumbnail:
+            # adjust the image quality to 75%
+            quality: 75
+            # list of transformations to apply (the "filters")
+            filters:
+                # create a thumbnail: set size to 200x200 and use the "outbound" mode
+                # to crop the image when the size ratio of the input differs
+                thumbnail: { size: [200, 200], mode: outbound }
+                # create a 2px #333 border: center the thumbnail on a black background
+                # 4px larger to create a 2px border around the final image
+                # background: { size: [204, 204], position: center, color: '#333333' }
