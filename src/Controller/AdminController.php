@@ -559,7 +559,7 @@ class AdminController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function create(Request $request): Response
+    public function createNews(Request $request)
     {
         return $this->setNews($request, new News());
     }
@@ -574,7 +574,7 @@ class AdminController extends AbstractController
      * @param News $news
      * @return Response
      */
-    public function read(News $news): Response
+    public function readNews(News $news)
     {
         return $this->render('admin/news/read.html.twig', ['news' => $news]);
     }
@@ -590,7 +590,7 @@ class AdminController extends AbstractController
      * @param News $news
      * @return Response
      */
-    public function update(Request $request, News $news): Response
+    public function updateNews(Request $request, News $news)
     {
         return $this->setNews($request, $news);
     }
@@ -607,8 +607,10 @@ class AdminController extends AbstractController
      * @param News $news
      * @return Response
      */
-    public function delete(Request $request, News $news): Response
+    public function deleteNews(Request $request, News $news)
     {
+        $name = $news->getName();
+
         # Getting the delete form
         $form = $this->getDeleteForm();
 
@@ -625,7 +627,8 @@ class AdminController extends AbstractController
         }
 
         return $this->render('admin/news/delete.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'name' => $name
         ]);
     }
 

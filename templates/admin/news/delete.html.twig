@@ -1,12 +1,12 @@
 {% extends 'admin/base.html.twig' %}
 
 {% block admin_body %}
-    <h1>news.delete</h1>
-    <p>Do you really want to delete this news?</p>
+    <h1>Suppression de &laquo; {{ name }} &raquo;</h1>
+    <p>Voulez-vous vraiment supprimer cette actualité ?</p>
 
     {{ form_start(form) }}
     {{ form_widget(form) }}
-    <a href="{{ url('admin.news') }}">Back</a>
-    <button type="submit">Delete</button>
+    <a href="{{ url('admin.news') }}">Retour</a>
+    <button type="submit">Supprimer</button>
     {{ form_end(form) }}
 {% endblock %}
