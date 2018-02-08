@@ -8,7 +8,10 @@
     <p>{{ association.textInfo|default("Aucune info n'a été renseignée.") }}</p>
 
     {% for teamMember in association.teamMembers %}
-        <p><strong>Membre d'équipe {{ loop.index }} : </strong>{{ teamMember.firstname }} - {{ teamMember.job }}</p>
+        {% if teamMember.imagePath %}
+            <img src="{{ asset('images/' ~ teamMember.imagePath) }}" alt="Photo de {{ teamMember.firstname }}">
+        {% endif %}
+        <p>{{ teamMember.firstname }} - {{ teamMember.job }}</p>
     {% else %}
         <p>Aucun membre à afficher</p>
     {% endfor %}

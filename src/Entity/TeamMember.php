@@ -3,10 +3,12 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="team_member")
+ * @ORM\Entity(repositoryClass="App\Repository\TeamMemberRepository")
  */
 class TeamMember
 {
@@ -23,14 +25,31 @@ class TeamMember
     private $association;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", type="string", length=50)
+     * @Assert\NotBlank()
      */
     private $firstname;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", type="string", length=255)
+     * @Assert\NotBlank()
      */
     private $job;
+
+    /**
+     * @Assert\Image(
+     *     mimeTypes={"image/jpg", "image/jpeg", "image/png"},
+     *     mimeTypesMessage="L'image doit être au format jpg, jpeg ou png."
+     * )
+     */
+    private $uploadedFile;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $imagePath;
 
     /**
      * @return mixed
@@ -83,6 +102,42 @@ class TeamMember
     public function setJob($job)
     {
         $this->job = $job;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUploadedFile()
+    {
+        return $this->uploadedFile;
+    }
+
+    /**
+     * @param mixed $uploadedFile
+     * @return TeamMember
+     */
+    public function setUploadedFile($uploadedFile)
+    {
+        $this->uploadedFile = $uploadedFile;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getImagePath()
+    {
+        return $this->imagePath;
+    }
+
+    /**
+     * @param string $imagePath
+     * @return TeamMember
+     */
+    public function setImagePath($imagePath)
+    {
+        $this->imagePath = $imagePath;
         return $this;
     }
 
