@@ -23,9 +23,17 @@ class AssociationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('textIntro', TextareaType::class)
-            ->add('textInfo', TextareaType::class)
+            ->add('textIntro', TextareaType::class, [
+                'label' => 'Introduction',
+                'required' => false,
+            ])
+            ->add('textInfo', TextareaType::class, [
+                'label' => 'Informations',
+                'required' => false,
+            ])
             ->add('teamMembers', CollectionType::class, [
+                'label' => 'Membres d\'équipe',
+                'required' => false,
                 'entry_type' => TeamMemberType::class,
                 'allow_add' => true,
                 'allow_delete' => true,
@@ -35,11 +43,25 @@ class AssociationType extends AbstractType
                     'attr' => ['class' => 'team-member']
                 ]
             ])
-            ->add('addTeamMemberButton', ButtonType::class)
-            ->add('phoneNumber', TextType::class)
-            ->add('address', TextType::class)
-            ->add('mail', EmailType::class)
-            ->add('aboutUs', TextareaType::class)
+            ->add('addTeamMemberButton', ButtonType::class, [
+                'label' => 'Ajouter',
+            ])
+            ->add('phoneNumber', TextType::class, [
+                'label' => 'Téléphone',
+                'required' => false,
+            ])
+            ->add('address', TextType::class, [
+                'label' => 'Adresse',
+                'required' => false,
+            ])
+            ->add('mail', EmailType::class, [
+                'label' => 'Email',
+                'required' => false,
+            ])
+            ->add('aboutUs', TextareaType::class, [
+                'label' => 'À propos',
+                'required' => false,
+            ])
         ;
     }
 
