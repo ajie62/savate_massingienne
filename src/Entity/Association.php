@@ -10,6 +10,7 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
@@ -25,32 +26,54 @@ class Association
     private $id;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", length=500, nullable=true)
+     * @Assert\Length(
+     *     max="500",
+     *     maxMessage="Ce champ ne peut contenir que {{ limit }} caractères maximum."
+     * )
      */
     private $textIntro;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", length=500, nullable=true)
+     * @Assert\Length(
+     *     max="500",
+     *     maxMessage="Ce champ ne peut contenir que {{ limit }} caractères maximum."
+     * )
      */
     private $textInfo;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
+     * @Assert\Regex(
+     *     "/^0[1-8]([-. ]?[0-9]{2}){4}$/",
+     *     match=true,
+     *     message="Les chiffres peuvent être attachés ou séparés par des espaces, des tirets, des points. Il doit être composé de 10 chiffres."
+     * )
      */
     private $phoneNumber;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Length(
+     *     max="255",
+     *     maxMessage="Ce champ ne peut contenir que {{ limit }} caractères maximum."
+     * )
      */
     private $address;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", length=100, nullable=true)
+     * @Assert\Email(message="Il ne s'agit pas d'une adresse email valide.")
      */
     private $mail;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", length=255, nullable=true)
+     * @Assert\Length(
+     *     max="255",
+     *     maxMessage="Ce champ ne peut contenir que {{ limit }} caractères maximum."
+     * )
      */
     private $aboutUs;
 

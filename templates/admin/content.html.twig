@@ -6,10 +6,20 @@
         {{ message }}
     {% endfor %}
 
-    <h1>Éditer le contenu du site</h1>
-
+    <h1>Contenu du site</h1>
     {{ form_start(form) }}
-    {{ form_widget(form) }}
+
+    <h3>Page d'accueil</h3>
+    {{ form_row(form.textIntro) }}
+    {{ form_row(form.textInfo) }}
+    {{ form_row(form.teamMembers) }}
+    {{ form_row(form.addTeamMemberButton) }}
+
+    <h3>Pied de page</h3>
+    {{ form_row(form.phoneNumber) }}
+    {{ form_row(form.address) }}
+    {{ form_row(form.mail) }}
+    {{ form_row(form.aboutUs) }}
     <button type="submit">Mettre à jour</button>
     {{ form_end(form) }}
 {% endblock %}
