@@ -12,6 +12,7 @@ use App\Entity\Association;
 use App\Entity\Event;
 use App\Entity\License;
 use App\Entity\News;
+use App\Entity\TeamMember;
 use App\Entity\User;
 use App\Form\AdminUserType;
 use App\Form\AssociationType;
@@ -43,21 +44,21 @@ class AdminController extends AbstractController
      */
     private $em;
 
-    /**
-     * The directory containing uploaded licenses.
-     * @var string
-     */
     private $licensesDir;
+
+    private $imagesDir;
 
     /**
      * AdminController constructor.
      * @param EntityManagerInterface $entityManager
      * @param $licenses_dir
+     * @param $images_dir
      */
-    public function __construct($entityManager, $licenses_dir)
+    public function __construct($entityManager, $licenses_dir, $images_dir)
     {
         $this->em = $entityManager;
         $this->licensesDir = $licenses_dir;
+        $this->imagesDir = $images_dir;
     }
 
     /**
@@ -295,10 +296,17 @@ class AdminController extends AbstractController
     {
         # Fetching unique Association entity from the database
         $association = $this->em->getRepository(Association::class)->find(1);
+        $teamMembers = null;
 
         # If no Association entity were found, create one
         if (is_null($association)) {
             $association = new Association();
+        }
+
+        # If there are team members in the association
+        if ($association->getTeamMembers()) {
+            # Set them in the teamMembers var
+            $teamMembers = $association->getTeamMembers();
         }
 
         # Form creation, based on AssociationType
@@ -307,10 +315,29 @@ class AdminController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            # If $teamMembers isn't null
+            if (!is_null($teamMembers)) {
+                /** @var TeamMember $member */
+                foreach ($teamMembers as $member) {
+                    # Get the uploadedFile on each $member who was added
+                    $uploadedFile = $member->getUploadedFile();
+                    if ($uploadedFile instanceof UploadedFile) {
+                        # Give it a unique name
+                        $name = sha1(uniqid(true)).'.'.$uploadedFile->guessExtension();
+                        # Move it into the images directory with its new name
+                        $uploadedFile->move($this->imagesDir, $name);
+                        # Set the image path and set the uploaded file to null
+                        $member->setImagePath($name)->setUploadedFile(null);
+                    }
+                }
+            }
+
             # Persist
             $this->em->persist($association);
             # Flush
             $this->em->flush();
+            # Add a flash message
+            $this->addFlash('notice', 'La mise à jour a bien été effectuée.');
 
             # Redirection to the same page
             return $this->redirectToRoute('admin.content');
@@ -319,6 +346,54 @@ class AdminController extends AbstractController
         return $this->render('admin/content.html.twig', [
             'form' => $form->createView()
         ]);
+    }
+
+    /**
+     * List all team members
+     * @Route("/team", name="admin.team")
+     *
+     * Members with ROLE_SUPER_ADMIN and ROLE_ADMIN can access this page.
+     * @Security("is_granted('ROLE_ADMIN')")
+     *
+     * @return Response
+     */
+    public function team()
+    {
+        # Get TeamMember repository
+        $teamMemberRepo = $this->em->getRepository(TeamMember::class);
+        # Fetch all members
+        $teamMembers = $teamMemberRepo->findAll();
+
+        return $this->render('admin/team/list.html.twig', [
+            'teamMembers' => $teamMembers,
+        ]);
+    }
+
+    /**
+     * Delete a given team member
+     * @Route("/content/{id}/delete-team-member", name="admin.delete-team-member")
+     * @ParamConverter(name="teamMember", class="App\Entity\TeamMember", options={"id" = "id"})
+     *
+     * Members with ROLE_SUPER_ADMIN can delete a team member.
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     *
+     * @param TeamMember $teamMember
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function deleteTeamMember(TeamMember $teamMember)
+    {
+        $em = $this->em;
+        $repo = $em->getRepository(TeamMember::class);
+        $removed = $repo->deleteTeamMember($teamMember);
+
+        if ($removed) {
+            $this->addFlash('success', 'Le membre d\'équipe a bien été supprimé.');
+        } else {
+            $this->addFlash('failure', 'Le membre d\'équipe n\'a pas été supprimé.');
+        }
+
+        # Redirect to admin.content
+        return $this->redirectToRoute('admin.team');
     }
 
     /**
@@ -493,7 +568,7 @@ class AdminController extends AbstractController
      * Read a news
      * @Route("/news/{id}", name="admin.news_read", requirements={"id" = "\d+"})
      *
-     * Mmbers with ROLE_SUPER_ADMIN and ROLE_ADMIN can read a news.
+     * Members with ROLE_SUPER_ADMIN and ROLE_ADMIN can read a news.
      * @Security("is_granted('ROLE_ADMIN')")
      *
      * @param News $news
@@ -585,11 +660,6 @@ class AdminController extends AbstractController
             'form' => $form->createView(),
             'isNewNews' => $isNewNews,
         ]);
-    }
-
-    public function team()
-    {
-        return $this->render('admin/team.html.twig');
     }
 
     /**

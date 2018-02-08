@@ -2,11 +2,11 @@
 
 {% block body %}
     <ul>
-        <li><a href="{{ path('admin.index') }}">Members</a></li>
-        <li><a href="{{ path('admin.content') }}">Content</a></li>
-        <li><a href="{{ path('admin.event') }}">Events</a></li>
-        <li><a href="{{ path('admin.news') }}">News</a></li>
-        <li><a href="#">Team</a></li>
+        <li><a href="{{ path('admin.index') }}">Membres</a></li>
+        <li><a href="{{ path('admin.content') }}">Contenu du site</a></li>
+        <li><a href="{{ path('admin.event') }}">Évènements</a></li>
+        <li><a href="{{ path('admin.news') }}">Actualités</a></li>
+        <li><a href="{{ path('admin.team') }}">Équipe</a></li>
     </ul>
 
     {% block admin_body %}{% endblock %}

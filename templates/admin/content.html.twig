@@ -1,7 +1,12 @@
 {% extends 'admin/base.html.twig' %}
 
 {% block admin_body %}
-    <h1>Edit homepage content</h1>
+    {# Submitting the AssociationType form will print a flash message #}
+    {% for message in app.flashes('notice') %}
+        {{ message }}
+    {% endfor %}
+
+    <h1>Éditer le contenu du site</h1>
 
     {{ form_start(form) }}
     {{ form_widget(form) }}
