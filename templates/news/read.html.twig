@@ -8,7 +8,7 @@
         {{ news.updatedAt ? ('- <strong>Mise à jour le ' ~ news.updatedAt|date('d/m/Y à H:i') ~ '</strong>')|raw }}
     </small>
 
-    <p>{{ news.content }}</p>
+    <p>{{ news.content|markdown }}</p>
 
     <a href="{{ url('news.index') }}">Retour</a>
 {% endblock %}
