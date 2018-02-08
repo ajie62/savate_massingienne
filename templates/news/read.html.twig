@@ -1,14 +1,14 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>news.read</h1>
+    <h1>{{ news.name }}</h1>
 
-    <h2>{{ news.name }}</h2>
     <small>
-        Created at: {{ news.createdAt|date('d/m/Y - H:i') }}
-        {{ news.updatedAt ? ('<strong>Updated at: ' ~ news.updatedAt|date('d/m/Y - H:i') ~ '</strong>')|raw }}
+        Publiée le {{ news.createdAt|date('d/m/Y à H:i') }}
+        {{ news.updatedAt ? ('- <strong>Mise à jour le ' ~ news.updatedAt|date('d/m/Y à H:i') ~ '</strong>')|raw }}
     </small>
+
     <p>{{ news.content }}</p>
 
-    <a href="{{ url('news.index') }}">Back</a>
+    <a href="{{ url('news.index') }}">Retour</a>
 {% endblock %}

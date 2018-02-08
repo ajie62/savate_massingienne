@@ -1,19 +1,18 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>news.index</h1>
+    <h1>Actualités</h1>
 
     {% for news in newsCollection %}
-        <p>Id: {{ news.id }}</p>
-        <p>Name: {{ news.name }}</p>
-        <p>Creation: {{ news.createdAt|date('d/m/Y - H:i') }}</p>
-        {{ news.updatedAt ? ('<p> Last update: ' ~ news.updatedAt|date('d/m/Y - H:i') ~ '</p>')|raw }}
-        <p>Content: {{ news.content }}</p>
-        <a href="{{ url('news.read', {id: news.id}) }}">Read</a>
+        <p>Titre : {{ news.name }}</p>
+        <p>Publiée le : {{ news.createdAt|date('d/m/Y à H:i') }}</p>
+        {{ news.updatedAt ? ('<p> Dernière mise à jour : ' ~ news.updatedAt|date('d/m/Y à H:i') ~ '</p>')|raw }}
+        <p>Contenu : {{ news.content }}</p>
+        <a href="{{ url('news.read', {slug: news.slug}) }}">Lire</a>
     {% else %}
         <p>Pas de news</p>
     {% endfor %}
 
-    <a href="{{ url('admin.index') }}">Back</a>
+    <a href="{{ url('admin.index') }}">Retour</a>
     
 {% endblock %}
