@@ -89,9 +89,9 @@ class UserController extends AbstractController
 
             # Get the form and its view
             $form = $form->getForm();
-            $formView = $form->createView();
 
             $form->handleRequest($request);
+            $formView = $form->createView();
 
             if ($form->isSubmitted() && $form->isValid()) {
                 # Get the file that was uploaded by the user
