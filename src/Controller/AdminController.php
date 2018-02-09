@@ -47,18 +47,21 @@ class AdminController extends AbstractController
     private $licensesDir;
 
     private $imagesDir;
+    private $teamMemberThumbnailDir;
 
     /**
      * AdminController constructor.
      * @param EntityManagerInterface $entityManager
      * @param $licenses_dir
      * @param $images_dir
+     * @param $team_member_thumbnail_dir
      */
-    public function __construct($entityManager, $licenses_dir, $images_dir)
+    public function __construct($entityManager, $licenses_dir, $images_dir, $team_member_thumbnail_dir)
     {
         $this->em = $entityManager;
         $this->licensesDir = $licenses_dir;
         $this->imagesDir = $images_dir;
+        $this->teamMemberThumbnailDir = $team_member_thumbnail_dir;
     }
 
     /**
@@ -382,10 +385,29 @@ class AdminController extends AbstractController
      */
     public function deleteTeamMember(TeamMember $teamMember)
     {
-        $em = $this->em;
-        $repo = $em->getRepository(TeamMember::class);
+        # TeamMember repository
+        $repo = $this->em->getRepository(TeamMember::class);
+
+        # Get the team member original image and cached image (thumbnail, by LiipImagineBundle)
+        $originalImage = $this->imagesDir . DIRECTORY_SEPARATOR . $teamMember->getImagePath();
+        $cachedImage = $this->teamMemberThumbnailDir . DIRECTORY_SEPARATOR . $teamMember->getImagePath();
+
+        # If the original image exists
+        if (file_exists($originalImage)) {
+            # Delete it
+            @unlink($cachedImage);
+        }
+
+        # If the cached image exists
+        if(file_exists($cachedImage)) {
+            # Delete it
+            @unlink($cachedImage);
+        }
+
+        # Determines whether a team member has been removed or not.
         $removed = $repo->deleteTeamMember($teamMember);
 
+        # Flash message
         if ($removed) {
             $this->addFlash('success', 'Le membre d\'équipe a bien été supprimé.');
         } else {
@@ -393,7 +415,7 @@ class AdminController extends AbstractController
         }
 
         # Redirect to admin.content
-        return $this->redirectToRoute('admin.team');
+        return $this->redirectToRoute('admin.content');
     }
 
     /**
