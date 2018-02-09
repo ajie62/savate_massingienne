@@ -1,12 +1,15 @@
 {% extends 'admin/base.html.twig' %}
 
 {% block admin_body %}
-    <h1>Delete</h1>
 
-    <p>Confirmez-vous la suppression ?</p>
+    <h1>Suppression de membre</h1>
+
+    <p>Confirmez-vous la suppression du membre ?</p>
     {{ form_start(form) }}
     {{ form_widget(form) }}
-    <button type="submit">Confirm</button>
+    <a href="{{ path('admin.members') }}">Retour</a>
+    <button type="submit">Confirmer</button>
     {{ form_end(form) }}
+
 {% endblock %}
 

@@ -25,17 +25,28 @@ class AdminUserType extends AbstractType
         $targetUser = $options['data'];
 
         $builder
-            ->add('username', TextType::class)
-            ->add('firstname', TextType::class)
-            ->add('lastname', TextType::class)
+            ->add('username', TextType::class, [
+                'label' => 'Nom d\'utilisateur',
+            ])
+            ->add('firstname', TextType::class, [
+                'label' => 'Prénom'
+            ])
+            ->add('lastname', TextType::class, [
+                'label' => 'Nom'
+            ])
         ;
 
         # If the user's role is ROLE_SUPER_ADMIN || the targeted user is the active user
         if ($securityChecker->isGranted('ROLE_SUPER_ADMIN') || $targetUser == $activeUser) {
             # Add two new fields: licenseNumber & email
             $builder
-                ->add('licenseNumber', TextType::class, ['required' => false])
-                ->add('email', EmailType::class)
+                ->add('licenseNumber', TextType::class, [
+                    'label' => 'N° de licence',
+                    'required' => false,
+                ])
+                ->add('email', EmailType::class, [
+                    'label' => 'Adresse mail'
+                ])
             ;
         }
 
@@ -43,6 +54,7 @@ class AdminUserType extends AbstractType
         if ($securityChecker->isGranted('ROLE_SUPER_ADMIN') && $activeUser !== $targetUser) {
             # Add a roles field to the form
             $builder->add('roles', ChoiceType::class, [
+                'label' => 'Rôle',
                 'choices' => [
                     'Utilisateur' => 'ROLE_USER',
                     'Modérateur' => 'ROLE_MODERATEUR',

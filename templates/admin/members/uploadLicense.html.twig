@@ -2,11 +2,12 @@
 
 {% block admin_body %}
 
-    <h1>member.addLicense</h1>
+    <h1>Ajout d'une nouvelle licence</h1>
 
     {{ form_start(form) }}
     {{ form_widget(form) }}
-    <button type="submit">Upload</button>
+    <a href="{{ path('admin.members') }}">Retour</a>
+    <button type="submit">Ajouter</button>
     {{ form_end(form) }}
 
 {% endblock %}

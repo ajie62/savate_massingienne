@@ -2,7 +2,7 @@
 
 {% block admin_body %}
 
-    <h1>user.update</h1>
+    <h1>Mise à jour d'informations</h1>
 
     {{ form_start(form) }}
     {{ form_row(form.username) }}
@@ -19,6 +19,7 @@
     {% endif %}
 
     {{ form_rest(form) }}
+    <a href="{{ path('admin.members') }}">Retour</a>
     <button type="submit">Mettre à jour</button>
     {{ form_end(form) }}
 

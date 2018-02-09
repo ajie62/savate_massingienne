@@ -1,9 +1,8 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>user.read</h1>
 
-    <h2>{{ user.firstname|capitalize }}</h2>
+    <h1>{{ user.firstname|capitalize }}</h1>
     <img src="{{ user.imagePath ? asset('images/' ~ user.imagePath) | imagine_filter('img_profile_thumbnail') : 'http://via.placeholder.com/150x150' }}" alt="{{ 'Photo de profil de ' ~ user.firstname }}">
 
     {% if self %}
@@ -13,52 +12,52 @@
         <button type="submit">Mettre à jour</button>
         {{ form_end(form) }}
 
-        <a href="{{ url('user.update') }}">Edit profile</a>
+        <a href="{{ url('user.update') }}">Éditer mon profil</a>
     {% endif %}
 
     <ul>
-        <li>Username: {{ user.username }}</li>
-        <li>First name: {{ user.firstname }}</li>
-        <li>Last name: {{ user.lastname }}</li>
-        <li>License number: {{ user.licenseNumber ?? 'undefined' }}</li>
-        <li>Email: {{ user.email }}</li>
-        <li>Member since: {{ user.memberSince|date('d/m/Y - H:i') }}</li>
+        <li>Nom d'utilisateur : {{ user.username|capitalize }}</li>
+        <li>Prénom : {{ user.firstname|capitalize }}</li>
+        <li>Nom : {{ user.lastname|capitalize }}</li>
+        <li>N° de licence : {{ user.licenseNumber|default('Pas encore renseigné') }}</li>
+        <li>Adresse mail: {{ user.email }}</li>
+        <li>Membre depuis le: {{ user.memberSince|date('d/m/Y à H:i') }}</li>
     </ul>
 
     <h2>Licences</h2>
     {% set licenses = user.licenses %}
     {% if self %}
         {% if licenses|length == 0 %}
-            <p>You don't have licenses yet.</p>
+            <p>Aucune licence n'a été ajoutée à votre profil.</p>
         {% else %}
             <ul>
                 {% for license in licenses %}
-                    <li><a href="{{ asset('licenses/' ~ license.name) }} " target="_blank" title="See in the browser">License {{ license.year }}/{{ license.year + 1 }}</a></li>
+                    <li><a href="{{ asset('licenses/' ~ license.name) }} " target="_blank" title="Voir la licence">Licence {{ license.year }}/{{ license.year + 1 }}</a></li>
                 {% endfor %}
             </ul>
         {% endif %}
     {% else %}
         {% set userLicenseNumber = user.licenses|length %}
         {% if userLicenseNumber == 0 %}
-            <p class="text-center">{{ user.firstname }} doesn't have licenses yet.</p>
+            <p class="text-center">{{ user.firstname|capitalize }} n'a pas encore de licence.</p>
         {% else %}
-            <p class="text-center">{{ user.firstname }} owns {{ userLicenseNumber > 1 ? userLicenseNumber ~ " licenses" : userLicenseNumber ~ " license" }}.</p>
+            <p class="text-center">{{ user.firstname|capitalize }} possède {{ userLicenseNumber > 1 ? userLicenseNumber ~ " licences" : userLicenseNumber ~ " licence" }}.</p>
         {% endif %}
     {% endif %}
 
     {% if self %}
-        <h2>My events</h2>
+        <h2>Mes évènements</h2>
     {% else %}
-        <h2>Events</h2>
+        <h2>Évènements</h2>
     {% endif %}
 
     {% if upcomingEvents %}
         {% for event in upcomingEvents %}
-            <h4>{{ event.name }} <small>- {{ event.startingDate|date('d/m/Y') }}</small></h4>
-            <p>Users attending: </p>
+            <h4>{{ event.name|capitalize }} <small>- {{ event.startingDate|date('d/m/Y') }}</small></h4>
+            <p>Participants : </p>
             <ul>
                 {% for user in event.users %}
-                    <li><a href="{{ path('user.profile', {'username': user.username}) }}">{{ user.firstname }}</a></li>
+                    <li><a href="{{ path('user.profile', {'username': user.username}) }}">{{ user.firstname|capitalize }}</a></li>
                 {% endfor %}
             </ul>
         {% endfor %}

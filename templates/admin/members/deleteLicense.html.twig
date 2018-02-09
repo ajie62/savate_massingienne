@@ -2,18 +2,21 @@
 
 {% block admin_body %}
 
-    <h1>admin.delete_license</h1>
-
-    <p>
-        You're about to delete the
-        {{ license.year }}/{{ license.year + 1 }}
-        license that belongs to <strong>{{ license.user == app.user ? 'you' : license.user.username|capitalize }}</strong>.
-        Do you confirm?
+    <h1>Suppression de licence</h1>
+    <p>Vous êtes sur le point de supprimer
+        {% if license.user == app.user %}
+            votre licence <strong>{{ license.year }}/{{ license.year + 1 }}</strong>.
+        {% else %}
+            la licence <strong>{{ license.year }}/{{ license.year + 1 }}</strong> de
+            <strong>{{ license.user.firstname|capitalize ~ ' ' ~ license.user.lastname|capitalize }}</strong>.
+        {% endif %}
+        Confirmez-vous ?
     </p>
 
     {{ form_start(form) }}
     {{ form_widget(form) }}
-    <button type="submit">Confirm</button>
+    <a href="{{ path('admin.members') }}">Retour</a>
+    <button type="submit">Confirmer</button>
     {{ form_end(form) }}
 
 {% endblock %}
