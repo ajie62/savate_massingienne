@@ -395,7 +395,7 @@ class AdminController extends AbstractController
         # If the original image exists
         if (file_exists($originalImage)) {
             # Delete it
-            @unlink($cachedImage);
+            @unlink($originalImage);
         }
 
         # If the cached image exists

@@ -42,3 +42,4 @@ services:
     App\Controller\UserController:
         arguments:
             $images_dir: '%images_dir%'
+            $img_profile_thumbnail_dir: '%img_profile_thumbnail_dir%'

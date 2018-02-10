@@ -26,10 +26,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class UserController extends AbstractController
 {
     private $imagesDir;
+    private $imgProfileThumbnailDir;
 
-    public function __construct($images_dir)
+    public function __construct($images_dir, $img_profile_thumbnail_dir)
     {
         $this->imagesDir = $images_dir;
+        $this->imgProfileThumbnailDir = $img_profile_thumbnail_dir;
     }
 
     /**
@@ -100,10 +102,20 @@ class UserController extends AbstractController
                 if ($uploadedFile instanceof UploadedFile) {
                     # And if there's already an image path defined for the user
                     if ($user->getImagePath()) {
-                        # And if the file exists in the images directory
-                        if (file_exists($this->imagesDir.DIRECTORY_SEPARATOR.$user->getImagePath())) {
+                        # Get the user original image and cached image (thumbnail, by LiipImagineBundle)
+                        $originalImage = $this->imagesDir.DIRECTORY_SEPARATOR.$user->getImagePath();
+                        $cachedImage = $this->imgProfileThumbnailDir.DIRECTORY_SEPARATOR.$user->getImagePath();
+
+                        # If the original image exists
+                        if (file_exists($originalImage)) {
                             # Delete it
-                            @unlink($this->imagesDir.DIRECTORY_SEPARATOR.$user->getImagePath());
+                            @unlink($originalImage);
+                        }
+
+                        # If the cached image exists
+                        if(file_exists($cachedImage)) {
+                            # Delete it
+                            @unlink($cachedImage);
                         }
                     }
 
