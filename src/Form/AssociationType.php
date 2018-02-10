@@ -31,21 +31,6 @@ class AssociationType extends AbstractType
                 'label' => 'Informations',
                 'required' => false,
             ])
-            ->add('teamMembers', CollectionType::class, [
-                'label' => 'Membres d\'équipe',
-                'required' => false,
-                'entry_type' => TeamMemberType::class,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'by_reference' => false,
-                'entry_options' => [
-                    'label' => false,
-                    'attr' => ['class' => 'team-member']
-                ]
-            ])
-            ->add('addTeamMemberButton', ButtonType::class, [
-                'label' => 'Ajouter',
-            ])
             ->add('phoneNumber', TextType::class, [
                 'label' => 'Téléphone',
                 'required' => false,
