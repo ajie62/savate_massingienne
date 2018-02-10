@@ -41,10 +41,6 @@ class Event
     /**
      * @ORM\Column(type="datetime")
      * @Assert\NotNull(message="Merci de renseigner une date valide.")
-     * @Assert\Range(
-     *     min="+2 days",
-     *     minMessage="Votre évènement doit commencer dans 2 jours ou plus."
-     * )
      */
     private $startingDate;
 

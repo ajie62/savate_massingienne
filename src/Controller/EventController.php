@@ -93,4 +93,22 @@ class EventController extends AbstractController
         # Redirection to event.index
         return $this->redirectToRoute('event.index');
     }
+
+    /**
+     * List of past events
+     * @Route("/event/archives", name="event.archives")
+     *
+     * Everyone can see the events archives.
+     * @Security("is_granted('IS_AUTHENTICATED_ANONYMOUSLY')")
+     *
+     * @return Response
+     */
+    public function archives()
+    {
+        $pastEvents = $this->em->getRepository(Event::class)->getPastEvents();
+
+        return $this->render('event/archives.html.twig', [
+            'pastEvents' => $pastEvents,
+        ]);
+    }
 }

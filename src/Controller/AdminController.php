@@ -473,6 +473,14 @@ class AdminController extends AbstractController
      */
     public function updateEvent(Request $request, Event $event): Response
     {
+        # If the targeted event is a past event
+        if ($event->getEndingDate() < new \DateTime()) {
+            # It's impossible to edit a past event
+            $this->addFlash('warning', 'Impossible d\'éditer un évènement passé.');
+            # Redirection to admin.event
+            return $this->redirectToRoute('admin.event');
+        }
+
         return $this->setEvent($request, $event);
     }
 
@@ -490,6 +498,14 @@ class AdminController extends AbstractController
      */
     public function deleteEvent(Request $request, Event $event): Response
     {
+        # If the targeted event is a past event
+        if ($event->getEndingDate() < new \DateTime()) {
+            # It's impossible to delete a past event
+            $this->addFlash('warning', 'Impossible de supprimer un évènement passé.');
+            # Redirection to admin.event
+            return $this->redirectToRoute('admin.event');
+        }
+
         $availableRedirectRoutes = ['event.index', 'admin.event'];
         $redirectRoute = $request->query->get('redirect', 'admin.event');
         $redirectRoute = in_array($redirectRoute, $availableRedirectRoutes) ? $redirectRoute : $availableRedirectRoutes[0];

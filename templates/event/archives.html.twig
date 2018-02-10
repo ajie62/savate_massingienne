@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Archives</h1>
+
+    {% for event in pastEvents %}
+        <h2>{{ event.name }}</h2>
+        <small>
+        {% if date(event.startingDate) == date(event.endingDate) %}
+            Le {{ event.startingDate|date('d/m/Y de H:i') }} à {{ event.endingDate('H:i') }}.
+        {% else %}
+            Du {{ event.startingDate|date('d/m/Y') }} au {{ event.endingDate|date('d/m/Y') }}.
+        {% endif %}
+        </small>
+        <p>{{ event.description }}</p>
+    {% else %}
+        <p>Aucun évènement n'a eu lieu pour le moment.</p>
+    {% endfor %}
+
+    <a href="{{ path('event.index') }}">Retour</a>
+    <a href="{{ path('home.index') }}">Accueil</a>
+{% endblock %}
+
