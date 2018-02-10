@@ -27,10 +27,6 @@ class TeamMemberType extends AbstractType
                 'label' => 'Photo',
                 'required' => false,
             ])
-            ->add('deleteButton', ButtonType::class, [
-                'label' => 'Retirer',
-                'attr' => ['class' => 'js-delete-team-member'],
-            ])
         ;
     }
 

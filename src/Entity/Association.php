@@ -244,18 +244,4 @@ class Association
         $this->teamMembers->add($teamMember);
         return $this;
     }
-
-    /**
-     * @param TeamMember $teamMember
-     * @return $this
-     */
-    public function removeTeamMember(TeamMember $teamMember)
-    {
-        if($this->teamMembers->contains($teamMember)) {
-            $teamMember->setAssociation(null);
-            $this->teamMembers->removeElement($teamMember);
-        }
-
-        return $this;
-    }
 }

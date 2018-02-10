@@ -19,6 +19,7 @@ use App\Form\AssociationType;
 use App\Form\EventType;
 use App\Form\LicenseType;
 use App\Form\NewsType;
+use App\Form\TeamMemberType;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -43,9 +44,7 @@ class AdminController extends AbstractController
      * @var EntityManagerInterface
      */
     private $em;
-
     private $licensesDir;
-
     private $imagesDir;
     private $teamMemberThumbnailDir;
 
@@ -299,17 +298,35 @@ class AdminController extends AbstractController
     {
         # Fetching unique Association entity from the database
         $association = $this->em->getRepository(Association::class)->find(1);
-        $teamMembers = null;
+        $teamMembers = $this->em->getRepository(TeamMember::class)->findAll();
 
         # If no Association entity were found, create one
         if (is_null($association)) {
             $association = new Association();
         }
 
-        # If there are team members in the association
-        if ($association->getTeamMembers()) {
-            # Set them in the teamMembers var
-            $teamMembers = $association->getTeamMembers();
+        $teamMember = new TeamMember();
+
+        $formAddTeamMember = $this->createForm(TeamMemberType::class, $teamMember);
+        $formAddTeamMember->handleRequest($request);
+
+        if ($formAddTeamMember->isSubmitted() && $formAddTeamMember->isValid()) {
+            /** @var TeamMember $member */
+            # Get the uploadedFile on each $member who was added
+            $uploadedFile = $teamMember->getUploadedFile();
+            if ($uploadedFile instanceof UploadedFile) {
+                # Give it a unique name
+                $name = sha1(uniqid(true)).'.'.$uploadedFile->guessExtension();
+                # Move it into the images directory with its new name
+                $uploadedFile->move($this->imagesDir, $name);
+                # Set the image path and set the uploaded file to null
+                $teamMember->setImagePath($name)->setUploadedFile(null);
+            }
+
+            $association->addTeamMember($teamMember);
+            $this->em->flush();
+
+            return $this->redirectToRoute('admin.content');
         }
 
         # Form creation, based on AssociationType
@@ -318,23 +335,6 @@ class AdminController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            # If $teamMembers isn't null
-            if (!is_null($teamMembers)) {
-                /** @var TeamMember $member */
-                foreach ($teamMembers as $member) {
-                    # Get the uploadedFile on each $member who was added
-                    $uploadedFile = $member->getUploadedFile();
-                    if ($uploadedFile instanceof UploadedFile) {
-                        # Give it a unique name
-                        $name = sha1(uniqid(true)).'.'.$uploadedFile->guessExtension();
-                        # Move it into the images directory with its new name
-                        $uploadedFile->move($this->imagesDir, $name);
-                        # Set the image path and set the uploaded file to null
-                        $member->setImagePath($name)->setUploadedFile(null);
-                    }
-                }
-            }
-
             # Persist
             $this->em->persist($association);
             # Flush
@@ -347,28 +347,9 @@ class AdminController extends AbstractController
         }
 
         return $this->render('admin/content.html.twig', [
-            'form' => $form->createView()
-        ]);
-    }
-
-    /**
-     * List all team members
-     * @Route("/team", name="admin.team")
-     *
-     * Members with ROLE_SUPER_ADMIN and ROLE_ADMIN can access this page.
-     * @Security("is_granted('ROLE_ADMIN')")
-     *
-     * @return Response
-     */
-    public function team()
-    {
-        # Get TeamMember repository
-        $teamMemberRepo = $this->em->getRepository(TeamMember::class);
-        # Fetch all members
-        $teamMembers = $teamMemberRepo->findAll();
-
-        return $this->render('admin/team/list.html.twig', [
-            'teamMembers' => $teamMembers,
+            'form' => $form->createView(),
+            'formAddTeamMember' => $formAddTeamMember->createView(),
+            'teamMembers' => $teamMembers
         ]);
     }
 
@@ -385,9 +366,6 @@ class AdminController extends AbstractController
      */
     public function deleteTeamMember(TeamMember $teamMember)
     {
-        # TeamMember repository
-        $repo = $this->em->getRepository(TeamMember::class);
-
         # Get the team member original image and cached image (thumbnail, by LiipImagineBundle)
         $originalImage = $this->imagesDir . DIRECTORY_SEPARATOR . $teamMember->getImagePath();
         $cachedImage = $this->teamMemberThumbnailDir . DIRECTORY_SEPARATOR . $teamMember->getImagePath();
@@ -404,15 +382,9 @@ class AdminController extends AbstractController
             @unlink($cachedImage);
         }
 
-        # Determines whether a team member has been removed or not.
-        $removed = $repo->deleteTeamMember($teamMember);
-
-        # Flash message
-        if ($removed) {
-            $this->addFlash('success', 'Le membre d\'équipe a bien été supprimé.');
-        } else {
-            $this->addFlash('failure', 'Le membre d\'équipe n\'a pas été supprimé.');
-        }
+        $this->em->remove($teamMember);
+        $this->em->flush();
+        $this->addFlash('success', 'Le membre d\'équipe a bien été supprimé.');
 
         # Redirect to admin.content
         return $this->redirectToRoute('admin.content');
