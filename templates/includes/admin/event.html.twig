@@ -16,10 +16,13 @@
             {% endfor %}
         </li>
     {% endif %}
-    <li>
-        <a href="{{ url('admin.event_update', {id: event.id}) }}">Éditer</a>
-        {% if is_granted('ROLE_SUPER_ADMIN') %}
-            <a href="{{ path('admin.event_delete', {id: event.id, redirect: 'admin.event'}) }}">Supprimer</a>
+
+    {% if is_granted('ROLE_SUPER_ADMIN') %}
+        {% if date('now') < date(event.endingDate) %}
+            <li>
+                <a href="{{ url('admin.event_update', {id: event.id}) }}">Éditer</a>
+                <a href="{{ path('admin.event_delete', {id: event.id, redirect: 'admin.event'}) }}">Supprimer</a>
+            </li>
         {% endif %}
-    </li>
+    {% endif %}
 </ul>
