@@ -13,6 +13,7 @@ use App\Entity\Contact;
 use App\Entity\Event;
 use App\Entity\News;
 use App\Form\ContactType;
+use App\Service\EmailManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,10 +26,15 @@ class AppController extends AbstractController
      * @var EntityManagerInterface
      */
     private $em;
+    /**
+     * @var EmailManager
+     */
+    private $emailManager;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, EmailManager $emailManager)
     {
         $this->em = $entityManager;
+        $this->emailManager = $emailManager;
     }
 
     /**
@@ -64,14 +70,13 @@ class AppController extends AbstractController
      * @Security("is_granted('IS_AUTHENTICATED_ANONYMOUSLY')")
      *
      * @param Request $request
-     * @param \Swift_Mailer $mailer
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function contact(Request $request, \Swift_Mailer $mailer)
+    public function contact(Request $request)
     {
         # Create a contact object
         $contact = new Contact();
-        # Getting the current user
+        # Get the current user
         $user = $this->getUser();
 
         # If the person who wants to send an email is a member
@@ -88,23 +93,13 @@ class AppController extends AbstractController
         $contactForm->handleRequest($request);
 
         if ($contactForm->isSubmitted() && $contactForm->isValid()) {
-            # Create a new message to send with SwiftMailer
-            $message = (new \Swift_Message($contact->getSubject()))
-                ->setFrom($contact->getEmail())
-                ->setTo('recipient@example.com')
-                ->setBody(
-                    $this->renderView(
-                        // templates/emails/contact.html.twig
-                        'emails/contact.html.twig', ['email' => $contact]
-                    ),
-                    'text/html'
-                )
-            ;
+            # Send the email thanks to the EmailManager Service
+            $this->emailManager->sendEmail($contact);
 
-            $mailer->send($message);
-
+            # Add a flash message
             $this->addFlash('success', 'Votre message a bien été envoyé !');
-                return $this->redirectToRoute('app.contact');
+            # Redirection to app.contact
+            return $this->redirectToRoute('app.contact');
         }
 
         return $this->render('app/contact.html.twig', [
