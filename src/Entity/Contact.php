@@ -23,6 +23,11 @@ class Contact
     /**
      * @var string
      */
+    private $email;
+
+    /**
+     * @var string
+     */
     private $subject;
 
     /**
@@ -76,6 +81,24 @@ class Contact
     public function setLastname($lastname)
     {
         $this->lastname = $lastname;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param string $email
+     * @return Contact
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
         return $this;
     }
 
