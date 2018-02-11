@@ -31,7 +31,6 @@ services:
             $entityManager: '@doctrine.orm.entity_manager'
             $tokenStorage: '@security.token_storage'
 
-    # Argument $license_dir
     App\Controller\AdminController:
         arguments:
             $entityManager: '@doctrine.orm.entity_manager'
@@ -43,3 +42,7 @@ services:
         arguments:
             $images_dir: '%images_dir%'
             $img_profile_thumbnail_dir: '%img_profile_thumbnail_dir%'
+
+    App\Service\EmailManager:
+        class: App\Service\EmailManager
+        arguments: ["@mailer", "@twig"]

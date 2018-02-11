@@ -1,0 +1,10 @@
+{# templates/emails/contact.html.twig #}
+<h1>Nouveau message de {{ email.firstname|capitalize ~ ' ' ~ email.lastname|capitalize }}</h1>
+<h3>Objet : {{ email.subject }}</h3>
+<h4>Envoyé le : {{ email.sendAt|date('d/m/Y à H:i') }}</h4>
+
+<p>
+    Contenu du message :<br><br>
+
+    {{ email.content }}
+</p>
