@@ -96,6 +96,10 @@ class AppController extends AbstractController
             # Send the email thanks to the EmailManager Service
             $this->emailManager->sendEmail($contact);
 
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($contact);
+            $em->flush();
+
             # Add a flash message
             $this->addFlash('success', 'Votre message a bien été envoyé !');
             # Redirection to app.contact
