@@ -33,12 +33,17 @@ class License
     private $name;
 
     /**
-     * @ORM\Column(type="string", length=4, nullable=false)
+     * @ORM\Column(type="string", length=4)
+     * @Assert\NotNull(groups={"add_license"})
+     * @Assert\Regex(pattern="/^[0-9]{4}$/", match=true, message="Format d'année non valide")
      */
     private $year;
 
     /**
      * @var null|UploadedFile
+     *
+     * @Assert\File(mimeTypes={"application/pdf"}, mimeTypesMessage="Le document doit être au format .pdf.")
+     * @Assert\NotNull(message="Fichier PDF obligatoire")
      */
     private $licenseFile;
 
@@ -58,7 +63,7 @@ class License
     public function __construct()
     {
         $this->setYear(date('Y'));
-        $this->uploadedAt = new \DateTime('', new \DateTimeZone('Europe/Paris'));
+        $this->uploadedAt = new \DateTime();
     }
 
     /**
@@ -72,7 +77,7 @@ class License
     /**
      * @param mixed $id
      */
-    public function setId($id): void
+    public function setId($id)
     {
         $this->id = $id;
     }
@@ -106,7 +111,7 @@ class License
     /**
      * @param mixed $year
      */
-    public function setYear($year): void
+    public function setYear($year)
     {
         $this->year = $year;
     }
@@ -122,7 +127,7 @@ class License
     /**
      * @param mixed $licenseFile
      */
-    public function setLicenseFile($licenseFile): void
+    public function setLicenseFile($licenseFile)
     {
         $this->licenseFile = $licenseFile;
     }
