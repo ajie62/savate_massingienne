@@ -11,7 +11,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -20,8 +20,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @UniqueEntity(fields={"username"}, message="Ce nom d'utilisateur existe déjà.")
  * @UniqueEntity(fields={"email"}, message="Cette adresse mail est déjà utilisée.")
  * @UniqueEntity(fields={"licenseNumber"}, message="Ce numéro de licence est déjà utilisé.")
+ * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
-class User implements UserInterface, \Serializable
+class User implements AdvancedUserInterface, \Serializable
 {
     const USER = "ROLE_USER";
     const MODERATEUR = "ROLE_MODERATEUR";
@@ -84,6 +85,10 @@ class User implements UserInterface, \Serializable
 
     /**
      * @ORM\Column(type="string", type="string", length=64)
+     * @Assert\Length(
+     *     min="8",
+     *     minMessage="Votre mot de passe doit comporter {{ limit }} caractères minimum.",
+     * )
      */
     private $password;
 
@@ -108,7 +113,7 @@ class User implements UserInterface, \Serializable
     /**
      * @ORM\Column(type="datetime")
      */
-    private $memberSince;
+    private $subscribedAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
@@ -137,14 +142,22 @@ class User implements UserInterface, \Serializable
     private $imagePath;
 
     /**
+     * @var bool
+     *
+     * @ORM\Column(name="is_active", type="boolean")
+     */
+    private $isActive;
+
+    /**
      * User constructor.
      */
     public function __construct()
     {
         $this->roles = [self::USER];
-        $this->memberSince = new \DateTime();
+        $this->subscribedAt = new \DateTime();
         $this->licenses = new ArrayCollection();
         $this->events = new ArrayCollection();
+        $this->roles === [self::ADMIN] ? $this->isActive = true : $this->isActive = false;
     }
 
     /**
@@ -319,18 +332,18 @@ class User implements UserInterface, \Serializable
     /**
      * @return \DateTime
      */
-    public function getMemberSince(): \DateTime
+    public function getSubscribedAt()
     {
-        return $this->memberSince;
+        return $this->subscribedAt;
     }
 
     /**
-     * @param \DateTime $memberSince
+     * @param \DateTime $subscribedAt
      * @return User
      */
-    public function setMemberSince(\DateTime $memberSince): User
+    public function setSubscribedAt($subscribedAt)
     {
-        $this->memberSince = $memberSince;
+        $this->subscribedAt = $subscribedAt;
         return $this;
     }
 
@@ -407,6 +420,24 @@ class User implements UserInterface, \Serializable
     }
 
     /**
+     * @return bool
+     */
+    public function isActive()
+    {
+        return $this->isActive;
+    }
+
+    /**
+     * @param bool $isActive
+     * @return User
+     */
+    public function setIsActive($isActive)
+    {
+        $this->isActive = $isActive;
+        return $this;
+    }
+
+    /**
      * @return mixed
      */
     public function getSalt()
@@ -429,7 +460,8 @@ class User implements UserInterface, \Serializable
         return serialize([
             $this->id,
             $this->username,
-            $this->password
+            $this->password,
+            $this->isActive
         ]);
     }
 
@@ -447,8 +479,69 @@ class User implements UserInterface, \Serializable
        list(
            $this->id,
            $this->username,
-           $this->password
+           $this->password,
+           $this->isActive
            ) = unserialize($serialized)
        ;
+    }
+
+    /**
+     * Checks whether the user's account has expired.
+     *
+     * Internally, if this method returns false, the authentication system
+     * will throw an AccountExpiredException and prevent login.
+     *
+     * @return bool true if the user's account is non expired, false otherwise
+     *
+     * @see AccountExpiredException
+     */
+    public function isAccountNonExpired()
+    {
+        return true;
+    }
+
+    /**
+     * Checks whether the user is locked.
+     *
+     * Internally, if this method returns false, the authentication system
+     * will throw a LockedException and prevent login.
+     *
+     * @return bool true if the user is not locked, false otherwise
+     *
+     * @see LockedException
+     */
+    public function isAccountNonLocked()
+    {
+        return true;
+    }
+
+    /**
+     * Checks whether the user's credentials (password) has expired.
+     *
+     * Internally, if this method returns false, the authentication system
+     * will throw a CredentialsExpiredException and prevent login.
+     *
+     * @return bool true if the user's credentials are non expired, false otherwise
+     *
+     * @see CredentialsExpiredException
+     */
+    public function isCredentialsNonExpired()
+    {
+        return true;
+    }
+
+    /**
+     * Checks whether the user is enabled.
+     *
+     * Internally, if this method returns false, the authentication system
+     * will throw a DisabledException and prevent login.
+     *
+     * @return bool true if the user is enabled, false otherwise
+     *
+     * @see DisabledException
+     */
+    public function isEnabled()
+    {
+        return $this->isActive;
     }
 }

@@ -86,14 +86,17 @@ class AdminController extends AbstractController
      */
     public function members()
     {
-        # Fetch the members list from the database
-        $membersList = $this->em->getRepository(User::class)->findAll();
+        $userRepository = $this->em->getRepository(User::class);
+
+        $activeUsers = $userRepository->findByStatus(true);
+        $inactiveUsers = $userRepository->findByStatus(false);
 
         # Get the license repository
         $licensesManager = $this->em->getRepository(License::class);
 
         return $this->render('admin/members/members.html.twig', [
-            'membersList' => $membersList,
+            'activeUsers' => $activeUsers,
+            'inactiveUsers' => $inactiveUsers,
             'licensesManager' => $licensesManager
         ]);
     }
@@ -152,6 +155,45 @@ class AdminController extends AbstractController
         return $this->render('admin/members/update.html.twig', [
             'form' => $form->createView()
         ]);
+    }
+
+    /**
+     * Validate a subscription
+     * @Route("/member/{id}/validate", name="admin.validate_subscription")
+     *
+     * Members with ROLE_SUPER_ADMIN can validate a subscription.
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     *
+     * @param User $user
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function validateSubscription(User $user, Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $user->setIsActive(true);
+        $em->flush();
+
+        return $this->redirectToRoute('admin.index');
+    }
+
+    /**
+     * Reject a subscription
+     * @Route("member/{id}/reject", name="admin.reject_subscription", requirements={"id", "/\d+/"})
+     *
+     * Members with ROLE_SUPER_ADMIN can reject a subscription.
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     *
+     * @param User $user
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function rejectSubscription(User $user)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($user);
+        $em->flush();
+
+        return $this->redirectToRoute('admin.index');
     }
 
     /**

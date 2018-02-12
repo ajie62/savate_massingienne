@@ -60,8 +60,13 @@ class SecurityController extends AbstractController
             # Flush
             $em->flush();
 
+            $this->addFlash(
+                'notice',
+                'Votre inscription a été prise en compte ! Elle doit toutefois être validée par un administrateur.'
+            );
+
             # Redirection to home.index
-            return $this->redirectToRoute('home.index');
+            return $this->redirectToRoute('app.index');
         }
 
         return $this->render('security/register.html.twig', [

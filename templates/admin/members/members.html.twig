@@ -1,9 +1,26 @@
 {% extends 'admin/base.html.twig' %}
 
 {% block admin_body %}
-    <h1>Membres</h1>
+    {# Waiting for approval #}
+    <h1>Inscriptions en attente</h1>
+    {% for subscriber in inactiveUsers %}
+        <ul>
+            <li>Prénom : {{ subscriber.firstname }}</li>
+            <li>Nom : {{ subscriber.lastname }}</li>
+            <li>Email : {{ subscriber.email }}</li>
+            <li>Le : {{ subscriber.subscribedAt|date('d/m/Y à H:i') }}</li>
+            <li>
+                <a href="{{ url('admin.validate_subscription', {'id': subscriber.id}) }}">Valider</a>
+                <a href="{{ url('admin.reject_subscription', {'id': subscriber.id}) }}">Refuser</a>
+            </li>
+        </ul>
+    {% else %}
+        <p>Aucune inscription en attente.</p>
+    {% endfor %}
 
-    {% if membersList %}
+    {# Validated members #}
+    <h1>Membres</h1>
+    {% if activeUsers %}
     <table>
         <thead>
         <tr>
@@ -21,7 +38,7 @@
         </thead>
 
         <tbody>
-        {% for member in membersList %}
+        {% for member in activeUsers %}
             <tr class="top">
                 <td>{{ member.id }}</td>
                 <td>{{ member.username|capitalize }}</td>
