@@ -64,6 +64,20 @@ class AppController extends AbstractController
     }
 
     /**
+     * Page giving an introduction to what the French boxing is.
+     * @Route("/savate", name="app.savate")
+     *
+     * Everyone can see this page.
+     * @Security("is_granted('IS_AUTHENTICATED_ANONYMOUSLY')")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function savate()
+    {
+        return $this->render('app/savate.html.twig');
+    }
+
+    /**
      * @Route("/contact", name="app.contact")
      *
      * Everyone can see this page and send a message.

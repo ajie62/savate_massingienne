@@ -19,8 +19,8 @@
         <li>Prénom : {{ user.firstname|capitalize }}</li>
         <li>Nom : {{ user.lastname|capitalize }}</li>
         <li>N° de licence : {{ user.licenseNumber|default('Pas encore renseigné') }}</li>
-        <li>Adresse mail: {{ user.email }}</li>
-        <li>Membre depuis le: {{ user.memberSince|date('d/m/Y à H:i') }}</li>
+        <li>Adresse mail : {{ user.email }}</li>
+        <li>Membre depuis le : {{ user.subscribedAt|date('d/m/Y à H:i') }}</li>
     </ul>
 
     <h2>Licences</h2>

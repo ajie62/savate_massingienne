@@ -34,7 +34,9 @@
             <td>Photo</td>
             <td>Prénom</td>
             <td>Rôle</td>
-            <td>Action</td>
+            {% if is_granted('ROLE_SUPER_ADMIN') %}
+                <td>Action</td>
+            {% endif %}
         </tr>
         </thead>
 
@@ -44,7 +46,9 @@
                     <td><img src="{{ asset('images/' ~ member.imagePath) | imagine_filter('admin_team_thumbnail')}}" alt="Photo de {{ member.firstname }}"></td>
                     <td>{{ member.firstname }}</td>
                     <td>{{ member.job }}</td>
-                    <td><a href="{{ path('admin.delete-team-member', {id: member.id}) }}">Supprimer</a></td>
+                    {% if is_granted('ROLE_SUPER_ADMIN') %}
+                        <td><a href="{{ path('admin.delete-team-member', {id: member.id}) }}">Supprimer</a></td>
+                    {% endif %}
                 </tr>
             {% endfor %}
         </tbody>
