@@ -1,0 +1,12 @@
+{# templates/bundles/TwigBundle/Exception/error404.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <h1>Erreur {{ status_code }} !</h1>
+
+    <p>
+        La page que vous cherchez n'existe pas ou plus. <a href="{{ path('app.index') }}">Retourner à l'accueil</a>
+    </p>
+
+{% endblock %}
