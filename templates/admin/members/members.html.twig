@@ -9,10 +9,12 @@
             <li>Nom : {{ subscriber.lastname }}</li>
             <li>Email : {{ subscriber.email }}</li>
             <li>Le : {{ subscriber.subscribedAt|date('d/m/Y à H:i') }}</li>
-            <li>
-                <a href="{{ url('admin.validate_subscription', {'id': subscriber.id}) }}">Valider</a>
-                <a href="{{ url('admin.reject_subscription', {'id': subscriber.id}) }}">Refuser</a>
-            </li>
+            {% if is_granted('ROLE_SUPER_ADMIN') %}
+                <li>
+                    <a href="{{ url('admin.validate_subscription', {'id': subscriber.id}) }}">Valider</a>
+                    <a href="{{ url('admin.reject_subscription', {'id': subscriber.id}) }}">Refuser</a>
+                </li>
+            {% endif %}
         </ul>
     {% else %}
         <p>Aucune inscription en attente.</p>
