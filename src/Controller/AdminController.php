@@ -20,6 +20,7 @@ use App\Form\EventType;
 use App\Form\LicenseType;
 use App\Form\NewsType;
 use App\Form\TeamMemberType;
+use App\Service\EmailManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -47,6 +48,10 @@ class AdminController extends AbstractController
     private $licensesDir;
     private $imagesDir;
     private $teamMemberThumbnailDir;
+    /**
+     * @var EmailManager
+     */
+    private $emailManager;
 
     /**
      * AdminController constructor.
@@ -54,13 +59,15 @@ class AdminController extends AbstractController
      * @param $licenses_dir
      * @param $images_dir
      * @param $team_member_thumbnail_dir
+     * @param EmailManager $emailManager
      */
-    public function __construct($entityManager, $licenses_dir, $images_dir, $team_member_thumbnail_dir)
+    public function __construct($entityManager, $licenses_dir, $images_dir, $team_member_thumbnail_dir, EmailManager $emailManager)
     {
         $this->em = $entityManager;
         $this->licensesDir = $licenses_dir;
         $this->imagesDir = $images_dir;
         $this->teamMemberThumbnailDir = $team_member_thumbnail_dir;
+        $this->emailManager = $emailManager;
     }
 
     /**
@@ -165,14 +172,17 @@ class AdminController extends AbstractController
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
      *
      * @param User $user
-     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
-    public function validateSubscription(User $user, Request $request)
+    public function validateSubscription(User $user)
     {
-        $em = $this->getDoctrine()->getManager();
         $user->setIsActive(true);
-        $em->flush();
+        $this->em->flush();
+
+        $this->emailManager->sendSubscriptionEmail($user);
 
         return $this->redirectToRoute('admin.index');
     }
@@ -186,13 +196,20 @@ class AdminController extends AbstractController
      *
      * @param User $user
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
     public function rejectSubscription(User $user)
     {
-        $em = $this->getDoctrine()->getManager();
-        $em->remove($user);
-        $em->flush();
+        # Remove the user from database
+        $this->em->remove($user);
+        # Send the user an email
+        $this->emailManager->sendSubscriptionEmail($user);
+        # Flush
+        $this->em->flush();
 
+        # Redirection to admin.index
         return $this->redirectToRoute('admin.index');
     }
 
