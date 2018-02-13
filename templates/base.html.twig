@@ -2,35 +2,24 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{% block title %}Savate Massingienne{% endblock %}</title>
+        <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+        {% block stylesheets %}
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css">
+            <link rel="stylesheet" href="{{ asset('css/main.css') }}">
+        {% endblock %}
     </head>
     <body>
         {% block header %}
-            <ul>
-                <li><a href="{{ path('app.index') }}">Accueil</a></li>
-                <li><a href="{{ path('event.index') }}">Évènements</a></li>
-                <li><a href="{{ path('news.index') }}">Actualités</a></li>
-                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-                    <li><a href="{{ path('user.profile', {username: app.user.username}) }}">Profil</a></li>
-                {% endif %}
-                <li><a href="{{ path('app.contact') }}">Contact</a></li>
-                {% if is_granted('ROLE_ADMIN') %}
-                    <li><a href="{{ path('admin.index') }}">Administration</a></li>
-                {% endif %}
-                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-                    <li><a href="{{ path('security.logout') }}">Déconnexion</a></li>
-                {% endif %}
-                {% if not is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-                    <li><a href="{{ path('security.login') }}">Connexion</a></li>
-                    <li><a href="{{ path('security.register') }}">Inscription</a></li>
-                {% endif %}
-            </ul>
+            {{ include('includes/header.html.twig') }}
         {% endblock %}
 
         {% block body %}{% endblock %}
         {% block javascripts %}
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+            <script src="{{ asset('js/main.js') }}"></script>
         {% endblock %}
     </body>
 </html>

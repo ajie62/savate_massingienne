@@ -1,0 +1,25 @@
+@import 'variables', 'global/header';
+@import url('https://fonts.googleapis.com/css?family=Patua+One');
+
+* { box-sizing: border-box; }
+
+html { height: 100%; }
+
+body {
+  display: flex;
+  flex-direction: column;
+  font-size: 1em;
+  min-height: 100vh;
+  font-family: 'PT Sans', 'Arial', sans-serif;
+}
+
+h1, h2, h3, h4 { font-family: 'Patua One', cursive; }
+
+main.main-wrapper { flex: 1 1 0; }
+
+.padding-left-right { padding: 0 15px; }
+
+.centered {
+  max-width: 800px;
+  margin: 0 auto;
+}

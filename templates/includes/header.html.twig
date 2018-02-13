@@ -1,0 +1,32 @@
+{# templates/includes/header.html.twig #}
+<header>
+    <div class="topnav" id="topnav">
+        <a href="{{ url('app.index') }}" class="brand">Team Savate Massingienne</a>
+
+        <div class="links">
+            <a href="{{ url('app.index') }}">Accueil</a>
+            <a href="{{ url('event.index') }}">Évènements</a>
+            <a href="{{ url('news.index') }}">Actualités</a>
+            <a href="{{ url('app.savate') }}">Savate</a>
+            
+            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                <a href="{{ url('user.profile', {username: app.user.username}) }}">Profil</a>
+            {% endif %}
+
+            {% if is_granted('ROLE_ADMIN') %}
+                <a href="{{ url('admin.index') }}">Administration</a>
+            {% endif %}
+
+            {% if not is_granted('ROLE_USER') %}
+                <a href="{{ url('security.register') }}">Inscription</a>
+                <a href="{{ url('security.login') }}">Connexion</a>
+            {% endif %}
+
+            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                <a href="{{ url('security.logout') }}">Déconnexion</a>
+            {% endif %}
+        </div>
+
+        <a id="toggleBtn" class="icon">&#9776;</a>
+    </div>
+</header>
