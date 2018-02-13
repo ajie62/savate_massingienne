@@ -31,8 +31,8 @@ class SecurityController extends AbstractController
      * Register
      * @Route("/register", name="security.register")
      *
-     * Only anonymous users can register.
-     * @Security("not has_role('ROLE_USER') and not is_granted('IS_AUTHENTICATED_REMEMBERED')")
+     * Everyone can see this page.
+     * @Security("is_granted('IS_AUTHENTICATED_ANONYMOUSLY')")
      *
      * @param Request $request
      * @param UserPasswordEncoderInterface $passwordEncoder
@@ -40,6 +40,11 @@ class SecurityController extends AbstractController
      */
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
+        # If a user in logged in, the login page can't be reached
+        if ($this->getUser()) {
+            return $this->redirectToRoute('app.index');
+        }
+
         $user = new User();
 
         # Form creation, based on RegistrationType
@@ -78,14 +83,19 @@ class SecurityController extends AbstractController
      * Login
      * @Route("/login", name="security.login")
      *
-     * Only anonymous users can log in.
-     * @Security("not has_role('ROLE_USER') and not is_granted('IS_AUTHENTICATED_REMEMBERED')")
+     * Everyone can see this page.
+     * @Security("is_granted('IS_AUTHENTICATED_ANONYMOUSLY')")
      *
      * @param AuthenticationUtils $authenticationUtils
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function login(AuthenticationUtils $authenticationUtils)
     {
+        # If a user in logged in, the login page can't be reached
+        if ($this->getUser()) {
+            return $this->redirectToRoute('app.index');
+        }
+
         # Last email entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
         # Last error if there is one
