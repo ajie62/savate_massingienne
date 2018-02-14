@@ -50,7 +50,7 @@ class AppController extends AbstractController
     {
         $association = $this->em->getRepository(Association::class)->find(1);
         $twoLastEvents = $this->em->getRepository(Event::class)->getTwoLastEvents();
-        $news = $this->em->getRepository(News::class)->findAll();
+        $twoLastNews = $this->em->getRepository(News::class)->getTwoLastNews();
 
         if (is_null($association)) {
             $association = new Association();
@@ -59,7 +59,7 @@ class AppController extends AbstractController
         return $this->render('app/index.html.twig', [
             'association' => $association,
             'twoLastEvents' => $twoLastEvents,
-            'newsList' => $news
+            'twoLastNews' => $twoLastNews
         ]);
     }
 
