@@ -62,4 +62,14 @@ class EventRepository extends EntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function getTwoLastEvents()
+    {
+        return $this->createQueryBuilder('e')
+            ->orderBy('e.startingDate', 'ASC')
+            ->andWhere('e.startingDate > CURRENT_DATE()')
+            ->setMaxResults(2)
+            ->getQuery()
+            ->getResult();
+    }
 }

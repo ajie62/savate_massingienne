@@ -5,28 +5,141 @@
         {{ message }}
     {% endfor %}
 
-    <p>{{ association.textIntro|default("Aucune intro n'a été rédigée.") }}</p>
-    <p>{{ association.textInfo|default("Aucune info n'a été renseignée.") }}</p>
+    <main class="main-wrapper">
+        <div class="intro-img padding-left-right">
+            <h1>Team Savate Massingienne</h1>
+        </div>
 
-    {% for teamMember in association.teamMembers %}
-        {% if teamMember.imagePath %}
-            <img src="{{ asset('images/' ~ teamMember.imagePath) }}" alt="Photo de {{ teamMember.firstname }}">
-        {% endif %}
-        <p>{{ teamMember.firstname }} - {{ teamMember.job }}</p>
-    {% else %}
-        <p>Aucun membre à afficher</p>
-    {% endfor %}
+        <div class="site-content">
+            <section class="introduction">
+                <h2 class="text-center">Introduction</h2>
+                <div class="content centered padding-left-right grid grid-two-columns">
+                    <div class="img"></div>
+                    <div class="text {{ association.textIntro ? 'text-justify' : 'text-center' }}">
+                        <p>{{ association.textIntro|default('L\'introduction n\'a pas encore rédigée.') }}</p>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <p class="text-center"><a href="{{ url('admin.content') }}" class="to-admin-button">Gestion du contenu</a></p>
+                        {% endif %}
+                    </div>
+                </div>
+            </section>
 
-    {% for event in events %}
-        <p>{{ event.name }}</p>
-    {% else %}
-        <p>Aucun évènement à afficher</p>
-    {% endfor %}
+            <section class="informations">
+                <h2 class="text-center">Informations</h2>
+                <div class="content centered padding-left-right grid">
+                    <p class="{{ association.textInfo ? 'text-justify' : 'text-center' }}">{{ association.textInfo|default("Les informations n'ont pas encore été fournies.") }}</p>
+                </div>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <p class="text-center"><a href="{{ url('admin.content') }}" class="to-admin-button">Gestion du contenu</a></p>
+                {% endif %}
+            </section>
 
-    {% for news in newsList %}
-        <p>{{ news.name }}</p>
-    {% else %}
-        <p>Aucune actualité à afficher</p>
-    {% endfor %}
+            <section class="team">
+                <h2 class="text-center">Équipe</h2>
+                <div class="team-members content centered padding-left-right grid {% if association.teamMembers|length > 0 %}grid-five-column{% else %}grid-no-column grid-horizontal-center grid-vertical-center{% endif %}">
+                    {% for member in association.teamMembers %}
+                        <div class="member">
+                            <img src="{{ asset('images/' ~ member.imagePath) }}" alt="Photo de {{ member.firstname }}">
+                            <p class="text-center">{{ member.firstname }}, {{ member.job }}</p>
+                        </div>
+                    {% else %}
+                        <p class="text-center">Aucun membre d'équipe n'a été ajouté.</p>
+                    {% endfor %}
+                </div>
+                <div class="text-center">
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <p class="text-center"><a href="{{ url('admin.content') }}" class="to-admin-button">Gestion du contenu</a></p>
+                    {% endif %}
+                </div>
+            </section>
 
+            {# NEWS SECTION #}
+            <section class="news">
+                <h2 class="text-center">Actualités</h2>
+                <div class="content centered padding-left-right grid {% if not newsList %}grid-vertical-center grid-horizontal-center {% else %}grid-two-columns{% endif %}">
+                    {% for news in newsList %}
+                        <div class="homepage-news">
+                            <h3>{{ news.name }}</h3>
+                            <small>
+                                {% if is_granted('ROLE_ADMIN') %}
+                                    <a href="{{ url('admin.news_update', {id: news.id}) }}">Éditer</a><br>
+                                {% endif %}
+                                Publié le {{ news.createdAt|date('d/m/Y à H:i') }}
+                            </small>
+                        </div>
+                    {% else %}
+                        <p class="text-center">Aucune actualité n'a été publiée.</p>
+                    {% endfor %}
+                </div>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <div class="text-center">
+                        <a href="{{ url('admin.news_create') }}" class="to-admin-button">Publier une actualité</a>
+                    </div>
+                {% endif %}
+            </section>
+
+            {# EVENTS SECTION #}
+            <section class="events">
+                <h2 class="text-center">Évènements</h2>
+                <div class="content centered padding-left-right grid {% if not twoLastEvents %}grid-vertical-center grid-horizontal-center {% else %}grid-two-columns{% endif %}">
+                   {% for event in twoLastEvents %}
+                        <div class="homepage-events">
+                            <h3>{{ event.name|length > 50 ? event.name|slice(0,50) ~ '...' : event.name }}</h3>
+                            <small>
+                                Début : {{ event.startingDate|date('d/m/Y à H:i') }} - Fin : {{ event.endingDate|date('d/m/Y à H:i') }}
+                                {% if is_granted('ROLE_ADMIN') %}
+                                    <a href="{{ url('admin.event_update', {id: event.id}) }}" class="to-admin-link">Éditer</a>
+                                {% endif %}
+                            </small>
+
+                            <p class="text-justify minimized-element">{{ event.description }}</p>
+                        </div>
+                   {% else %}
+                        <p class="text-center">
+                            Aucun évènement n'est prévu pour le moment.
+                        </p>
+                   {% endfor %}
+                </div>
+                <div class="text-center">
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <br><a href="{{ url('admin.event_create') }}" class="to-admin-button">Créer un évènement</a>
+                    {% endif %}
+                </div>
+            </section>
+        </div>
+    </main>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+        $(function() {
+
+            var minimized_elements = $('p.minimized-element');
+
+            minimized_elements.each(function() {
+                var t = $(this).text();
+                if (t.length < 350) return;
+
+                $(this).html(
+                    t.slice(0,350)
+                    + '<span>... </span><a href="#" class="more"> Lire</a>'
+                    + '<span style="display:none;">' + t.slice(350,t.length)
+                    + '<a href="#" class="less"> Moins</a></span>'
+                );
+            });
+
+            $('a.more', minimized_elements).click(function(e) {
+                e.preventDefault();
+                $(this).hide().prev().hide();
+                $(this).next().show();
+            });
+
+            $('a.less', minimized_elements).click(function(e) {
+                e.preventDefault();
+                $(this).parent().hide().prev().show().prev().show();
+            });
+        });
+    </script>
 {% endblock %}

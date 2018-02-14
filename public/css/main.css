@@ -1,6 +1,5 @@
 @import url("https://fonts.googleapis.com/css?family=Patua+One");
 .topnav {
-  box-shadow: 0 1px 6px #d8d8d8;
   overflow: hidden; }
   .topnav .brand {
     font-family: 'Patua One', 'Helvetica Neue', sans-serif;
@@ -41,6 +40,85 @@
       float: none;
       text-align: left; } }
 
+.main-wrapper .intro-img {
+  align-items: center;
+  background: url("../images/training.jpg") no-repeat 100%;
+  background-size: cover;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  height: 450px;
+  justify-content: center;
+  text-align: center; }
+  .main-wrapper .intro-img h1 {
+    font-size: 4em;
+    line-height: 1.5em;
+    margin: 0;
+    text-shadow: 0 0 30px #000; }
+    @media screen and (max-width: 900px) {
+      .main-wrapper .intro-img h1 {
+        font-size: 3em; } }
+    @media screen and (max-width: 768px) {
+      .main-wrapper .intro-img h1 {
+        font-size: 2em; } }
+.main-wrapper section {
+  padding: 50px 0; }
+  .main-wrapper section h2 {
+    font-size: 2em;
+    text-transform: uppercase; }
+  .main-wrapper section p {
+    line-height: 1.5; }
+  .main-wrapper section:not(:last-child):not(:first-child) {
+    margin: 0 0; }
+  .main-wrapper section .content {
+    margin-bottom: 20px;
+    min-height: 300px; }
+.main-wrapper .introduction .content,
+.main-wrapper .events .content,
+.main-wrapper .news .content {
+  grid-gap: 20px; }
+@media screen and (max-width: 900px) {
+  .main-wrapper .introduction .content {
+    grid-template-columns: 100%;
+    grid-auto-rows: minmax(250px, auto); } }
+.main-wrapper .introduction .img {
+  background: url("../images/salle.jpg") no-repeat center; }
+  @media screen and (max-width: 900px) {
+    .main-wrapper .introduction .img {
+      background-position: center 80%; } }
+.main-wrapper .informations {
+  background: #333;
+  background: url("../images/dark-pattern-3.jpg");
+  background-size: cover;
+  color: #f2f2f2; }
+  .main-wrapper .informations .content {
+    align-content: center; }
+.main-wrapper .team p {
+  margin: 0; }
+.main-wrapper .team h2 {
+  margin: 0; }
+.main-wrapper .team .team-members {
+  grid-gap: 10px;
+  height: 100%; }
+  .main-wrapper .team .team-members .member p {
+    margin: 5px 0; }
+  .main-wrapper .team .team-members img {
+    height: 170px;
+    width: 170px; }
+.main-wrapper .news {
+  background: url("../images/dark-pattern.png") fixed;
+  background-size: cover;
+  color: white;
+  height: 100%; }
+.main-wrapper .events {
+  height: 100%; }
+  @media screen and (max-width: 768px) {
+    .main-wrapper .events .content {
+      grid-template-columns: 100%; } }
+  .main-wrapper .events .content .homepage-events {
+    border: 1px solid #333;
+    padding: 5px; }
+
 * {
   box-sizing: border-box; }
 
@@ -58,13 +136,60 @@ h1, h2, h3, h4 {
   font-family: 'Patua One', cursive; }
 
 main.main-wrapper {
-  flex: 1 1 0; }
+  flex: 1; }
 
-.padding-left-right {
-  padding: 0 15px; }
+/* LAYOUT */
+.grid {
+  display: grid; }
+
+.grid-no-column {
+  grid-template-columns: 100%; }
+
+.grid-two-columns {
+  grid-template-columns: repeat(2, 1fr); }
+
+.grid-five-columns {
+  grid-template-columns: repeat(5, 1fr); }
+
+.grid-vertical-center {
+  align-content: center; }
+
+.grid-horizontal-center {
+  justify-content: center; }
+
+.flex {
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; }
+
+.text-center {
+  text-align: center; }
+
+.text-justify {
+  text-align: justify; }
 
 .centered {
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto; }
+
+.padding-left-right {
+  padding: 20px 15px; }
+
+.to-admin-link {
+  color: indianred; }
+
+.to-admin-link,
+.to-admin-button {
+  border-radius: 10px;
+  font-weight: bold;
+  text-decoration: none; }
+
+.to-admin-button {
+  background: indianred;
+  color: white;
+  display: inline-block;
+  padding: 10px 15px; }
 
 /*# sourceMappingURL=main.css.map */
