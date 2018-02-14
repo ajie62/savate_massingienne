@@ -1,0 +1,104 @@
+.main-wrapper {
+  // Welcome image
+  .intro-img {
+    align-items: center;
+    background: url('../images/training.jpg') no-repeat 100%;
+    background-size: cover;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    height: 450px;
+    justify-content: center;
+    text-align: center;
+    h1 {
+      font-size: 4em;
+      line-height: 1.5em;
+      margin: 0;
+      text-shadow: 0 0 30px #000;
+      @media #{$biggerPhones} { font-size: 3em; }
+      @media #{$bigPhones} { font-size: 2em; }
+    }
+  }
+
+  section {
+    padding: 50px 0;
+    h2 {
+      font-size: 2em;
+      text-transform: uppercase;
+    }
+    p { line-height: 1.5; }
+    &:not(:last-child):not(:first-child) { margin: 0 0; }
+    .content {
+      margin-bottom: 20px;
+      min-height: 300px;
+    }
+  }
+
+  .introduction .content,
+  .events .content,
+  .news .content {
+    grid-gap: 20px;
+  }
+
+  // 'Introduction' section
+  .introduction {
+    .content {
+      @media #{$biggerPhones} {
+        grid-template-columns: 100%;
+        grid-auto-rows: minmax(250px, auto);
+      }
+    }
+    .img {
+      background: url('../images/salle.jpg') no-repeat center;
+      @media #{$biggerPhones} { background-position: center 80%; }
+    }
+  }
+
+  // 'Informations' section
+  .informations {
+    background: $main-black;
+    background: url('../images/dark-pattern-3.jpg');
+    background-size: cover;
+    color: #f2f2f2;
+    .content { align-content: center; }
+  }
+
+  // 'Team' section
+  .team {
+    p { margin: 0; }
+    h2 { margin: 0; }
+    .team-members {
+      grid-gap: 10px;
+      height: 100%;
+      .member {
+        p { margin: 5px 0; }
+      }
+      img {
+        height: 170px;
+        width: 170px;
+      }
+    }
+  }
+
+  // 'News' section
+  .news {
+    background: url('../images/dark-pattern.png') fixed;
+    background-size: cover;
+    color: white;
+    height: 100%;
+  }
+
+  // 'Events' section
+  .events {
+    height: 100%;
+    .content {
+      @media #{$bigPhones} {
+        grid-template-columns: 100%;
+      }
+      .homepage-events {
+        border: 1px solid #333;
+        padding: 5px;
+      }
+    }
+  }
+}

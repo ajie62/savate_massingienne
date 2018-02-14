@@ -49,7 +49,7 @@ class AppController extends AbstractController
     public function index()
     {
         $association = $this->em->getRepository(Association::class)->find(1);
-        $events = $this->em->getRepository(Event::class)->findAll();
+        $twoLastEvents = $this->em->getRepository(Event::class)->getTwoLastEvents();
         $news = $this->em->getRepository(News::class)->findAll();
 
         if (is_null($association)) {
@@ -58,7 +58,7 @@ class AppController extends AbstractController
 
         return $this->render('app/index.html.twig', [
             'association' => $association,
-            'events' => $events,
+            'twoLastEvents' => $twoLastEvents,
             'newsList' => $news
         ]);
     }

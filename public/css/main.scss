@@ -1,0 +1,67 @@
+@import 'variables', 'global/header', 'index';
+@import url('https://fonts.googleapis.com/css?family=Patua+One');
+
+* { box-sizing: border-box; }
+
+html { height: 100%; }
+
+body {
+  display: flex;
+  flex-direction: column;
+  font-size: 1em;
+  min-height: 100vh;
+  font-family: 'PT Sans', 'Arial', sans-serif;
+}
+
+h1, h2, h3, h4 { font-family: 'Patua One', cursive; }
+
+main.main-wrapper { flex: 1; }
+
+/* LAYOUT */
+// CSS Grid Layout
+.grid { display: grid; }
+.grid-no-column { grid-template-columns: 100%; }
+.grid-two-columns { grid-template-columns: repeat(2, 1fr); }
+.grid-five-columns { grid-template-columns: repeat(5, 1fr); }
+
+
+// This needs the container height to be 100%;
+.grid-vertical-center { align-content: center; }
+.grid-horizontal-center { justify-content: center; }
+
+// Flexbox
+.flex {
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+// Alignment and spacing
+.text-center { text-align: center; }
+.text-justify { text-align: justify; }
+
+.centered {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.padding-left-right { padding: 20px 15px; }
+
+// Links and buttons for admin
+.to-admin-link { color: indianred; }
+
+.to-admin-link,
+.to-admin-button {
+  border-radius: 10px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.to-admin-button {
+  background: indianred;
+  color: white;
+  display: inline-block;
+  padding: 10px 15px;
+}
