@@ -43,7 +43,13 @@
         <tbody>
             {% for member in teamMembers %}
                 <tr>
-                    <td><img src="{{ asset('images/' ~ member.imagePath) | imagine_filter('admin_team_thumbnail')}}" alt="Photo de {{ member.firstname }}"></td>
+                    <td>
+                        {% if member.imagePath %}
+                            <img src="{{ asset('images/' ~ member.imagePath) | imagine_filter('admin_team_thumbnail')}}" alt="Photo de {{ member.firstname }}">
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
                     <td>{{ member.firstname }}</td>
                     <td>{{ member.job }}</td>
                     {% if is_granted('ROLE_SUPER_ADMIN') %}

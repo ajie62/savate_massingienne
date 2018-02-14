@@ -11,6 +11,8 @@
         </div>
 
         <div class="site-content">
+
+            {# INTRODUCTION SECTION #}
             <section class="introduction">
                 <h2 class="text-center">Introduction</h2>
                 <div class="content centered padding-left-right grid grid-two-columns">
@@ -24,22 +26,24 @@
                 </div>
             </section>
 
+            {# INFORMATIONS SECTION #}
             <section class="informations">
                 <h2 class="text-center">Informations</h2>
                 <div class="content centered padding-left-right grid">
-                    <p class="{{ association.textInfo ? 'text-justify' : 'text-center' }}">{{ association.textInfo|default("Les informations n'ont pas encore été fournies.") }}</p>
+                    <p class="text-center">{{ association.textInfo|default("Les informations n'ont pas encore été fournies.") }}</p>
                 </div>
                 {% if is_granted('ROLE_ADMIN') %}
                     <p class="text-center"><a href="{{ url('admin.content') }}" class="to-admin-button">Gestion du contenu</a></p>
                 {% endif %}
             </section>
 
+            {# TEAM SECTION #}
             <section class="team">
                 <h2 class="text-center">Équipe</h2>
-                <div class="team-members content centered padding-left-right grid {% if association.teamMembers|length > 0 %}grid-five-column{% else %}grid-no-column grid-horizontal-center grid-vertical-center{% endif %}">
+                <div class="team-members content centered padding-left-right grid grid-vertical-center grid-horizontal-center {% if association.teamMembers|length == 0 %}grid-no-column{% else %}grid-team-columns{% endif %}">
                     {% for member in association.teamMembers %}
-                        <div class="member">
-                            <img src="{{ asset('images/' ~ member.imagePath) }}" alt="Photo de {{ member.firstname }}">
+                        <div class="member text-center">
+                            <img src="{{ member.imagePath ? asset('images/' ~ member.imagePath) : asset('images/no-pp.jpg') }}" alt="Photo de {{ member.firstname }}">
                             <p class="text-center">{{ member.firstname }}, {{ member.job }}</p>
                         </div>
                     {% else %}
@@ -56,26 +60,32 @@
             {# NEWS SECTION #}
             <section class="news">
                 <h2 class="text-center">Actualités</h2>
-                <div class="content centered padding-left-right grid {% if not newsList %}grid-vertical-center grid-horizontal-center {% else %}grid-two-columns{% endif %}">
-                    {% for news in newsList %}
+                <div class="content centered text-center padding-left-right grid {% if not twoLastNews %}grid-vertical-center grid-horizontal-center {% else %}grid-two-columns{% endif %}">
+                    {% for news in twoLastNews %}
                         <div class="homepage-news">
                             <h3>{{ news.name }}</h3>
                             <small>
-                                {% if is_granted('ROLE_ADMIN') %}
-                                    <a href="{{ url('admin.news_update', {id: news.id}) }}">Éditer</a><br>
-                                {% endif %}
                                 Publié le {{ news.createdAt|date('d/m/Y à H:i') }}
+                                {% if is_granted('ROLE_ADMIN') %}
+                                    <a href="{{ url('admin.news_update', {id: news.id}) }}" class="to-admin-link">Éditer</a><br>
+                                {% endif %}
                             </small>
+                            <div class="news-content text-justify">
+                                <p>{{ news.content|length < 300 ? news.content : news.content|slice(0, 300) ~ '...' }}</p>
+                            </div>
+
+                            <a href="{{ url('news.read', {slug: news.slug}) }}" class="action-button">Lire</a>
                         </div>
                     {% else %}
                         <p class="text-center">Aucune actualité n'a été publiée.</p>
                     {% endfor %}
                 </div>
-                {% if is_granted('ROLE_ADMIN') %}
-                    <div class="text-center">
+                <div class="text-center">
+                    <a href="{{ url('news.index') }}" class="black-action-button">Toutes les actualités</a>
+                    {% if is_granted('ROLE_ADMIN') %}
                         <a href="{{ url('admin.news_create') }}" class="to-admin-button">Publier une actualité</a>
-                    </div>
-                {% endif %}
+                    {% endif %}
+                </div>
             </section>
 
             {# EVENTS SECTION #}
@@ -84,7 +94,7 @@
                 <div class="content centered padding-left-right grid {% if not twoLastEvents %}grid-vertical-center grid-horizontal-center {% else %}grid-two-columns{% endif %}">
                    {% for event in twoLastEvents %}
                         <div class="homepage-events">
-                            <h3>{{ event.name|length > 50 ? event.name|slice(0,50) ~ '...' : event.name }}</h3>
+                            <h3 class="text-center">{{ event.name|length > 50 ? event.name|slice(0,50) ~ '...' : event.name }}</h3>
                             <small>
                                 Début : {{ event.startingDate|date('d/m/Y à H:i') }} - Fin : {{ event.endingDate|date('d/m/Y à H:i') }}
                                 {% if is_granted('ROLE_ADMIN') %}
@@ -101,8 +111,10 @@
                    {% endfor %}
                 </div>
                 <div class="text-center">
+                    <a href="{{ url('event.archives') }}" class="black-action-button">Archives</a>
+                    <a href="{{ url('event.index') }}" class="black-action-button">Tous les évènements</a>
                     {% if is_granted('ROLE_ADMIN') %}
-                        <br><a href="{{ url('admin.event_create') }}" class="to-admin-button">Créer un évènement</a>
+                        <a href="{{ url('admin.event_create') }}" class="to-admin-button">Créer un évènement</a>
                     {% endif %}
                 </div>
             </section>
@@ -124,9 +136,9 @@
 
                 $(this).html(
                     t.slice(0,350)
-                    + '<span>... </span><a href="#" class="more"> Lire</a>'
+                    + '<span>... </span><a href="#" class="more content-link"> Lire</a>'
                     + '<span style="display:none;">' + t.slice(350,t.length)
-                    + '<a href="#" class="less"> Moins</a></span>'
+                    + '<a href="#" class="less content-link"> Moins</a></span>'
                 );
             });
 

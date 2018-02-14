@@ -23,6 +23,7 @@ main.main-wrapper { flex: 1; }
 .grid-no-column { grid-template-columns: 100%; }
 .grid-two-columns { grid-template-columns: repeat(2, 1fr); }
 .grid-five-columns { grid-template-columns: repeat(5, 1fr); }
+.grid-team-columns { grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); }
 
 
 // This needs the container height to be 100%;
@@ -50,18 +51,31 @@ main.main-wrapper { flex: 1; }
 .padding-left-right { padding: 20px 15px; }
 
 // Links and buttons for admin
-.to-admin-link { color: indianred; }
-
 .to-admin-link,
-.to-admin-button {
-  border-radius: 10px;
+.content-link {
+  color: indianred;
   font-weight: bold;
   text-decoration: none;
+  &:hover { text-decoration: underline; }
 }
 
-.to-admin-button {
-  background: indianred;
+.black-action-button {
+  background: $main-black;
+  border-radius: 10px;
   color: white;
   display: inline-block;
+  font-weight: bold;
   padding: 10px 15px;
+  text-decoration: none;
+  &:hover { background: lighten($main-black, 5%); }
+}
+
+.to-admin-button, .action-button {
+  background: indianred;
+  border-radius: 10px;
+  color: white;
+  display: inline-block;
+  font-weight: bold;
+  padding: 10px 15px;
+  text-decoration: none;
 }
