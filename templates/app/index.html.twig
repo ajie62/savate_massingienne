@@ -20,7 +20,9 @@
                     <div class="text {{ association.textIntro ? 'text-justify' : 'text-center' }}">
                         <p>{{ association.textIntro|default('L\'introduction n\'a pas encore rédigée.') }}</p>
                         {% if is_granted('ROLE_ADMIN') %}
-                            <p class="text-center"><a href="{{ url('admin.content') }}" class="to-admin-button">Gestion du contenu</a></p>
+                            <div class="text-center">
+                                <a href="{{ url('admin.content') }}" class="to-admin-button">Gestion du contenu</a>
+                            </div>
                         {% endif %}
                     </div>
                 </div>
@@ -33,7 +35,9 @@
                     <p class="text-center">{{ association.textInfo|default("Les informations n'ont pas encore été fournies.") }}</p>
                 </div>
                 {% if is_granted('ROLE_ADMIN') %}
-                    <p class="text-center"><a href="{{ url('admin.content') }}" class="to-admin-button">Gestion du contenu</a></p>
+                    <div class="text-center">
+                        <a href="{{ url('admin.content') }}" class="to-admin-button">Gestion du contenu</a>
+                    </div>
                 {% endif %}
             </section>
 
@@ -60,16 +64,18 @@
             {# NEWS SECTION #}
             <section class="news">
                 <h2 class="text-center">Actualités</h2>
-                <div class="content centered text-center padding-left-right grid {% if not twoLastNews %}grid-vertical-center grid-horizontal-center {% else %}grid-two-columns{% endif %}">
+                <div class="content centered text-center padding-left-right grid {% if twoLastNews|length == 0 %}grid-horizontal-center grid-vertical-center{% elseif twoLastNews|length == 1 %} grid-no-column{% else %}grid-two-columns{% endif %}">
                     {% for news in twoLastNews %}
                         <div class="homepage-news">
-                            <h3>{{ news.name }}</h3>
-                            <small>
-                                Publié le {{ news.createdAt|date('d/m/Y à H:i') }}
-                                {% if is_granted('ROLE_ADMIN') %}
-                                    <a href="{{ url('admin.news_update', {id: news.id}) }}" class="to-admin-link">Éditer</a><br>
-                                {% endif %}
-                            </small>
+                            <div class="news-header">
+                                <h3>{{ news.name }}</h3>
+                                <small>
+                                    Publié le {{ news.createdAt|date('d/m/Y à H:i') }}
+                                    {% if is_granted('ROLE_ADMIN') %}
+                                        <a href="{{ url('admin.news_update', {id: news.id}) }}" class="to-admin-link">Éditer</a><br>
+                                    {% endif %}
+                                </small>
+                            </div>
                             <div class="news-content text-justify">
                                 <p>{{ news.content|length < 300 ? news.content : news.content|slice(0, 300) ~ '...' }}</p>
                             </div>
@@ -91,7 +97,7 @@
             {# EVENTS SECTION #}
             <section class="events">
                 <h2 class="text-center">Évènements</h2>
-                <div class="content centered padding-left-right grid {% if not twoLastEvents %}grid-vertical-center grid-horizontal-center {% else %}grid-two-columns{% endif %}">
+                <div class="content centered padding-left-right grid {% if twoLastEvents|length == 0 %}grid-horizontal-center grid-vertical-center{% elseif twoLastEvents|length == 1 %} grid-no-column{% else %}grid-two-columns{% endif %}">
                    {% for event in twoLastEvents %}
                         <div class="homepage-events">
                             <h3 class="text-center">{{ event.name|length > 50 ? event.name|slice(0,50) ~ '...' : event.name }}</h3>

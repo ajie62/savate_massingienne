@@ -2,6 +2,7 @@
   // Welcome image
   .intro-img {
     align-items: center;
+    background: #3f4e5e; // Fallback
     background: url('../images/training.jpg') no-repeat 100%;
     background-size: cover;
     color: white;
@@ -24,13 +25,14 @@
     padding: 50px 0;
     h2 {
       font-size: 2em;
+      margin: 5px 0;
       text-transform: uppercase;
     }
     p { line-height: 1.5; }
     &:not(:last-child):not(:first-child) { margin: 0 0; }
     .content {
       margin-bottom: 20px;
-      min-height: 300px;
+      min-height: 200px;
     }
   }
 
@@ -91,6 +93,7 @@
       @media #{$biggerPhones} { grid-template-columns: 100%; }
       .homepage-news {
         h3 { margin-bottom: 5px; }
+        .news-content { padding: 15px 0; }
       }
     }
   }

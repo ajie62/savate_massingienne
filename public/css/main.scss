@@ -50,7 +50,7 @@ main.main-wrapper { flex: 1; }
 
 .padding-left-right { padding: 20px 15px; }
 
-// Links and buttons for admin
+// Links and buttons
 .to-admin-link,
 .content-link {
   color: indianred;
@@ -61,21 +61,20 @@ main.main-wrapper { flex: 1; }
 
 .black-action-button {
   background: $main-black;
-  border-radius: 10px;
-  color: white;
-  display: inline-block;
-  font-weight: bold;
-  padding: 10px 15px;
-  text-decoration: none;
   &:hover { background: lighten($main-black, 5%); }
 }
 
 .to-admin-button, .action-button {
   background: indianred;
+  &:hover { background: lighten(indianred, 5%); }
+}
+
+.black-action-button, .to-admin-button, .action-button {
   border-radius: 10px;
-  color: white;
+  color: ivory;
   display: inline-block;
   font-weight: bold;
+  margin-top: 5px;
   padding: 10px 15px;
   text-decoration: none;
 }
