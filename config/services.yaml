@@ -46,3 +46,10 @@ services:
     App\Service\EmailManager:
         class: App\Service\EmailManager
         arguments: ["@mailer", "@twig"]
+
+    App\Service\AssociationService:
+        class: App\Service\AssociationService
+        public: true
+        autowire: true
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
