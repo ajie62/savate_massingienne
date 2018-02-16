@@ -16,7 +16,6 @@
                 <h2>En cours</h2>
                 {% for event in eventsInProgress %}
                     {% include 'includes/event.html.twig' %}
-                    <p class="text-right text-italic">Les inscriptions sont terminées.</p>
                 {% else %}
                     <p>Il n'y a aucun évènement en cours.</p>
                 {% endfor %}

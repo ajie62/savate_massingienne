@@ -1,4 +1,4 @@
-@import 'variables', 'global/header', 'index', 'event';
+@import 'variables', 'global/header', 'index', 'event', 'news';
 @import url('https://fonts.googleapis.com/css?family=Patua+One');
 
 * { box-sizing: border-box; }
@@ -86,4 +86,17 @@ main.main-wrapper { flex: 1; }
   background: #5cb85c;
   color: azure;
   padding: 5px 0;
+}
+
+#event .main-wrapper,
+#archives .main-wrapper,
+#news .main-wrapper,
+#read-news .main-wrapper {
+  .buttons {
+    border-top: 1px solid #d8d8d8;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 40px;
+    padding: 10px 0;
+  }
 }

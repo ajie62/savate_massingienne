@@ -137,13 +137,6 @@
 #event .main-wrapper p,
 #archives .main-wrapper p {
   line-height: 1.5; }
-#event .main-wrapper .buttons,
-#archives .main-wrapper .buttons {
-  border-top: 1px solid #d8d8d8;
-  display: flex;
-  justify-content: space-between;
-  margin-top: 40px;
-  padding: 10px 0; }
 #event .main-wrapper h2,
 #archives .main-wrapper h2 {
   margin: 5px 0; }
@@ -177,6 +170,28 @@
   border: 1px solid #333;
   border-radius: 15px;
   padding: 10px 15px; }
+
+#news .main-wrapper .content h1 {
+  text-transform: uppercase; }
+#news .main-wrapper .content article {
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 10px;
+  margin-top: 30px; }
+  #news .main-wrapper .content article h3 {
+    margin: 0 0 10px 0; }
+  #news .main-wrapper .content article .news-content {
+    line-height: 1.5; }
+
+#read-news .main-wrapper .content .news-header h1 {
+  color: #dd4444;
+  font-size: 3em;
+  margin-bottom: 10px;
+  text-transform: uppercase; }
+#read-news .main-wrapper .content .news-header small {
+  font-size: 1em; }
+#read-news .main-wrapper .content .news-content {
+  line-height: 1.7; }
 
 * {
   box-sizing: border-box; }
@@ -277,5 +292,15 @@ main.main-wrapper {
   background: #5cb85c;
   color: azure;
   padding: 5px 0; }
+
+#event .main-wrapper .buttons,
+#archives .main-wrapper .buttons,
+#news .main-wrapper .buttons,
+#read-news .main-wrapper .buttons {
+  border-top: 1px solid #d8d8d8;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40px;
+  padding: 10px 0; }
 
 /*# sourceMappingURL=main.css.map */

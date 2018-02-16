@@ -1,0 +1,32 @@
+// NEWS > index.html.twig
+#news .main-wrapper {
+  .content {
+    h1 { text-transform: uppercase; }
+    article {
+      border: 1px solid #333;
+      border-radius: 10px;
+      padding: 10px;
+      margin-top: 30px;
+      h3 { margin: 0 0 10px 0; }
+      .news-content { line-height: 1.5; }
+    }
+  }
+}
+
+// NEWS > read.html.twig
+#read-news .main-wrapper {
+  .content {
+    .news-header {
+      h1 {
+        color: #dd4444;
+        font-size: 3em;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+      }
+      small {
+        font-size: 1em;
+      }
+    }
+    .news-content { line-height: 1.7; }
+  }
+}
