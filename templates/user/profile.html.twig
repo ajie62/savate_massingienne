@@ -1,70 +1,112 @@
 {% extends 'base.html.twig' %}
+{% block body_id 'profile' %}
+{% block title %}{{ user.firstname }} - {{ parent() }}{% endblock %}
 
 {% block body %}
+    <main class="main-wrapper">
+        <section class="profile-header text-center">
+            <h1>{{ user.firstname|capitalize }}</h1>
 
-    <h1>{{ user.firstname|capitalize }}</h1>
-    <img src="{{ user.imagePath ? asset('images/' ~ user.imagePath) | imagine_filter('img_profile_thumbnail') : 'http://via.placeholder.com/150x150' }}" alt="{{ 'Photo de profil de ' ~ user.firstname }}">
+            <figure>
+                <img src="{% if user.imagePath %}{{ asset('images/' ~ user.imagePath) | imagine_filter('img_profile_thumbnail') }}{% else %}{{ asset('images/no-pp.jpg') }}{% endif %}"
+                     alt="{{ 'Photo de profil de ' ~ user.firstname }}"
+                     id="profile-picture"
+                />
+                {% if self %}
+                    <div class="overlay text-center">
+                        <div>Modifier</div>
+                    </div>
+                {% endif %}
+            </figure>
 
-    {% if self %}
-        {{ form_start(form) }}
-        {{ form_widget(form) }}
-        <button type="submit">Mettre à jour</button>
-        {{ form_end(form) }}
+            {% if self %}
+                {{ form_start(form) }}
+                {{ form_widget(form) }}
+                <button type="submit">Mettre à jour</button>
+                {{ form_end(form) }}
+            {% endif %}
+        </section>
 
-        <a href="{{ url('user.update') }}">Éditer mon profil</a>
-    {% endif %}
+        <div class="profile-content centered padding-left-right grid">
+            {# Informations #}
+            <section class="info">
+                <div>
+                    {% if self %}<h2 class="text-center">Mes infos</h2>{% else %}<h2 class="text-center">Infos</h2>{% endif %}
 
-    <ul>
-        <li>Nom d'utilisateur : {{ user.username|capitalize }}</li>
-        <li>Prénom : {{ user.firstname|capitalize }}</li>
-        <li>Nom : {{ user.lastname|capitalize }}</li>
-        <li>N° de licence : {{ user.licenseNumber|default('Pas encore renseigné') }}</li>
-        <li>Adresse mail : {{ user.email }}</li>
-        <li>Membre depuis le : {{ user.subscribedAt|date('d/m/Y à H:i') }}</li>
-    </ul>
+                    <ul class="double">
+                        <li><span>Nom :</span> {{ user.lastname ? ('<strong>'~user.lastname~'</strong>')|raw : 'Non renseigné' }}</li>
+                        <li><span>Prénom :</span> {{ user.firstname ? ('<strong>'~user.firstname~'</strong>')|raw : 'Non renseigné' }}</li>
+                        <li><span>N° de licence :</span> <strong>{{ user.licenseNumber ? user.licenseNumber : 'N/A' }}</strong></li>
+                        <li><span>Adresse mail :</span> <strong>{{ user.email }}</strong></li>
+                        <li><span>Membre depuis le </span> <strong>{{ user.subscribedAt|date('d/m/Y') }}</strong></li>
+                    </ul>
 
-    <h2>Licences</h2>
-    {% set licenses = user.licenses %}
-    {% if self %}
-        {% if licenses|length == 0 %}
-            <p>Aucune licence n'a été ajoutée à votre profil.</p>
-        {% else %}
-            <ul>
-                {% for license in licenses %}
-                    <li><a href="{{ asset('licenses/' ~ license.name) }} " target="_blank" title="Voir la licence">Licence {{ license.year }}/{{ license.year + 1 }}</a></li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-    {% else %}
-        {% set userLicenseNumber = user.licenses|length %}
-        {% if userLicenseNumber == 0 %}
-            <p class="text-center">{{ user.firstname|capitalize }} n'a pas encore de licence.</p>
-        {% else %}
-            <p class="text-center">{{ user.firstname|capitalize }} possède {{ userLicenseNumber > 1 ? userLicenseNumber ~ " licences" : userLicenseNumber ~ " licence" }}.</p>
-        {% endif %}
-    {% endif %}
+                    {% if self %}
+                        <div class="text-center">
+                            <a href="{{ url('user.update') }}" class="content-link">Éditer mon profil</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </section>
 
-    {% if self %}
-        <h2>Mes évènements</h2>
-    {% else %}
-        <h2>Évènements</h2>
-    {% endif %}
+            {# Licenses #}
+            <section class="licenses">
+                <h2 class="text-center">{% if self %}Mes licences{% else %}Licences{% endif %}</h2>
+                {% set licenses = user.licenses %}
 
-    {% if upcomingEvents %}
-        {% for event in upcomingEvents %}
-            <h4>{{ event.name|capitalize }} <small>- {{ event.startingDate|date('d/m/Y') }}</small></h4>
-            <p>Participants : </p>
-            <ul>
-                {% for user in event.users %}
-                    <li><a href="{{ path('user.profile', {'username': user.username}) }}">{{ user.firstname|capitalize }}</a></li>
-                {% endfor %}
-            </ul>
-        {% endfor %}
-    {% else %}
-        {% if self %}
-            <p>Vous ne participez à aucun évènement. <a href="{{ path('event.index') }}">Voir les évènements</a></p>
-        {% else %}
-            <p>Ne participe à aucun évènement.</p>
-        {% endif %}
-    {% endif %}
+                {# If the user is logged and looks at his own profile page #}
+                {% if self %}
+                    {% if licenses|length == 0 %}
+                        <p>Aucune licence n'a été ajoutée à votre profil.</p>
+                    {% else %}
+                        <ul class="list-unstyled text-center">
+                            {% for license in licenses %}
+                                <li><a href="{{ asset('licenses/' ~ license.name) }} " target="_blank" title="Voir la licence" class="content-link">Licence {{ license.year }}/{{ license.year + 1 }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% else %}
+                    <p class="text-center">{{ user.firstname|capitalize }}
+                        {% if user.licenses|length == 0 %}
+                            n'a pas encore de licence.
+                        {% else %}
+                            possède {{ user.licenses|length > 1 ? user.licenses|length ~ " licences" : user.licenses|length ~ " licence" }}.
+                        {% endif %}
+                    </p>
+                {% endif %}
+            </section>
+
+            {# Events #}
+            <section class="events">
+                <h2 class="text-center">{% if self %}Mes évènements{% else %}Évènements{% endif %}</h2>
+
+                <div class="events-container">
+                    {% if upcomingEvents %}
+                        {% for event in upcomingEvents %}
+                            <div class="profile-event">
+                                <h4 class="text-center">{{ event.name|capitalize }} <small>- le {{ event.startingDate|date('d/m/Y') }}</small></h4>
+
+                                <span>Participants :</span>
+                                <ul class="list-unstyled">
+                                    {% for user in event.users %}
+                                        <li>
+                                            <a href="{{ path('user.profile', {'username': user.username}) }}">
+                                                <img src="{% if user.imagePath %}{{ asset('images/' ~ user.imagePath) }}{% else %}{{ asset('images/no-pp.jpg') }}{% endif %}" alt="Photo de {{ user.firstname }}" />
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        {% if self %}
+                            <p>Vous ne participez à aucun évènement. <a href="{{ path('event.index') }}">Voir les évènements</a></p>
+                        {% else %}
+                            <p>Ne participe à aucun évènement.</p>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </section>
+        </div>
+    </main>
 {% endblock %}

@@ -3,13 +3,6 @@
 #archives .main-wrapper {
   h1 { text-transform: uppercase; }
   p { line-height: 1.5; }
-  .buttons {
-    border-top: 1px solid #d8d8d8;
-    display: flex;
-    justify-content: space-between;
-    margin-top: 40px;
-    padding: 10px 0;
-  }
   h2 { margin: 5px 0; }
   hr {
     border: 1px solid #d8d8d8;
@@ -34,9 +27,7 @@
       position: absolute;
       top: 0;
       right: 0;
-      @media #{$smallPhones} {
-        display: none;
-      }
+      @media #{$smallPhones} { display: none; }
     }
   }
   .current {

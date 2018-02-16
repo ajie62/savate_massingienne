@@ -1,18 +1,49 @@
 {% extends 'base.html.twig' %}
+{% block title %}Actualités - {{ parent() }}{% endblock %}
+{% block body_id 'news' %}
 
 {% block body %}
-    <h1>Actualités</h1>
+    <main class="main-wrapper">
+        <div class="content centered padding-left-right">
+            <h1 class="text-center">Actualités</h1>
 
-    {% for news in newsCollection %}
-        <p>Titre : {{ news.name }}</p>
-        <p>Publiée le : {{ news.createdAt|date('d/m/Y à H:i') }}</p>
-        {{ news.updatedAt ? ('<p> Dernière mise à jour : ' ~ news.updatedAt|date('d/m/Y à H:i') ~ '</p>')|raw }}
-        <p>Contenu : {{ news.content }}</p>
-        <a href="{{ url('news.read', {slug: news.slug}) }}">Lire</a>
-    {% else %}
-        <p>Pas de news</p>
-    {% endfor %}
+            {% for news in newsCollection %}
+                <article>
+                    <section class="news-header">
+                        <h3>{{ news.name }}
+                            <small>
+                                {% if is_granted('ROLE_ADMIN') %}<a href="{{ path('admin.news_update', {id: news.id}) }}" class="to-admin-link">Éditer</a>{% endif %}
+                                {% if is_granted('ROLE_SUPER_ADMIN') %}<a href="{{ path('admin.news_delete', {id: news.id}) }}" class="to-admin-link">Supprimer</a>{% endif %}
+                            </small>
+                        </h3>
+                        <small>
+                            Publiée le : {{ news.createdAt|date('d/m/Y à H:i') }}
+                            {{ news.updatedAt ? '- Dernière mise à jour : ' ~ news.updatedAt|date('d/m/Y à H:i') }}
+                        </small>
+                    </section>
 
-    <a href="{{ url('admin.index') }}">Retour</a>
-    
+                    <section class="news-content">
+                        <p class="text-justify">{{ news.content|length > 400 ? news.content|slice(0, 400) ~ '...' : news.content }}</p>
+                    </section>
+
+                    <div class="text-right">
+                        <a href="{{ url('news.read', {slug: news.slug}) }}" class="action-button">Lire</a>
+                    </div>
+                </article>
+            {% else %}
+                <p>Aucune actualité n'a été publiée.</p>
+            {% endfor %}
+
+            <div class="buttons">
+                <div class="left">
+                    <a href="{{ url('app.index') }}" class="black-action-button">Accueil</a>
+                </div>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <div class="right">
+                        <a href="{{ url('admin.news_create') }}" class="action-button">Nouvelle actualité</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </main>
 {% endblock %}

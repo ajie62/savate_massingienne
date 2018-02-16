@@ -1,14 +1,32 @@
 {% extends 'base.html.twig' %}
+{% block body_id 'read-news'  %}
+{% block title %}{{ news.name }} - {{ parent() }}{% endblock %}
 
 {% block body %}
-    <h1>{{ news.name }}</h1>
+    <main class="main-wrapper">
+        <div class="content centered padding-left-right">
+            <div class="news-header">
+                <h1>{{ news.name }}</h1>
+                <small>
+                    Publié le {{ news.createdAt|date('d/m/Y à H:i') }}
+                    {{ news.updatedAt ? ('- <strong>Mis à jour le ' ~ news.updatedAt|date('d/m/Y à H:i') ~ '</strong>')|raw }}
+                </small>
+            </div>
+            <div class="news-content">
+                <p>{{ news.content|markdown }}</p>
+            </div>
 
-    <small>
-        Publiée le {{ news.createdAt|date('d/m/Y à H:i') }}
-        {{ news.updatedAt ? ('- <strong>Mise à jour le ' ~ news.updatedAt|date('d/m/Y à H:i') ~ '</strong>')|raw }}
-    </small>
-
-    <p>{{ news.content|markdown }}</p>
-
-    <a href="{{ url('news.index') }}">Retour</a>
+            <div class="buttons">
+                <div class="left">
+                    <a href="{{ url('news.index') }}" class="black-action-button">Retour</a>
+                </div>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <div class="right">
+                        <a href="{{ url('admin.news_delete', {id: news.id}) }}" class="action-button">Supprimer</a>
+                        <a href="{{ url('admin.news_update', {id: news.id}) }}" class="action-button">Éditer</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </main>
 {% endblock %}
