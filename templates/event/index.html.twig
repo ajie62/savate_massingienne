@@ -1,26 +1,55 @@
 {% extends 'base.html.twig' %}
+{% block title %}Évènements - {{ parent() }}{% endblock %}
+{% block body_id 'event' %}
 
 {% block body %}
-    <h1>Évènements</h1>
+    <div class="main-wrapper">
+        {% for message in app.flashes('notice') %}
+            <div class="flash-success">
+                <div class="message centered padding-left-right">{{ message|raw }}</div>
+            </div>
+        {% endfor %}
+        <div class="content centered padding-left-right">
+            <h1 class="text-center">Évènements</h1>
 
-    <h2>En cours</h2>
-    {% for event in eventsInProgress %}
-        {% include 'includes/event.html.twig' %}
-    {% else %}
-        <p>Aucun évènement en cours.</p>
-    {% endfor %}
+            <div class="current">
+                <h2>En cours</h2>
+                {% for event in eventsInProgress %}
+                    {% include 'includes/event.html.twig' %}
+                    <p class="text-right text-italic">Les inscriptions sont terminées.</p>
+                {% else %}
+                    <p>Il n'y a aucun évènement en cours.</p>
+                {% endfor %}
+            </div>
 
-    <h2>À venir</h2>
-    {% for event in upcomingEvents %}
-        {% include 'includes/event.html.twig' %}
-        {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-            {% set isAttendant = app.user in event.users %}
-            <p><a href="{{ url('event.subscribe', {id: event.id}) }}">{{ isAttendant ? 'Ne participe plus' : 'Je participe' }}</a></p>
-        {% endif %}
-    {% else %}
-        <p>Aucun évènement à venir.</p>
-    {% endfor %}
+            <hr>
 
-    <a href="{{ path('app.index') }}">Accueil</a>
-    <a href="{{ path('event.archives') }}">Archives</a>
+            <div class="upcoming">
+                <h2>À venir</h2>
+                {% for event in upcomingEvents %}
+                    {% include 'includes/event.html.twig' %}
+                    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                        {% set isAttendant = app.user in event.users %}
+                        <div class="text-right">
+                            <a href="{{ url('event.subscribe', {id: event.id}) }}" class="content-link">{{ isAttendant ? 'Ne participe plus' : 'Je participe' }}</a>
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <p>Aucun évènement à venir.</p>
+                {% endfor %}
+            </div>
+
+            <div class="buttons">
+                <div class="left">
+                    <a href="{{ url('app.index') }}" class="black-action-button">Accueil</a>
+                    <a href="{{ url('event.archives') }}" class="black-action-button">Archives</a>
+                </div>
+                {% if is_granted('ROLE_ADMIN') %}
+                <div class="right">
+                    <a href="{{ url('admin.event_create') }}" class="action-button">Nouvel évènement</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 {% endblock %}

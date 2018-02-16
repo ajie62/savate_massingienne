@@ -13,9 +13,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity
- * @ORM\Table(name="news")
  * @ORM\Entity(repositoryClass="App\Repository\NewsRepository")
+ * @ORM\Table(name="news")
  */
 class News
 {

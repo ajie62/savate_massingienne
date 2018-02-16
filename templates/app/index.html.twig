@@ -1,4 +1,6 @@
 {% extends 'base.html.twig' %}
+{% block title %}Accueil - {{ parent() }}{% endblock %}
+{% block body_id 'homepage' %}
 
 {% block body %}
     {% for message in app.flashes('notice') %}

@@ -79,9 +79,17 @@ class EventController extends AbstractController
         # If the user has already subscribed
         if ($event->getUsers()->contains($user)) {
             # Unsubscribe
+            $this->addFlash(
+                'notice',
+                'Vous ne participez plus à l\'évènement "<em>'. $event->getName() . '</em>".'
+            );
             $event->removeUser($user);
         } else {
             # Subscribe
+            $this->addFlash(
+                'notice',
+                'Vous participez à l\'évènement "<em>'. $event->getName() . '</em>".'
+            );
             $event->addUser($user);
         }
 

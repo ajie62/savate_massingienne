@@ -14,9 +14,8 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity
- * @ORM\Table(name="license")
  * @ORM\Entity(repositoryClass="App\Repository\LicenseRepository")
+ * @ORM\Table(name="license")
  * @UniqueEntity(fields={"user", "year"})
  */
 class License
