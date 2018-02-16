@@ -1,0 +1,50 @@
+// Common styles: event.html.twig & archive.html.twig
+#event .main-wrapper,
+#archives .main-wrapper {
+  h1 { text-transform: uppercase; }
+  p { line-height: 1.5; }
+  .buttons {
+    border-top: 1px solid #d8d8d8;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 40px;
+    padding: 10px 0;
+  }
+  h2 { margin: 5px 0; }
+  hr {
+    border: 1px solid #d8d8d8;
+    margin: 30px 0;
+  }
+  .event {
+    position: relative;
+    margin-top: 30px;
+  }
+}
+
+// event.html.twig
+#event .main-wrapper {
+  .event {
+    h3 { margin: 5px 0; }
+    .event-content { line-height: 1.5; }
+    .date {
+      background: $main-black;
+      border-radius: 0 13px 0 15px;
+      color: white;
+      padding: 10px;
+      position: absolute;
+      top: 0;
+      right: 0;
+      @media #{$smallPhones} {
+        display: none;
+      }
+    }
+  }
+  .current {
+    h2 { margin: 0; }
+    .event {
+      border: 1px solid $main-black;
+      border-radius: 15px;
+      padding: 10px 15px;
+    }
+  }
+}

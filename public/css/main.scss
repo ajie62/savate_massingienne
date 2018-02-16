@@ -1,4 +1,4 @@
-@import 'variables', 'global/header', 'index';
+@import 'variables', 'global/header', 'index', 'event';
 @import url('https://fonts.googleapis.com/css?family=Patua+One');
 
 * { box-sizing: border-box; }
@@ -42,6 +42,8 @@ main.main-wrapper { flex: 1; }
 // Alignment and spacing
 .text-center { text-align: center; }
 .text-justify { text-align: justify; }
+.text-right { text-align: right; }
+.text-italic { font-style: italic; }
 
 .centered {
   max-width: 900px;
@@ -50,10 +52,10 @@ main.main-wrapper { flex: 1; }
 
 .padding-left-right { padding: 20px 15px; }
 
-// Links and buttons for admin
+// Links and buttons
 .to-admin-link,
 .content-link {
-  color: indianred;
+  color: #dd4444;
   font-weight: bold;
   text-decoration: none;
   &:hover { text-decoration: underline; }
@@ -61,21 +63,27 @@ main.main-wrapper { flex: 1; }
 
 .black-action-button {
   background: $main-black;
-  border-radius: 10px;
-  color: white;
-  display: inline-block;
-  font-weight: bold;
-  padding: 10px 15px;
-  text-decoration: none;
   &:hover { background: lighten($main-black, 5%); }
 }
 
 .to-admin-button, .action-button {
-  background: indianred;
+  background: #dd4444;
+  &:hover { background: lighten(#dd4444, 5%); }
+}
+
+.black-action-button, .to-admin-button, .action-button {
   border-radius: 10px;
-  color: white;
+  color: ivory;
   display: inline-block;
   font-weight: bold;
+  margin-top: 5px;
   padding: 10px 15px;
   text-decoration: none;
+}
+
+// Flash messages
+.flash-success {
+  background: #5cb85c;
+  color: azure;
+  padding: 5px 0;
 }

@@ -1,5 +1,26 @@
-<p>
-    {{ event.name }} - {{ event.description }}
-    {% if is_granted('ROLE_ADMIN') %}<a href="{{ path('admin.event_update', {id: event.id}) }}">Edit</a>{% endif %}
-    {% if is_granted('ROLE_SUPER_ADMIN') %}<a href="{{ path('admin.event_delete', {id: event.id, redirect: 'event.index'}) }}">Delete</a>{% endif %}
-</p>
+<article class="event">
+    <div class="date">
+        {{ event.startingDate|date('d/m/Y') }}
+    </div>
+
+    <section class="event-header">
+        <h3>
+            {{ event.name }}
+            <small>
+                {% if is_granted('ROLE_ADMIN') %}<a href="{{ path('admin.event_update', {id: event.id}) }}" class="to-admin-link">Éditer</a>{% endif %}
+                {% if is_granted('ROLE_SUPER_ADMIN') %}<a href="{{ path('admin.event_delete', {id: event.id, redirect: 'event.index'}) }}" class="to-admin-link">Delete</a>{% endif %}
+            </small>
+        </h3>
+        <small>A lieu
+            {% if event.startingDate|date('d/m/Y') == event.endingDate|date('d/m/Y') %}
+                le {{ event.startingDate|date('d/m/Y') }} de {{ event.startingDate|date('H:i') }} à {{ event.endingDate|date('H:i') }}
+            {% else %}
+                du {{ event.startingDate|date('d/m/Y à H:i') }} au {{ event.endingDate|date('d/m/Y à H:i') }}
+            {% endif %}
+        </small>
+    </section>
+
+    <section class="event-content">
+        <p class="text-justify">{{ event.description|nl2br }}</p>
+    </section>
+</article>

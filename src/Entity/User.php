@@ -15,12 +15,11 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @ORM\Table(name="user")
  * @UniqueEntity(fields={"username"}, message="Ce nom d'utilisateur existe déjà.")
  * @UniqueEntity(fields={"email"}, message="Cette adresse mail est déjà utilisée.")
  * @UniqueEntity(fields={"licenseNumber"}, message="Ce numéro de licence est déjà utilisé.")
- * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
 class User implements AdvancedUserInterface, \Serializable
 {
