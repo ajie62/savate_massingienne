@@ -1,4 +1,4 @@
-@import 'variables', 'global/header', 'index', 'event', 'news', 'savate';
+@import 'variables', 'global/header', 'index', 'event', 'news', 'savate', 'user';
 @import url('https://fonts.googleapis.com/css?family=Patua+One');
 
 * { box-sizing: border-box; }
@@ -79,6 +79,12 @@ main.main-wrapper { flex: 1; }
   margin-top: 5px;
   padding: 10px 15px;
   text-decoration: none;
+}
+
+// List
+.list-unstyled {
+  list-style-type: none;
+  padding: 0;
 }
 
 // Flash messages

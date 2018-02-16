@@ -14,3 +14,14 @@ var toggleBtn = document.getElementById('toggleBtn');
 toggleBtn.addEventListener('click', function() {
     toggle();
 });
+
+/** Profile picture */
+var $formUploadedFile = $('input#form_uploadedFile');
+var $profilePicture = $('#profile-picture');
+
+$profilePicture.parent('figure').find('> *').click(function () {
+    $formUploadedFile.click();
+    $formUploadedFile.on('change', function () {
+        $(this).parents('form').submit();
+    });
+});
