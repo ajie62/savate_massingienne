@@ -193,6 +193,13 @@
 #read-news .main-wrapper .content .news-content {
   line-height: 1.7; }
 
+#savate .main-wrapper .information {
+  background: rgba(221, 68, 68, 0.5);
+  border: 1px solid #9e1d1d;
+  border-radius: 5px;
+  line-height: 1.5;
+  padding: 10px; }
+
 * {
   box-sizing: border-box; }
 
@@ -296,7 +303,8 @@ main.main-wrapper {
 #event .main-wrapper .buttons,
 #archives .main-wrapper .buttons,
 #news .main-wrapper .buttons,
-#read-news .main-wrapper .buttons {
+#read-news .main-wrapper .buttons,
+#savate .main-wrapper .buttons {
   border-top: 1px solid #d8d8d8;
   display: flex;
   justify-content: space-between;

@@ -1,8 +1,32 @@
 {% extends 'base.html.twig' %}
+{% block body_id 'savate' %}
+{% block title %}La Savate - {{ parent() }}{% endblock %}
 
 {% block body %}
+    <main class="main-wrapper">
+        <div class="content centered padding-left-right">
+            <h1>Qu'est-ce que la savate ?</h1>
 
-    <h1>Qu'est-ce que la savate ?</h1>
+            <div class="information">
+                <p class="text-justify">
+                    Chers visiteurs, cette page est encore en cours de construction.
+                    Dans quelque temps, vous pourrez y trouver une présentation de la
+                    savate boxe française.
+                </p>
+            </div>
+            
+            <div class="buttons">
+                <div class="left">
+                    <a href="{{ url('app.index') }}" class="black-action-button">Accueil</a>
+                </div>
+                {% if is_granted('ROLE_ADMIN') %}
+                <div class="right">
+                    <a href="{{ url('admin.content') }}" class="action-button">Gestion du contenu</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </main>
 
 {% endblock %}
 

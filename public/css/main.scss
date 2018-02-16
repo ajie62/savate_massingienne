@@ -1,4 +1,4 @@
-@import 'variables', 'global/header', 'index', 'event', 'news';
+@import 'variables', 'global/header', 'index', 'event', 'news', 'savate';
 @import url('https://fonts.googleapis.com/css?family=Patua+One');
 
 * { box-sizing: border-box; }
@@ -91,7 +91,8 @@ main.main-wrapper { flex: 1; }
 #event .main-wrapper,
 #archives .main-wrapper,
 #news .main-wrapper,
-#read-news .main-wrapper {
+#read-news .main-wrapper,
+#savate .main-wrapper {
   .buttons {
     border-top: 1px solid #d8d8d8;
     display: flex;
