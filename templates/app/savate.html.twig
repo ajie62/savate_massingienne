@@ -19,11 +19,6 @@
                 <div class="left">
                     <a href="{{ url('app.index') }}" class="black-action-button">Accueil</a>
                 </div>
-                {% if is_granted('ROLE_ADMIN') %}
-                <div class="right">
-                    <a href="{{ url('admin.content') }}" class="action-button">Gestion du contenu</a>
-                </div>
-                {% endif %}
             </div>
         </div>
     </main>

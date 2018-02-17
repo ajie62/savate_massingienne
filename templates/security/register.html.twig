@@ -1,10 +1,45 @@
 {% extends 'base.html.twig' %}
+{% block body_id 'registration-page' %}
+{% block title %}Inscription - {{ parent() }}{% endblock %}
 
 {% block body %}
-    <h1>Inscription</h1>
+    <main class="main-wrapper">
+        <div class="content centered padding-left-right grid">
 
-    {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button type="submit">Inscription</button>
-    {{ form_end(form) }}
+            <div class="registration-information">
+                <h2 class="text-center">Informations</h2>
+
+                <h3>Le formulaire</h3>
+                <ul class="text-justify">
+                    <li>Tous les champs sont obligatoires.</li>
+                    <li>Le mot de passe doit être composé de 8 caractères minimum.</li>
+                    <li>Vérifiez que votre adresse mail est correcte.</li>
+                </ul>
+
+                <hr>
+
+                <h3>L'inscription</h3>
+                <ul class="text-justify">
+                    <li>L'inscription est soumise à validation.</li>
+                    <li>Un mail vous est envoyé une fois la validation effectuée.</li>
+                    <li>Seules les personnes inscrites à la team savate massingienne sont acceptées.</li>
+                </ul>
+
+                <hr>
+
+                <h3 class="text-center">Déjà inscrit ?</h3>
+                <a href="{{ path('security.login') }}" class="black-action-button text-center">Connexion</a>
+            </div>
+
+            <div class="registration-form">
+                <h1 class="text-center">Inscription</h1>
+                {{ form_start(form) }}
+                {{ form_widget(form) }}
+                <div class="text-center">
+                    <button type="submit" class="action-button">Inscription</button>
+                </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </main>
 {% endblock %}
