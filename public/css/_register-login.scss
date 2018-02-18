@@ -13,9 +13,7 @@
     border: 1px solid $main-black;
     border-radius: 10px;
     padding: 20px;
-    @media #{$bigPhones} {
-      margin-top: 20px;
-    }
+    @media #{$bigPhones} { margin-top: 20px; }
     h1 {
       margin-top: 10px;
       text-transform: uppercase;
@@ -57,6 +55,39 @@
       list-style: none;
       padding: 0;
       line-height: 1.5;
+    }
+  }
+}
+
+// login
+#login-page {
+  hr { border: 1px solid #d7d7d7; }
+  .content {
+    margin-top: 20px;
+    .error-message {
+      background: #d9534f;
+      color: white;
+      padding: 10px;
+    }
+    h1 { margin: 0 0 15px 0; }
+    .login-form {
+      padding: 10px 0;
+      label {
+        display: inline-block;
+        text-align: center;
+        width: 120px;
+        @media #{$smallPhones} { width: 100%; }
+      }
+      input {
+        outline: none;
+        padding: 5px;
+        margin: 5px 0;
+        @media #{$smallPhones} { width: 100%; }
+      }
+      button {
+        border: none;
+        cursor: pointer;
+      }
     }
   }
 }
