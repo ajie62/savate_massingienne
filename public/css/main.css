@@ -334,6 +334,36 @@
   padding: 0;
   line-height: 1.5; }
 
+#login-page hr {
+  border: 1px solid #d7d7d7; }
+#login-page .content {
+  margin-top: 20px; }
+  #login-page .content .error-message {
+    background: #d9534f;
+    color: white;
+    padding: 10px; }
+  #login-page .content h1 {
+    margin: 0 0 15px 0; }
+  #login-page .content .login-form {
+    padding: 10px 0; }
+    #login-page .content .login-form label {
+      display: inline-block;
+      text-align: center;
+      width: 120px; }
+      @media screen and (max-width: 600px) {
+        #login-page .content .login-form label {
+          width: 100%; } }
+    #login-page .content .login-form input {
+      outline: none;
+      padding: 5px;
+      margin: 5px 0; }
+      @media screen and (max-width: 600px) {
+        #login-page .content .login-form input {
+          width: 100%; } }
+    #login-page .content .login-form button {
+      border: none;
+      cursor: pointer; }
+
 * {
   box-sizing: border-box; }
 

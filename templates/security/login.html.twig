@@ -1,17 +1,36 @@
 {% extends 'base.html.twig' %}
+{% block body_id 'login-page' %}
+{% block title %}Connexion - {{ parent() }}{% endblock %}
 
 {% block body %}
-    <h1>Connexion</h1>
+    <main class="main-wrapper">
+        <div class="content centered padding-left-right">
+            <h1 class="text-center">Connexion</h1>
 
-    {% if error %}
-        <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
+            {% if error %}
+                <div class="error-message text-center">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+            {% endif %}
 
-    {{ form_start(form, { attr: { action: path('security.login') } }) }}
-    {{ form_row(form.email) }}
-    {{ form_row(form.password) }}
+            <div class="login-form">
+                {{ form_start(form, { attr: { action: path('security.login') } }) }}
+                <div class="text-center">
+                    {{ form_row(form.email) }}
+                    {{ form_row(form.password) }}
+                </div>
 
-    <button type="submit">Connexion</button>
-    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}" />
-    {{ form_end(form) }}
+                <div class="text-center">
+                    <button type="submit" class="black-action-button">Connexion</button>
+                </div>
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}" />
+                {{ form_end(form) }}
+            </div>
+
+            <hr>
+
+            <p class="text-center">
+                Pas encore inscrit ?
+                <a href="{{ url('security.register') }}" class="action-button">Créer un compte</a>
+            </p>
+        </div>
+    </main>
 {% endblock %}
