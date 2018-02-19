@@ -1,0 +1,118 @@
+// Admin tabs
+.admin-tabs {
+  background: $main-black;
+  ul.tabs {
+    padding: 0;
+    li {
+      display: inline-block;
+      a {
+        color: ivory;
+        display: inline-block;
+        padding: 15px;
+        text-decoration: none;
+        &:hover { background: lighten($main-black, 10%); }
+      }
+    }
+  }
+}
+
+button {
+  background: #dd4444;
+  border: none;
+  border-radius: 10px;
+  color: ivory;
+  cursor: pointer;
+  margin-top: 5px;
+  padding: 10px 15px;
+}
+
+#admin-members {
+  .validate-button { background: $main-black; }
+  .reject-button { background: #dd4444; }
+
+  .validate-button,
+  .reject-button {
+    color: ivory;
+    display: inline-block;
+    font-size: .8em;
+    padding: 1px 5px;
+    text-decoration: none;
+  }
+
+  .table-responsive {
+    overflow: scroll;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    .hidden { display: none; }
+    .toggle-license {
+      cursor: pointer;
+      &:hover { color: lighten($main-black, 10%); }
+    }
+    a { text-decoration: none; }
+    td, th {
+      border: 1px solid #ddd;
+      padding: 5px;
+      text-align: center;
+    }
+  }
+}
+
+// Update members
+#member-update {
+  .grid {
+    grid-gap: 0 30px;
+    grid-template-columns: 1fr 3fr;
+    @media #{$bigPhones} {
+      grid-template-columns: 100%;
+    }
+    .picture {
+      padding: 10px 0;
+      img {
+        height: 200px;
+        width: 200px;
+      }
+      @media #{$smallPhones} {
+        margin-bottom: 20px;
+      }
+    }
+  }
+  form {
+    margin: 0 auto;
+    label {
+      display: inline-block;
+      min-width: 150px;
+      padding: 5px 0;
+      @media #{$smallPhones} { min-width: 100%; }
+    }
+    input {
+      border: none;
+      border-bottom: 1px solid $main-black;
+      margin: 5px 0;
+      padding: 5px;
+      outline: none;
+      min-width: calc(100% - 150px);
+      &:focus {
+        background: #f4f4f4;
+        transition: .5s;
+      }
+      @media #{$smallPhones} { width: 100%; }
+    }
+  }
+}
+
+#member-license-update {
+  form {
+    label {
+      display: inline-block;
+      min-width: 90px;
+      @media #{$smallPhones} {
+        min-width: 100%;
+      }
+    }
+    input {
+      margin: 10px 0;
+    }
+  }
+}

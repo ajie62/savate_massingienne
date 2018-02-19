@@ -1,14 +1,24 @@
 {% extends 'admin/base.html.twig' %}
+{% block body_id 'member-license-update' %}
+{% block title %}Ajout de licence - {{ parent() }}{% endblock %}
 
 {% block admin_body %}
+    <main class="main-wrapper">
+        <div class="content centered padding-left-right">
+            <h1>Ajout d'une nouvelle licence</h1>
+            <p class="text-justify">Vous ne pouvez ajouter qu'un seul document par année, et celui-ci doit être au format PDF.</p>
 
-    <h1>Ajout d'une nouvelle licence</h1>
+            {{ form_start(form) }}
+            {{ form_widget(form) }}
 
-    {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <a href="{{ path('admin.members') }}">Retour</a>
-    <button type="submit">Ajouter</button>
-    {{ form_end(form) }}
+            <div class="buttons text-center">
+                <a href="{{ url('admin.members') }}" class="black-action-button text-center">Retour</a>
+                <button type="submit">Ajouter</button>
+            </div>
+
+            {{ form_end(form) }}
+        </div>
+    </main>
 
 {% endblock %}
 

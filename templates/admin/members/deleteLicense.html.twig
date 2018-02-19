@@ -1,23 +1,30 @@
 {% extends 'admin/base.html.twig' %}
+{% block body_id 'member-license-delete' %}
+{% block title %}Suppression de licence{% endblock %}
 
 {% block admin_body %}
+    <main class="main-wrapper">
+        <div class="content centered padding-left-right">
+            <h1>Suppression de licence</h1>
+            <p class="text-justify">
+                Vous êtes sur le point de supprimer
+                {% if license.user == app.user %}
+                    votre licence <strong>{{ license.year }}/{{ license.year + 1 }}</strong>.
+                {% else %}
+                    la licence <strong>{{ license.year }}/{{ license.year + 1 }}</strong> de
+                    <strong>{{ license.user.firstname|capitalize ~ ' ' ~ license.user.lastname|capitalize }}</strong>.
+                {% endif %}
+                Confirmez-vous ?
+            </p>
 
-    <h1>Suppression de licence</h1>
-    <p>Vous êtes sur le point de supprimer
-        {% if license.user == app.user %}
-            votre licence <strong>{{ license.year }}/{{ license.year + 1 }}</strong>.
-        {% else %}
-            la licence <strong>{{ license.year }}/{{ license.year + 1 }}</strong> de
-            <strong>{{ license.user.firstname|capitalize ~ ' ' ~ license.user.lastname|capitalize }}</strong>.
-        {% endif %}
-        Confirmez-vous ?
-    </p>
-
-    {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <a href="{{ path('admin.members') }}">Retour</a>
-    <button type="submit">Confirmer</button>
-    {{ form_end(form) }}
-
+            {{ form_start(form) }}
+            {{ form_widget(form) }}
+            <div class="buttons text-center">
+                <a href="{{ url('admin.members') }}" class="black-action-button text-center">Retour</a>
+                <button type="submit">Confirmer</button>
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </main>
 {% endblock %}
 

@@ -364,6 +364,104 @@
       border: none;
       cursor: pointer; }
 
+.admin-tabs {
+  background: #333; }
+  .admin-tabs ul.tabs {
+    padding: 0; }
+    .admin-tabs ul.tabs li {
+      display: inline-block; }
+      .admin-tabs ul.tabs li a {
+        color: ivory;
+        display: inline-block;
+        padding: 15px;
+        text-decoration: none; }
+        .admin-tabs ul.tabs li a:hover {
+          background: #4d4d4d; }
+
+button {
+  background: #dd4444;
+  border: none;
+  border-radius: 10px;
+  color: ivory;
+  cursor: pointer;
+  margin-top: 5px;
+  padding: 10px 15px; }
+
+#admin-members .validate-button {
+  background: #333; }
+#admin-members .reject-button {
+  background: #dd4444; }
+#admin-members .validate-button,
+#admin-members .reject-button {
+  color: ivory;
+  display: inline-block;
+  font-size: .8em;
+  padding: 1px 5px;
+  text-decoration: none; }
+#admin-members .table-responsive {
+  overflow: scroll; }
+#admin-members table {
+  border-collapse: collapse;
+  width: 100%; }
+  #admin-members table .hidden {
+    display: none; }
+  #admin-members table .toggle-license {
+    cursor: pointer; }
+    #admin-members table .toggle-license:hover {
+      color: #4d4d4d; }
+  #admin-members table a {
+    text-decoration: none; }
+  #admin-members table td, #admin-members table th {
+    border: 1px solid #ddd;
+    padding: 5px;
+    text-align: center; }
+
+#member-update .grid {
+  grid-gap: 0 30px;
+  grid-template-columns: 1fr 3fr; }
+  @media screen and (max-width: 768px) {
+    #member-update .grid {
+      grid-template-columns: 100%; } }
+  #member-update .grid .picture {
+    padding: 10px 0; }
+    #member-update .grid .picture img {
+      height: 200px;
+      width: 200px; }
+    @media screen and (max-width: 600px) {
+      #member-update .grid .picture {
+        margin-bottom: 20px; } }
+#member-update form {
+  margin: 0 auto; }
+  #member-update form label {
+    display: inline-block;
+    min-width: 150px;
+    padding: 5px 0; }
+    @media screen and (max-width: 600px) {
+      #member-update form label {
+        min-width: 100%; } }
+  #member-update form input {
+    border: none;
+    border-bottom: 1px solid #333;
+    margin: 5px 0;
+    padding: 5px;
+    outline: none;
+    min-width: calc(100% - 150px); }
+    #member-update form input:focus {
+      background: #f4f4f4;
+      transition: .5s; }
+    @media screen and (max-width: 600px) {
+      #member-update form input {
+        width: 100%; } }
+
+#member-license-update form label {
+  display: inline-block;
+  min-width: 90px; }
+  @media screen and (max-width: 600px) {
+    #member-license-update form label {
+      min-width: 100%; } }
+#member-license-update form input {
+  margin: 10px 0; }
+
 * {
   box-sizing: border-box; }
 
@@ -373,9 +471,10 @@ html {
 body {
   display: flex;
   flex-direction: column;
+  font-family: 'PT Sans', 'Arial', sans-serif;
   font-size: 1em;
-  min-height: 100vh;
-  font-family: 'PT Sans', 'Arial', sans-serif; }
+  line-height: 1.5;
+  min-height: 100vh; }
 
 h1, h2, h3, h4 {
   font-family: 'Patua One', cursive; }
@@ -432,13 +531,20 @@ main.main-wrapper {
   padding: 20px 15px; }
 
 .to-admin-link,
-.content-link {
-  color: #dd4444;
+.content-link,
+.black-link {
   font-weight: bold;
   text-decoration: none; }
   .to-admin-link:hover,
-  .content-link:hover {
+  .content-link:hover,
+  .black-link:hover {
     text-decoration: underline; }
+
+.to-admin-link, .content-link {
+  color: #dd4444; }
+
+.black-link {
+  color: #333; }
 
 .black-action-button {
   background: #333; }
@@ -466,17 +572,13 @@ main.main-wrapper {
 .flash-success {
   background: #5cb85c;
   color: azure;
-  padding: 5px 0; }
+  padding: 10px 15px; }
 
-#event .main-wrapper .buttons,
-#archives .main-wrapper .buttons,
-#news .main-wrapper .buttons,
-#read-news .main-wrapper .buttons,
-#savate .main-wrapper .buttons {
+.buttons {
   border-top: 1px solid #d8d8d8;
   display: flex;
   justify-content: space-between;
-  margin-top: 40px;
+  margin-top: 20px;
   padding: 10px 0; }
 
 /*# sourceMappingURL=main.css.map */

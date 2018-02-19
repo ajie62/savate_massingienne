@@ -1,15 +1,23 @@
 {% extends 'admin/base.html.twig' %}
+{% block body_id 'member-delete' %}
+{% block title %}Suppression de {{ user.username }} - {{ parent() }}{% endblock %}
 
 {% block admin_body %}
 
-    <h1>Suppression de membre</h1>
+    <main class="main-wrapper">
+        <div class="content centered padding-left-right">
+            <h1>Suppression de {{ user.firstname|capitalize ~ ' ' ~ user.lastname }} ({{ user.username }})</h1>
 
-    <p>Confirmez-vous la suppression du membre ?</p>
-    {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <a href="{{ path('admin.members') }}">Retour</a>
-    <button type="submit">Confirmer</button>
-    {{ form_end(form) }}
+            <p>Confirmez-vous la suppression du membre ?</p>
+            {{ form_start(form) }}
+            {{ form_widget(form) }}
 
+            <div class="buttons text-center">
+                <a href="{{ url('admin.members') }}" class="black-action-button text-center">Retour</a>
+                <button type="submit">Confirmer</button>
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </main>
 {% endblock %}
 

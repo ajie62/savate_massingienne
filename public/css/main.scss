@@ -1,4 +1,4 @@
-@import 'variables', 'global/header', 'index', 'event', 'news', 'savate', 'user', 'register-login';
+@import 'variables', 'global/header', 'index', 'event', 'news', 'savate', 'user', 'register-login', 'admin';
 @import url('https://fonts.googleapis.com/css?family=Patua+One');
 
 * { box-sizing: border-box; }
@@ -8,9 +8,10 @@ html { height: 100%; }
 body {
   display: flex;
   flex-direction: column;
-  font-size: 1em;
-  min-height: 100vh;
   font-family: 'PT Sans', 'Arial', sans-serif;
+  font-size: 1em;
+  line-height: 1.5;
+  min-height: 100vh;
 }
 
 h1, h2, h3, h4 { font-family: 'Patua One', cursive; }
@@ -54,12 +55,15 @@ main.main-wrapper { flex: 1; }
 
 // Links and buttons
 .to-admin-link,
-.content-link {
-  color: #dd4444;
+.content-link,
+.black-link {
   font-weight: bold;
   text-decoration: none;
   &:hover { text-decoration: underline; }
 }
+
+.to-admin-link, .content-link { color: #dd4444; }
+.black-link { color: $main-black; }
 
 .black-action-button {
   background: $main-black;
@@ -91,19 +95,13 @@ main.main-wrapper { flex: 1; }
 .flash-success {
   background: #5cb85c;
   color: azure;
-  padding: 5px 0;
+  padding: 10px 15px;
 }
 
-#event .main-wrapper,
-#archives .main-wrapper,
-#news .main-wrapper,
-#read-news .main-wrapper,
-#savate .main-wrapper {
-  .buttons {
-    border-top: 1px solid #d8d8d8;
-    display: flex;
-    justify-content: space-between;
-    margin-top: 40px;
-    padding: 10px 0;
-  }
+.buttons {
+  border-top: 1px solid #d8d8d8;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  padding: 10px 0;
 }
