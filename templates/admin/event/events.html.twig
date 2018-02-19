@@ -1,34 +1,46 @@
 {% extends 'admin/base.html.twig' %}
+{% block body_id 'admin-events-list' %}
+{% block title %}Administration Évènements - {{ parent() }}{% endblock %}
 
 {% block admin_body %}
-    <h1>Évènements</h1>
+    <main class="main-wrapper">
+        <div class="content centered padding-left-right grid">
+            <div class="left">
+                <h1>Évènements</h1>
 
-    {# include located in templates/includes/admin #}
-    <h2>En cours</h2>
-    {% for event in eventsInProgress %}
-        {{ include('includes/admin/event.html.twig') }}
-    {% else %}
-        <p>Aucun évènement en cours.</p>
-    {% endfor %}
+                {# include located in templates/includes/admin #}
+                <h2>En cours</h2>
+                {% for event in eventsInProgress %}
+                    {{ include('includes/admin/event.html.twig') }}
+                {% else %}
+                    <p>Aucun évènement en cours.</p>
+                {% endfor %}
 
-    <h2>À venir</h2>
-    {% for event in upcomingEvents %}
-        {{ include('includes/admin/event.html.twig') }}
-    {% else %}
-        <p>Aucun évènement à venir.</p>
-    {% endfor %}
+                <h2>À venir</h2>
+                {% for event in upcomingEvents %}
+                    {{ include('includes/admin/event.html.twig') }}
+                {% else %}
+                    <p>Aucun évènement à venir.</p>
+                {% endfor %}
 
-    <h2>Terminés</h2>
-    {% for message in app.flashes('warning') %}
-        {{ message }}
-    {% endfor %}
+                <h2>Terminés</h2>
+                {% for message in app.flashes('warning') %}
+                    {{ message }}
+                {% endfor %}
 
-    {% for event in pastEvents %}
-        {{ include('includes/admin/event.html.twig') }}
-    {% else %}
-        <p>Aucun évènement terminé.</p>
-    {% endfor %}
+                <p>
+                    {% for event in pastEvents %}
+                        <strong>{{ event.name }}</strong> ({{ event.startingDate|date('d/m/Y') }}) {% if loop and not loop.last %}-{% endif %}
+                    {% else %}
+                        Aucun évènement terminé.
+                    {% endfor %}
+                </p>
+            </div>
 
-    <a href="{{ path('admin.index') }}">Retour</a>
-    <a href="{{ path('admin.event_create') }}">Nouvel évènement</a>
+            <aside class="admin-actions">
+                <a href="{{ path('admin.event_create') }}" class="create">Nouvel Évènement</a>
+                <a href="{{ path('admin.index') }}" class="back">Accueil</a>
+            </aside>
+        </div>
+    </main>
 {% endblock %}

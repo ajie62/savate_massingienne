@@ -105,3 +105,23 @@ main.main-wrapper { flex: 1; }
   margin-top: 20px;
   padding: 10px 0;
 }
+
+// Admin actions
+.admin-actions {
+  border-radius: 10px;
+  padding: 10px;
+  a {
+    border-radius: 10px;
+    color: ivory;
+    display: inline-block;
+    font-family: 'Patua One', cursive;
+    margin: 5px 0;
+    padding: 20px 15px;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    width: 100%;
+    &.create { background: #dd4444; }
+    &.back { background: $main-black; }
+  }
+}

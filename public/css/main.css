@@ -490,6 +490,33 @@ button {
 #admin-content .content .toggle-picture {
   cursor: pointer; }
 
+#admin-events-list h1 {
+  margin: 0; }
+#admin-events-list .content {
+  grid-gap: 20px;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-areas: 'l l l l l l l l r r r r'; }
+  @media screen and (max-width: 600px) {
+    #admin-events-list .content {
+      grid-template-areas: 'r r r r r r r r r r r r' 'l l l l l l l l l l l l'; } }
+  #admin-events-list .content .left {
+    grid-area: l; }
+    #admin-events-list .content .left .admin-event {
+      border-left: 3px solid white;
+      padding: 0 15px; }
+      #admin-events-list .content .left .admin-event:hover {
+        border-left: 3px solid #dd4444; }
+    #admin-events-list .content .left .admin-event-header h3 {
+      margin: 5px 0; }
+    #admin-events-list .content .left .admin-event-subscribers ul {
+      list-style: none;
+      padding: 0;
+      margin: 0; }
+    #admin-events-list .content .left .admin-event-subscribers p {
+      margin: 0; }
+  #admin-events-list .content .admin-actions {
+    grid-area: r; }
+
 * {
   box-sizing: border-box; }
 
@@ -608,5 +635,24 @@ main.main-wrapper {
   justify-content: space-between;
   margin-top: 20px;
   padding: 10px 0; }
+
+.admin-actions {
+  border-radius: 10px;
+  padding: 10px; }
+  .admin-actions a {
+    border-radius: 10px;
+    color: ivory;
+    display: inline-block;
+    font-family: 'Patua One', cursive;
+    margin: 5px 0;
+    padding: 20px 15px;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    width: 100%; }
+    .admin-actions a.create {
+      background: #dd4444; }
+    .admin-actions a.back {
+      background: #333; }
 
 /*# sourceMappingURL=main.css.map */
