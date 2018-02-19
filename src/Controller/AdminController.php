@@ -265,7 +265,7 @@ class AdminController extends AbstractController
             $this->em->persist($user);
             # Flush
             $this->em->flush();
-
+            # Flash message
             $this->addFlash(
                 'notice',
                 'Une licence a bien été ajoutée pour '.ucfirst($user->getFirstname()).' '.ucfirst($user->getLastname()).'.'
@@ -301,6 +301,8 @@ class AdminController extends AbstractController
 
         $form->handleRequest($request);
 
+        $user = $license->getUser();
+
         if ($form->isSubmitted() && $form->isValid()) {
             # Get the license filename
             $filename = $this->licensesDir.DIRECTORY_SEPARATOR.$license->getName();
@@ -314,6 +316,15 @@ class AdminController extends AbstractController
                 # Delete it
                 unlink($filename);
             }
+
+            $firstname = $user->getFirstname();
+            $lastname = $user->getLastname();
+
+            # Flash message
+            $this->addFlash(
+                'notice',
+                'La licence '.$license->getYear().'/'.($license->getYear() + 1).' de '. ucfirst($firstname) .' '. ucfirst($lastname) .' a bien été supprimée.'
+            );
 
             # Redirection to admin.members
             return $this->redirectToRoute('admin.members');

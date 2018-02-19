@@ -101,3 +101,18 @@ button {
     }
   }
 }
+
+#member-license-update {
+  form {
+    label {
+      display: inline-block;
+      min-width: 90px;
+      @media #{$smallPhones} {
+        min-width: 100%;
+      }
+    }
+    input {
+      margin: 10px 0;
+    }
+  }
+}

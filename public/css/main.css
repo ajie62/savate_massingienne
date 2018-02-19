@@ -453,6 +453,15 @@ button {
       #member-update form input {
         width: 100%; } }
 
+#member-license-update form label {
+  display: inline-block;
+  min-width: 90px; }
+  @media screen and (max-width: 600px) {
+    #member-license-update form label {
+      min-width: 100%; } }
+#member-license-update form input {
+  margin: 10px 0; }
+
 * {
   box-sizing: border-box; }
 
