@@ -29,7 +29,6 @@ button {
 #admin-members {
   .validate-button { background: $main-black; }
   .reject-button { background: #dd4444; }
-
   .validate-button,
   .reject-button {
     color: ivory;
@@ -38,10 +37,7 @@ button {
     padding: 1px 5px;
     text-decoration: none;
   }
-
-  .table-responsive {
-    overflow: scroll;
-  }
+  .table-responsive { overflow: scroll; }
   table {
     border-collapse: collapse;
     width: 100%;
@@ -64,18 +60,14 @@ button {
   .grid {
     grid-gap: 0 30px;
     grid-template-columns: 1fr 3fr;
-    @media #{$bigPhones} {
-      grid-template-columns: 100%;
-    }
+    @media #{$bigPhones} { grid-template-columns: 100%; }
     .picture {
       padding: 10px 0;
       img {
         height: 200px;
         width: 200px;
       }
-      @media #{$smallPhones} {
-        margin-bottom: 20px;
-      }
+      @media #{$smallPhones} { margin-bottom: 20px; }
     }
   }
   form {
@@ -102,17 +94,49 @@ button {
   }
 }
 
+// License update
 #member-license-update {
   form {
+    input { margin: 10px 0; }
     label {
       display: inline-block;
       min-width: 90px;
-      @media #{$smallPhones} {
-        min-width: 100%;
+      @media #{$smallPhones} { min-width: 100%; }
+    }
+  }
+}
+
+// Content management
+#admin-content {
+  .content {
+    h1 { margin: 5px 0; }
+    form {
+      label {
+        display: inline-block;
+        min-width: 100px;
+        padding: 10px 0;
+        vertical-align: top;
+        text-align: center;
+      }
+      input, textarea {
+        border: 1px solid #d8d8d8;
+        min-width: calc(100% - 100px);
+        outline: none;
+        padding: 10px;
+        text-align: justify;
+      }
+      textarea {
+        min-height: 150px;
+        max-height: 200px;
+        max-width: calc(100% - 100px);
       }
     }
-    input {
-      margin: 10px 0;
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      td, th { border: 1px solid $main-black; }
+      .hidden { display: none; }
     }
+    .toggle-picture { cursor: pointer; }
   }
 }

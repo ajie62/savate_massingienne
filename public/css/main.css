@@ -453,14 +453,42 @@ button {
       #member-update form input {
         width: 100%; } }
 
+#member-license-update form input {
+  margin: 10px 0; }
 #member-license-update form label {
   display: inline-block;
   min-width: 90px; }
   @media screen and (max-width: 600px) {
     #member-license-update form label {
       min-width: 100%; } }
-#member-license-update form input {
-  margin: 10px 0; }
+
+#admin-content .content h1 {
+  margin: 5px 0; }
+#admin-content .content form label {
+  display: inline-block;
+  min-width: 100px;
+  padding: 10px 0;
+  vertical-align: top;
+  text-align: center; }
+#admin-content .content form input, #admin-content .content form textarea {
+  border: 1px solid #d8d8d8;
+  min-width: calc(100% - 100px);
+  outline: none;
+  padding: 10px;
+  text-align: justify; }
+#admin-content .content form textarea {
+  min-height: 150px;
+  max-height: 200px;
+  max-width: calc(100% - 100px); }
+#admin-content .content table {
+  border-collapse: collapse;
+  width: 100%; }
+  #admin-content .content table td, #admin-content .content table th {
+    border: 1px solid #333; }
+  #admin-content .content table .hidden {
+    display: none; }
+#admin-content .content .toggle-picture {
+  cursor: pointer; }
 
 * {
   box-sizing: border-box; }

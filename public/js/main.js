@@ -30,3 +30,8 @@ $profilePicture.parent('figure').find('> *').click(function () {
 $('.toggle-license').click(function() {
     $(this).closest('.top').next('.bottom').toggleClass('hidden');
 });
+
+$('.toggle-picture').click(function() {
+    $(this).next('img').toggleClass('hidden');
+    $(this).toggle();
+});
