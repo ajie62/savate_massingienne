@@ -140,3 +140,34 @@ button {
     .toggle-picture { cursor: pointer; }
   }
 }
+
+// Events
+#admin-events-list {
+  h1 { margin: 0; }
+  .content {
+    grid-gap: 20px;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-areas: 'l l l l l l l l r r r r';
+    @media #{$smallPhones} { grid-template-areas: 'r r r r r r r r r r r r' 'l l l l l l l l l l l l'; }
+    .left {
+      grid-area: l;
+      .admin-event {
+        border-left: 3px solid white;
+        padding: 0 15px;
+        &:hover { border-left: 3px solid #dd4444; }
+      }
+      .admin-event-header {
+        h3 { margin: 5px 0;}
+      }
+      .admin-event-subscribers {
+        ul {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+        }
+        p { margin: 0; }
+      }
+    }
+    .admin-actions { grid-area: r; }
+  }
+}
