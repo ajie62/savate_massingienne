@@ -60,7 +60,7 @@
                                 <td>
                                     {# A moderateur can't edit a super admin #}
                                     {% if not (app.user.roles[0] == "ROLE_MODERATEUR" and member.roles[0] == "ROLE_SUPER_ADMIN") %}
-                                        <a href="{{ path('admin.update_member', {id: member.id}) }}" class="black-link">
+                                        <a href="{{ path('admin.update_member', {id: member.id}) }}" class="black-link" title="Éditer le profil">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                     {% endif %}
@@ -69,7 +69,7 @@
                                     {% if is_granted('ROLE_SUPER_ADMIN') %}
                                         {# And the member role isn't super admin#}
                                         {% if member.roles[0] != 'ROLE_SUPER_ADMIN' %}
-                                            <a href="{{ path('admin.delete_member', {id: member.id}) }}" class="content-link">
+                                            <a href="{{ path('admin.delete_member', {id: member.id}) }}" class="content-link" title="Supprimer">
                                                 <i class="fas fa-trash-alt"></i>
                                             </a>
                                         {% endif %}
@@ -83,7 +83,7 @@
                                     </td>
                                     <td>
                                         {% if is_granted('ROLE_SUPER_ADMIN') %}
-                                            <a href="{{ path("admin.member.delete_license", {"id": license.id}) }}" class="content-link">
+                                            <a href="{{ path("admin.member.delete_license", {"id": license.id}) }}" class="content-link" title="Supprimer la licence">
                                                 <i class="fas fa-trash-alt"></i>
                                             </a>
                                         {% endif %}

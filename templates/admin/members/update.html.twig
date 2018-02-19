@@ -1,26 +1,41 @@
 {% extends 'admin/base.html.twig' %}
+{% block body_id 'member-update' %}
+{% block title %}{% endblock %}
 
 {% block admin_body %}
+    <main class="main-wrapper">
+        <div class="content centered padding-left-right">
+            <h1>Mise à jour du profil de {{ user.firstname|capitalize ~ ' ' ~ user.lastname|capitalize}}</h1>
 
-    <h1>Mise à jour d'informations</h1>
+            <div class="grid">
+                <div class="picture text-center">
+                    <img src="{{ user.imagePath ? asset('images/' ~ user.imagePath) : asset('images/no-pp.jpg') }}" alt="{{ user.imagePath ? 'Photo de ' ~ user.firstname|capitalize : 'Aucune photo' }}"/>
+                </div>
 
-    {{ form_start(form) }}
-    {{ form_row(form.username) }}
-    {{ form_row(form.firstname) }}
-    {{ form_row(form.lastname) }}
+                <div class="form">
+                    {{ form_start(form) }}
+                    {{ form_row(form.username) }}
+                    {{ form_row(form.firstname) }}
+                    {{ form_row(form.lastname) }}
 
-    {% if is_granted('ROLE_SUPER_ADMIN') %}
-        {{ form_row(form.email) }}
-        {{ form_row(form.licenseNumber) }}
-    {% endif %}
+                    {% if is_granted('ROLE_SUPER_ADMIN') %}
+                        {{ form_row(form.email) }}
+                        {{ form_row(form.licenseNumber) }}
+                    {% endif %}
 
-    {% if form.roles is defined and is_granted('ROLE_SUPER_ADMIN') %}
-        {{ form_row(form.roles) }}
-    {% endif %}
+                    {% if form.roles is defined and is_granted('ROLE_SUPER_ADMIN') %}
+                        {{ form_row(form.roles) }}
+                    {% endif %}
 
-    {{ form_rest(form) }}
-    <a href="{{ path('admin.members') }}">Retour</a>
-    <button type="submit">Mettre à jour</button>
-    {{ form_end(form) }}
+                    {{ form_rest(form) }}
 
+                    <div class="buttons text-center">
+                        <a href="{{ url('admin.index') }}" class="black-action-button text-center">Retour</a>
+                        <button type="submit">Mettre à jour</button>
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </main>
 {% endblock %}

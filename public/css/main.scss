@@ -102,12 +102,13 @@ main.main-wrapper { flex: 1; }
 #archives .main-wrapper,
 #news .main-wrapper,
 #read-news .main-wrapper,
-#savate .main-wrapper {
+#savate .main-wrapper,
+#member-update .main-wrapper {
   .buttons {
     border-top: 1px solid #d8d8d8;
     display: flex;
     justify-content: space-between;
-    margin-top: 40px;
+    margin-top: 20px;
     padding: 10px 0;
   }
 }
