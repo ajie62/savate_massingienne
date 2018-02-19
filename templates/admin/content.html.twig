@@ -1,65 +1,83 @@
 {% extends 'admin/base.html.twig' %}
+{% block body_id 'admin-content' %}
+{% block title %}Administration Contenu - {{ parent() }}{% endblock %}
 
 {% block admin_body %}
-    {# Submitting the AssociationType form will print a flash message #}
-    {% for message in app.flashes('notice') %}
-        {{ message }}
-    {% endfor %}
+    <main class="main-wrapper">
+        {# Submitting the AssociationType form will print a flash message #}
+        {% for message in app.flashes('notice') %}
+            <div class="flash-success">{{ message }}</div>
+        {% endfor %}
+        <div class="content centered padding-left-right">
+            <h1 class="text-center">Contenu du site</h1>
+            {{ form_start(form) }}
 
-    <h1>Contenu du site</h1>
-    {{ form_start(form) }}
+            <h3>Page d'accueil</h3>
+            {{ form_row(form.textIntro) }}
+            {{ form_row(form.textInfo) }}
 
-    <h3>Page d'accueil</h3>
-    {{ form_row(form.textIntro) }}
-    {{ form_row(form.textInfo) }}
+            <h3>Pied de page</h3>
+            {{ form_row(form.phoneNumber) }}
+            {{ form_row(form.address) }}
+            {{ form_row(form.mail) }}
+            {{ form_row(form.aboutUs) }}
+            <div class="text-right">
+                <button type="submit">Mettre à jour</button>
+            </div>
+            {{ form_end(form) }}
 
-    <h3>Pied de page</h3>
-    {{ form_row(form.phoneNumber) }}
-    {{ form_row(form.address) }}
-    {{ form_row(form.mail) }}
-    {{ form_row(form.aboutUs) }}
-    <button type="submit">Mettre à jour</button>
-    {{ form_end(form) }}
+            <h3>Membres d'équipe</h3>
+            {{ form_start(formAddTeamMember) }}
+            {{ form_widget(formAddTeamMember) }}
+            <div class="text-right">
+                <button type="submit">Ajouter le membre</button>
+            </div>
+            {{ form_end(formAddTeamMember) }}
 
-    <h3>Membres d'équipe</h3>
-    {{ form_start(formAddTeamMember) }}
-    {{ form_widget(formAddTeamMember) }}
-    <button type="submit">Ajouter</button>
-    {{ form_end(formAddTeamMember) }}
+            <h3>L'équipe</h3>
+            <div class="team">
+                {% if teamMembers %}
+                    <table class="text-center">
+                        <thead>
+                        <tr class="text-center">
+                            <td>Photo</td>
+                            <td>Prénom</td>
+                            <td>Rôle</td>
+                            {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                <td>Action</td>
+                            {% endif %}
+                        </tr>
+                        </thead>
 
-    {% if teamMembers %}
-    <table>
-        <thead>
-        <tr>
-            <td>Photo</td>
-            <td>Prénom</td>
-            <td>Rôle</td>
-            {% if is_granted('ROLE_SUPER_ADMIN') %}
-                <td>Action</td>
-            {% endif %}
-        </tr>
-        </thead>
-
-        <tbody>
-            {% for member in teamMembers %}
-                <tr>
-                    <td>
-                        {% if member.imagePath %}
-                            <img src="{{ asset('images/' ~ member.imagePath) | imagine_filter('admin_team_thumbnail')}}" alt="Photo de {{ member.firstname }}">
-                        {% else %}
-                            N/A
-                        {% endif %}
-                    </td>
-                    <td>{{ member.firstname }}</td>
-                    <td>{{ member.job }}</td>
-                    {% if is_granted('ROLE_SUPER_ADMIN') %}
-                        <td><a href="{{ path('admin.delete-team-member', {id: member.id}) }}">Supprimer</a></td>
-                    {% endif %}
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% else %}
-        <p>Aucun membre d'équipe n'a été ajouté.</p>
-    {% endif %}
+                        <tbody>
+                        {% for member in teamMembers %}
+                            <tr>
+                                <td>
+                                    {% if member.imagePath %}
+                                        <span class="toggle-picture"><i class="fas fa-eye"></i></span>
+                                        <img src="{{ asset('images/' ~ member.imagePath) | imagine_filter('admin_team_thumbnail') }}" class="hidden"
+                                             alt="Photo de {{ member.firstname }}">
+                                    {% else %}
+                                        <i class="fas fa-eye-slash"></i>
+                                    {% endif %}
+                                </td>
+                                <td>{{ member.firstname }}</td>
+                                <td>{{ member.job }}</td>
+                                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                    <td>
+                                        <a href="{{ path('admin.delete-team-member', {id: member.id}) }}" class="content-link">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                    </td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p>Aucun membre d'équipe n'a été ajouté.</p>
+                {% endif %}
+            </div>
+        </div>
+    </main>
 {% endblock %}

@@ -419,6 +419,7 @@ class AdminController extends AbstractController
 
             $association->addTeamMember($teamMember);
             $this->em->flush();
+            $this->addFlash('notice', 'Le membre d\'équipe a bien été ajoutée.');
 
             return $this->redirectToRoute('admin.content');
         }
@@ -478,7 +479,7 @@ class AdminController extends AbstractController
 
         $this->em->remove($teamMember);
         $this->em->flush();
-        $this->addFlash('success', 'Le membre d\'équipe a bien été supprimé.');
+        $this->addFlash('notice', 'Le membre d\'équipe a bien été supprimé.');
 
         # Redirect to admin.content
         return $this->redirectToRoute('admin.content');
