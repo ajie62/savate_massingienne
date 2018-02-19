@@ -25,3 +25,8 @@ $profilePicture.parent('figure').find('> *').click(function () {
         $(this).parents('form').submit();
     });
 });
+
+/** Toggle license */
+$('.toggle-license').click(function() {
+    $(this).closest('.top').next('.bottom').toggleClass('hidden');
+});

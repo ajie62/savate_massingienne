@@ -1,12 +1,14 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <ul>
-        <li><a href="{{ path('admin.index') }}">Membres</a></li>
-        <li><a href="{{ path('admin.content') }}">Contenu du site</a></li>
-        <li><a href="{{ path('admin.event') }}">Évènements</a></li>
-        <li><a href="{{ path('admin.news') }}">Actualités</a></li>
-    </ul>
+    <div class="admin-tabs text-center">
+        <ul class="tabs centered"><!--
+        --><li><a href="{{ path('admin.index') }}">Membres</a></li><!--
+        --><li><a href="{{ path('admin.content') }}">Contenu</a></li><!--
+        --><li><a href="{{ path('admin.event') }}">Évènements</a></li><!--
+        --><li><a href="{{ path('admin.news') }}">Actualités</a></li><!--
+    --></ul>
+    </div>
 
     {% block admin_body %}{% endblock %}
 {% endblock %}

@@ -1,0 +1,50 @@
+// Admin tabs
+.admin-tabs {
+  background: $main-black;
+  ul.tabs {
+    padding: 0;
+    li {
+      display: inline-block;
+      a {
+        color: ivory;
+        display: inline-block;
+        padding: 15px;
+        text-decoration: none;
+        &:hover { background: lighten($main-black, 10%); }
+      }
+    }
+  }
+}
+
+#admin-members {
+  .validate-button { background: $main-black; }
+  .reject-button { background: #dd4444; }
+
+  .validate-button,
+  .reject-button {
+    color: ivory;
+    display: inline-block;
+    font-size: .8em;
+    padding: 1px 5px;
+    text-decoration: none;
+  }
+
+  .table-responsive {
+    overflow: scroll;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    .hidden { display: none; }
+    .toggle-license {
+      cursor: pointer;
+      &:hover { color: lighten($main-black, 10%); }
+    }
+    a { text-decoration: none; }
+    td, th {
+      border: 1px solid #ddd;
+      padding: 5px;
+      text-align: center;
+    }
+  }
+}
