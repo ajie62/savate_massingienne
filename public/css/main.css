@@ -378,6 +378,15 @@
         .admin-tabs ul.tabs li a:hover {
           background: #4d4d4d; }
 
+button {
+  background: #dd4444;
+  border: none;
+  border-radius: 10px;
+  color: ivory;
+  cursor: pointer;
+  margin-top: 5px;
+  padding: 10px 15px; }
+
 #admin-members .validate-button {
   background: #333; }
 #admin-members .reject-button {
@@ -443,14 +452,6 @@
     @media screen and (max-width: 600px) {
       #member-update form input {
         width: 100%; } }
-  #member-update form button {
-    background: #dd4444;
-    border: none;
-    border-radius: 10px;
-    color: ivory;
-    cursor: pointer;
-    margin-top: 5px;
-    padding: 10px 15px; }
 
 * {
   box-sizing: border-box; }
@@ -562,14 +563,9 @@ main.main-wrapper {
 .flash-success {
   background: #5cb85c;
   color: azure;
-  padding: 5px 0; }
+  padding: 10px 15px; }
 
-#event .main-wrapper .buttons,
-#archives .main-wrapper .buttons,
-#news .main-wrapper .buttons,
-#read-news .main-wrapper .buttons,
-#savate .main-wrapper .buttons,
-#member-update .main-wrapper .buttons {
+.buttons {
   border-top: 1px solid #d8d8d8;
   display: flex;
   justify-content: space-between;

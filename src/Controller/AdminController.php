@@ -155,6 +155,11 @@ class AdminController extends AbstractController
             # Flush
             $this->em->flush();
 
+            $this->addFlash(
+                'notice',
+                'Les informations de '.ucfirst($user->getFirstname()).' '.ucfirst($user->getLastname()).' ont bien été mises à jour.'
+            );
+
             # Redirection to admin.index
             return $this->redirectToRoute('admin.index');
         }
@@ -183,6 +188,11 @@ class AdminController extends AbstractController
         $user->setIsActive(true);
         $this->em->flush();
 
+        $this->addFlash(
+            'notice',
+            'L\'inscription de '.ucfirst($user->getFirstname()).' '.ucfirst($user->getLastname()).' a été validée.'
+        );
+
         $this->emailManager->sendSubscriptionEmail($user);
 
         return $this->redirectToRoute('admin.index');
@@ -209,6 +219,11 @@ class AdminController extends AbstractController
         $this->emailManager->sendSubscriptionEmail($user);
         # Flush
         $this->em->flush();
+
+        $this->addFlash(
+            'notice',
+            'L\'inscription de ' . ucfirst($user->getFirstname()) . ' ' . ucfirst($user->getLastname()) . ' a été rejetée.'
+        );
 
         # Redirection to admin.index
         return $this->redirectToRoute('admin.index');
@@ -250,6 +265,11 @@ class AdminController extends AbstractController
             $this->em->persist($user);
             # Flush
             $this->em->flush();
+
+            $this->addFlash(
+                'notice',
+                'Une licence a bien été ajoutée pour '.ucfirst($user->getFirstname()).' '.ucfirst($user->getLastname()).'.'
+            );
 
             # Redirection to admin.members
             return $this->redirectToRoute('admin.members');
@@ -334,12 +354,15 @@ class AdminController extends AbstractController
             $this->em->remove($user);
             # Flush
             $this->em->flush();
+            # Flash message
+            $this->addFlash('notice', 'Le membre a bien été supprimé.');
 
             # Redirection to admin.index
             return $this->redirectToRoute("admin.index");
         }
 
         return $this->render('admin/members/delete.html.twig', [
+            'user' => $user,
             'form' => $form->createView()
         ]);
     }

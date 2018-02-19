@@ -16,6 +16,16 @@
   }
 }
 
+button {
+  background: #dd4444;
+  border: none;
+  border-radius: 10px;
+  color: ivory;
+  cursor: pointer;
+  margin-top: 5px;
+  padding: 10px 15px;
+}
+
 #admin-members {
   .validate-button { background: $main-black; }
   .reject-button { background: #dd4444; }
@@ -88,15 +98,6 @@
         transition: .5s;
       }
       @media #{$smallPhones} { width: 100%; }
-    }
-    button {
-      background: #dd4444;
-      border: none;
-      border-radius: 10px;
-      color: ivory;
-      cursor: pointer;
-      margin-top: 5px;
-      padding: 10px 15px;
     }
   }
 }

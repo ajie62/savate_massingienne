@@ -4,6 +4,9 @@
 
 {% block admin_body %}
     <main class="main-wrapper">
+        {% for message in app.flashes('notice') %}
+            <div class="flash-success">{{ message }}</div>
+        {% endfor %}
         <div class="content centered padding-left-right">
             {# Waiting for approval #}
             <h1>Inscriptions en attente</h1>
@@ -23,7 +26,7 @@
             {# Validated members #}
             <h1>Membres</h1>
             {% if activeUsers %}
-                <div class="table-responsive">
+                <di class="table-responsive">
                     <table>
                         <thead>
                         <tr>
@@ -31,7 +34,7 @@
                             <th>Prénom</th>
                             <th>Nom</th>
                             <th>N° de licence</th>
-                            <th>Licence</th>
+                            <th>Licences</th>
                             <th>Rôle</th>
                             <th>Actions</th>
                         </tr>
@@ -77,18 +80,21 @@
                                 </td>
                             </tr>
                             <tr class="bottom hidden">
-                            {% for license in member.licenses %}
-                                    <td colspan="6">
-                                        <a href="{{ asset('licenses/' ~ license.name) }}" target="_blank">Licence {{ license.year }}</a>
-                                    </td>
-                                    <td>
-                                        {% if is_granted('ROLE_SUPER_ADMIN') %}
-                                            <a href="{{ path("admin.member.delete_license", {"id": license.id}) }}" class="content-link" title="Supprimer la licence">
-                                                <i class="fas fa-trash-alt"></i>
-                                            </a>
-                                        {% endif %}
-                                    </td>
-                            {% endfor %}
+                                <td colspan="7">
+                                    <table>
+                                        {% for license in member.licenses %}
+                                            <tr>
+                                                <td>Licence {{ license.year }}</td>
+                                                <td><a href="{{ asset('licenses/' ~ license.name) }}" target="_blank" class="black-link">Voir</a></td>
+                                                <td>
+                                                    {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                                        <a href="{{ path("admin.member.delete_license", {"id": license.id}) }}" class="content-link">Supprimer</a>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </table>
+                                </td>
                             </tr>
                         {% endfor %}
                         </tbody>

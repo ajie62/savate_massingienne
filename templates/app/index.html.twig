@@ -4,7 +4,7 @@
 
 {% block body %}
     {% for message in app.flashes('notice') %}
-        {{ message }}
+        <div class="flash-success">{{ message }}</div>
     {% endfor %}
 
     <main class="main-wrapper">
