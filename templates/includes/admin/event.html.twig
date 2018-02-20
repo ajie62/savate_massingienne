@@ -1,5 +1,5 @@
-<div class="admin-event">
-    <div class="admin-event-header">
+<article class="admin-event">
+    <section class="admin-event-header">
         <h3>
             {{ event.name }}
             <small>
@@ -18,9 +18,9 @@
             {% if event.updatedAt %}- Mis à jour le {{ event.updatedAt|date('d/m/Y à H:i') }}{% endif %}<br>
             Commence le {{ event.startingDate|date('d/m/Y à H:i') }} - Prend fin le {{ event.endingDate|date('d/m/Y à H:i') }}
         </small>
-    </div>
+    </section>
 
-    <div class="admin-event-content">
+    <section class="admin-event-content">
         <p class="text-justify">
             {% if event.description|length > 200 %}
                 {{ event.description|slice(0, 200) ~ '...' }}
@@ -28,9 +28,9 @@
                 {{ event.description }}
             {% endif %}
         </p>
-    </div>
+    </section>
 
-    <div class="admin-event-subscribers">
+    <section class="admin-event-subscribers">
         <p>Participants :</p>
         {% if event.users|length > 0 %}
             <ul>
@@ -41,5 +41,5 @@
         {% else %}
             <p>Aucun membre n'est inscrit.</p>
         {% endif %}
-    </div>
-</div>
+    </section>
+</article>

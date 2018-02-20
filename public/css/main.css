@@ -503,7 +503,7 @@ button {
     grid-area: l; }
     #admin-events-list .content .left .admin-event {
       border-left: 3px solid white;
-      padding: 0 15px; }
+      padding: 10px 15px; }
       #admin-events-list .content .left .admin-event:hover {
         border-left: 3px solid #dd4444; }
     #admin-events-list .content .left .admin-event-header h3 {
@@ -516,6 +516,59 @@ button {
       margin: 0; }
   #admin-events-list .content .admin-actions {
     grid-area: r; }
+
+#set-event .content form label {
+  display: inline-block;
+  margin: 10px 0;
+  min-width: 100px;
+  padding: 7px; }
+  @media screen and (max-width: 600px) {
+    #set-event .content form label {
+      margin: 0;
+      min-width: 100%; } }
+#set-event .content form input, #set-event .content form textarea {
+  margin: 10px 0;
+  min-width: calc(100% - 130px);
+  outline: none;
+  padding: 5px 10px; }
+  @media screen and (max-width: 600px) {
+    #set-event .content form input, #set-event .content form textarea {
+      margin: 0;
+      min-width: 100%; } }
+#set-event .content form textarea {
+  line-height: 1.5;
+  min-height: 150px;
+  max-height: 250px;
+  max-width: calc(100% - 130px);
+  text-align: justify;
+  vertical-align: top; }
+#set-event .content form .event-dates {
+  grid-gap: 10px;
+  grid-template-columns: repeat(12, 1fr);
+  text-align: center; }
+  @media screen and (max-width: 600px) {
+    #set-event .content form .event-dates {
+      grid-template-columns: 100%; } }
+  #set-event .content form .event-dates label {
+    margin: 0; }
+    #set-event .content form .event-dates label + ul {
+      background: #d9534f;
+      color: ivory;
+      list-style: none;
+      padding: 5px 0;
+      margin: 0 0 15px 0; }
+  #set-event .content form .event-dates > div {
+    margin: 10px 0 15px 0; }
+  #set-event .content form .event-dates > div:first-child {
+    grid-column: 3 / 7; }
+    @media screen and (max-width: 600px) {
+      #set-event .content form .event-dates > div:first-child {
+        grid-column: 1 / -1; } }
+  #set-event .content form .event-dates > div:last-child {
+    grid-column: 8 / -2; }
+    @media screen and (max-width: 600px) {
+      #set-event .content form .event-dates > div:last-child {
+        grid-column: 1 / -1; } }
 
 * {
   box-sizing: border-box; }

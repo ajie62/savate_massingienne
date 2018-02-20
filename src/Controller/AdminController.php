@@ -587,6 +587,8 @@ class AdminController extends AbstractController
             $this->em->remove($event);
             # Flush
             $this->em->flush();
+            # Flash message
+            $this->addFlash('notice', 'L\'évènement a bien été supprimé.');
 
             # Redirection to the redirect route
             return $this->redirectToRoute($redirectRoute);
@@ -625,6 +627,12 @@ class AdminController extends AbstractController
             $this->em->persist($event);
             # Flush
             $this->em->flush();
+
+            if ($isNewEvent) {
+                $this->addFlash('notice', 'L\'évènement a été publié.');
+            } else {
+                $this->addFlash('notice', 'L\'évènement a bien été modifié.');
+            }
 
             # Redirection to admin.event
             return $this->redirectToRoute('admin.event');

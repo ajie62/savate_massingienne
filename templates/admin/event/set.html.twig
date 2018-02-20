@@ -1,12 +1,31 @@
 {% extends 'admin/base.html.twig' %}
+{% block body_id 'set-event' %}
+{% block title %}
+    {% if isNewEvent %}
+        Administration Création d'évènement
+    {% else %}
+        Administration Mise à jour d'évènement
+    {% endif %}
+    - {{ parent() }}
+{% endblock %}
 
 {% block admin_body %}
-    <h1>{% if isNewEvent %}Nouvel évènement{% else %}Éditer &laquo; {{ event.name }} &raquo;{% endif %}</h1>
+    <main class="main-wrapper">
+        <div class="content centered padding-left-right">
+            <h1>{% if isNewEvent %}Nouvel évènement{% else %}Éditer &laquo; {{ event.name }} &raquo;{% endif %}</h1>
 
-    {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <a href="{{ url('admin.event') }}">Retour</a>
-    <button type="submit">Mettre à jour</button>
-    {{ form_end(form) }}
-
+            {{ form_start(form) }}
+            {{ form_row(form.name) }}
+            <div class="event-dates grid">
+                <div>{{ form_row(form.startingDate) }}</div>
+                <div>{{ form_row(form.endingDate) }}</div>
+            </div>
+            {{ form_row(form.description) }}
+            <div class="buttons text-center">
+                <a href="{{ url('admin.event') }}" class="black-action-button text-center">Retour</a>
+                <button type="submit">{% if isNewEvent %}Publier{% else %}Mettre à jour{% endif %}</button>
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </main>
 {% endblock %}
