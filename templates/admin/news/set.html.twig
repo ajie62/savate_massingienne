@@ -1,12 +1,26 @@
 {% extends 'admin/base.html.twig' %}
+{% block body_id 'set-news' %}
+{% block title %}
+    {% if isNewNews %}
+        Administration Création d'actualité
+    {% else %}
+        Administration Mise à jour d'actualité
+    {% endif %}
+    - {{ parent() }}
+{% endblock %}
 
 {% block admin_body %}
-    <h1>{{ isNewNews ? 'Nouvelle actualité' : 'Mise à jour' }}</h1>
+    <main class="main-wrapper">
+        <div class="content centered padding-left-right">
+            <h1>{% if isNewNews %}Nouvelle actualité{% else %}Éditer &laquo; {{ news.name }} &raquo;{% endif %}</h1>
 
-    {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button type="submit">Valider</button>
-    {{ form_end(form) }}
-
-    <a href="{{ url('admin.news') }}">Retour</a>
+            {{ form_start(form) }}
+            {{ form_widget(form) }}
+            <div class="buttons text-center">
+                <a href="{{ url('admin.news') }}" class="black-action-button text-center">Retour</a>
+                <button type="submit">{% if isNewNews %}Publier{% else %}Mettre à jour{% endif %}</button>
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </main>
 {% endblock %}

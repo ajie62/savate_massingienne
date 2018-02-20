@@ -8,7 +8,7 @@
             {{ event.name }}
             <small>
                 {% if is_granted('ROLE_ADMIN') %}<a href="{{ path('admin.event_update', {id: event.id}) }}" class="to-admin-link">Éditer</a>{% endif %}
-                {% if is_granted('ROLE_SUPER_ADMIN') %}<a href="{{ path('admin.event_delete', {id: event.id, redirect: 'event.index'}) }}" class="to-admin-link">Delete</a>{% endif %}
+                {% if is_granted('ROLE_SUPER_ADMIN') %}<a href="{{ path('admin.event_delete', {id: event.id, redirect: 'event.index'}) }}" class="to-admin-link">Supprimer</a>{% endif %}
             </small>
         </h3>
         <small>A lieu

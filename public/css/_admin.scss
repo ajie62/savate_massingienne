@@ -178,9 +178,16 @@ button {
     form {
       label {
         display: inline-block;
-        margin: 10px 0;
+        margin: 5px 0;
         min-width: 100px;
         padding: 7px;
+        & + ul {
+          background: #d9534f;
+          color: ivory;
+          list-style: none;
+          padding: 5px;
+          margin: 0;
+        }
         @media #{$smallPhones} {
           margin: 0;
           min-width: 100%;
@@ -215,7 +222,7 @@ button {
             background: #d9534f;
             color: ivory;
             list-style: none;
-            padding: 5px 0;
+            padding: 5px;
             margin: 0 0 15px 0;
           }
         }
@@ -228,6 +235,63 @@ button {
           grid-column: 8 / -2;
           @media #{$smallPhones} { grid-column: 1 / -1; }
         }
+      }
+    }
+  }
+}
+
+// News
+#admin-news-list {
+  h1 { margin: 0 0 30px 0; }
+  .content {
+    grid-gap: 20px;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-areas: 'l l l l l l l l r r r r';
+    @media #{$smallPhones} { grid-template-areas: 'r r r r r r r r r r r r' 'l l l l l l l l l l l l'; }
+    hr { margin: 30px 0; }
+    .left { grid-area: l; }
+    .admin-actions { grid-area: r; }
+    .admin-news {
+      .admin-news-header {
+        h3 { margin: 5px 0 0 0; }
+      }
+    }
+  }
+}
+
+// News read
+#admin-news-read {
+  .content {
+    h1 {
+      font-size: 3em;
+      margin: 0;
+    }
+  }
+}
+
+// Set news
+#set-news {
+  .content {
+    form {
+      label {
+        display: inline-block;
+        margin: 5px 0;
+        min-width: 80px;
+        padding: 5px;
+        text-align: center;
+        vertical-align: top;
+      }
+      input[type="text"], textarea {
+        margin: 5px 0;
+        min-width: calc(100% - 80px);
+        outline: none;
+        padding: 5px;
+      }
+      textarea {
+        max-width: calc(100% - 80px);
+        max-height: 400px;
+        min-height: 200px;
+        text-align: justify;
       }
     }
   }
