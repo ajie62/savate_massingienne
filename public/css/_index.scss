@@ -45,6 +45,7 @@
   // 'Introduction' section
   .introduction {
     .content {
+      min-height: 300px;
       @media #{$biggerPhones} {
         grid-template-columns: 100%;
         grid-template-rows: 250px auto;

@@ -10,11 +10,13 @@
             <a href="{{ url('app.savate') }}">Savate</a>
             
             {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-                <a href="{{ url('user.profile', {username: app.user.username}) }}">Profil</a>
+                <a href="{{ url('user.profile', {username: app.user.username}) }}">
+                    {{ app.user.firstname|capitalize }}
+                </a>
             {% endif %}
 
             {% if is_granted('ROLE_ADMIN') %}
-                <a href="{{ url('admin.index') }}">Administration</a>
+                <a href="{{ url('admin.index') }}">Admin</a>
             {% endif %}
 
             {% if not is_granted('ROLE_USER') %}

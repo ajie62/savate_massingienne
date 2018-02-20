@@ -152,9 +152,8 @@ button {
     .left {
       grid-area: l;
       .admin-event {
-        border-left: 3px solid white;
-        padding: 10px 15px;
-        &:hover { border-left: 3px solid #dd4444; }
+        padding: 0;
+        margin-bottom: 30px;
       }
       .admin-event-header {
         h3 { margin: 5px 0;}

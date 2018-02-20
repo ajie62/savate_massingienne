@@ -40,6 +40,48 @@
       float: none;
       text-align: left; } }
 
+.website-footer {
+  background-color: #333;
+  color: ivory;
+  grid-row-end: 999; }
+  .website-footer .website-footer-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 20px; }
+    @media screen and (max-width: 600px) {
+      .website-footer .website-footer-content {
+        grid-template-columns: 100%; } }
+    .website-footer .website-footer-content > div {
+      display: flex;
+      flex-direction: column; }
+    .website-footer .website-footer-content .location address {
+      margin: 0; }
+    .website-footer .website-footer-content .location a {
+      color: #fff;
+      text-decoration: none; }
+    .website-footer .website-footer-content .location span {
+      text-align: center;
+      width: 50px;
+      margin-right: 15px; }
+    .website-footer .website-footer-content .location > div {
+      display: flex;
+      flex-direction: row;
+      padding: 10px;
+      min-width: 250px; }
+      @media screen and (max-width: 600px) {
+        .website-footer .website-footer-content .location > div {
+          justify-content: space-between;
+          margin: 0 auto;
+          width: 100%; } }
+      .website-footer .website-footer-content .location > div address, .website-footer .website-footer-content .location > div a {
+        display: inline-block;
+        text-align: left;
+        width: 100%; }
+    .website-footer .website-footer-content .about h4 {
+      margin: 0; }
+    .website-footer .website-footer-content .about .social a {
+      color: inherit; }
+
 #homepage .main-wrapper .intro-img {
   align-items: center;
   background: #3f4e5e;
@@ -79,10 +121,12 @@
 #homepage .main-wrapper .events .content,
 #homepage .main-wrapper .news .content {
   grid-gap: 20px; }
-@media screen and (max-width: 900px) {
-  #homepage .main-wrapper .introduction .content {
-    grid-template-columns: 100%;
-    grid-template-rows: 250px auto; } }
+#homepage .main-wrapper .introduction .content {
+  min-height: 300px; }
+  @media screen and (max-width: 900px) {
+    #homepage .main-wrapper .introduction .content {
+      grid-template-columns: 100%;
+      grid-template-rows: 250px auto; } }
 #homepage .main-wrapper .introduction .img {
   background: url("../images/salle.jpg") no-repeat center; }
   @media screen and (max-width: 900px) {
@@ -194,9 +238,9 @@
   line-height: 1.7; }
 
 #savate .main-wrapper .information {
-  background: rgba(221, 68, 68, 0.5);
-  border: 1px solid #9e1d1d;
+  background: #d9534f;
   border-radius: 5px;
+  color: ivory;
   line-height: 1.5;
   padding: 10px; }
 
@@ -502,10 +546,8 @@ button {
   #admin-events-list .content .left {
     grid-area: l; }
     #admin-events-list .content .left .admin-event {
-      border-left: 3px solid white;
-      padding: 10px 15px; }
-      #admin-events-list .content .left .admin-event:hover {
-        border-left: 3px solid #dd4444; }
+      padding: 0;
+      margin-bottom: 30px; }
     #admin-events-list .content .left .admin-event-header h3 {
       margin: 5px 0; }
     #admin-events-list .content .left .admin-event-subscribers ul {
