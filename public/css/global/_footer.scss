@@ -1,0 +1,49 @@
+.website-footer {
+  background-color: $main-black;
+  color: ivory;
+  grid-row-end: 999;
+  .website-footer-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 20px;
+    @media #{$smallPhones} { grid-template-columns: 100%; }
+    & > div {
+      display: flex;
+      flex-direction: column;
+    }
+    .location {
+      address { margin: 0; }
+      a {
+        color: #fff;
+        text-decoration: none;
+      }
+      span {
+        text-align: center;
+        width: 50px;
+        margin-right: 15px;
+      }
+      & > div {
+        display: flex;
+        flex-direction: row;
+        padding: 10px;
+        min-width: 250px;
+        @media #{$smallPhones} {
+          justify-content: space-between;
+          margin: 0 auto;
+          width: 100%;
+        }
+        & address, & a {
+          display: inline-block;
+          text-align: left;
+          width: 100%;
+        }
+      }
+    }
+    .about {
+      h4 { margin: 0; }
+      .social {
+        a { color: inherit; }
+      }
+    }
+  }
+}

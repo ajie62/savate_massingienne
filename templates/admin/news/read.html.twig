@@ -1,14 +1,28 @@
 {% extends 'admin/base.html.twig' %}
+{% block body_id 'admin-news-read' %}
+{% block title %}{{ news.name }} - {{ parent() }}{% endblock %}
 
 {% block admin_body %}
-    <h1>{{ news.name }}</h1>
+    <main class="main-wrapper">
+        <div class="content centered padding-left-right">
+            <article class="admin-news-read">
+                <section class="admin-news-read-header">
+                    <h1>{{ news.name }}</h1>
+                    <small>
+                        Publiée le {{ news.createdAt|date('d/m/Y à H:i') }}
+                        {{ news.updatedAt ? ('- <strong>Mise à jour le ' ~ news.updatedAt|date('d/m/Y à H:i') ~ '</strong>')|raw }}
+                    </small>
+                </section>
 
-    <small>
-        Publiée le {{ news.createdAt|date('d/m/Y à H:i') }}
-        {{ news.updatedAt ? ('- <strong>Mise à jour le ' ~ news.updatedAt|date('d/m/Y à H:i') ~ '</strong>')|raw }}
-    </small>
+                <section class="admin-news-read-content">
+                    <p>{{ news.content }}</p>
+                </section>
+            </article>
 
-    <p>{{ news.content }}</p>
-
-    <a href="{{ url('admin.news') }}">Retour</a>
+            <div class="buttons text-center">
+                <a href="{{ url('admin.news') }}" class="black-action-button text-center">Retour</a>
+                <a href="{{ url('admin.news_update', {id: news.id}) }}" class="action-button">Éditer</a>
+            </div>
+        </div>
+    </main>
 {% endblock %}

@@ -1,12 +1,19 @@
 {% extends 'admin/base.html.twig' %}
+{% block title %}Suppression de {{ name }}{% endblock %}
 
 {% block admin_body %}
-    <h1>Suppression de &laquo; {{ name }} &raquo;</h1>
-    <p>Voulez-vous vraiment supprimer cette actualité ?</p>
+    <div class="main-wrapper">
+        <div class="content centered padding-left-right">
+            <h1>Suppression de &laquo; {{ name }} &raquo;</h1>
+            <p>Voulez-vous vraiment supprimer l'actualité <strong>&laquo; {{ name }} &raquo;</strong> ? Cette action est irréversible. </p>
 
-    {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <a href="{{ url('admin.news') }}">Retour</a>
-    <button type="submit">Supprimer</button>
-    {{ form_end(form) }}
+            {{ form_start(form) }}
+            {{ form_widget(form) }}
+            <div class="buttons text-center">
+                <a href="{{ url('admin.news') }}" class="black-action-button text-center">Retour</a>
+                <button type="submit">Supprimer</button>
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
 {% endblock %}

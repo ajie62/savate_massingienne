@@ -40,6 +40,48 @@
       float: none;
       text-align: left; } }
 
+.website-footer {
+  background-color: #333;
+  color: ivory;
+  grid-row-end: 999; }
+  .website-footer .website-footer-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 20px; }
+    @media screen and (max-width: 600px) {
+      .website-footer .website-footer-content {
+        grid-template-columns: 100%; } }
+    .website-footer .website-footer-content > div {
+      display: flex;
+      flex-direction: column; }
+    .website-footer .website-footer-content .location address {
+      margin: 0; }
+    .website-footer .website-footer-content .location a {
+      color: #fff;
+      text-decoration: none; }
+    .website-footer .website-footer-content .location span {
+      text-align: center;
+      width: 50px;
+      margin-right: 15px; }
+    .website-footer .website-footer-content .location > div {
+      display: flex;
+      flex-direction: row;
+      padding: 10px;
+      min-width: 250px; }
+      @media screen and (max-width: 600px) {
+        .website-footer .website-footer-content .location > div {
+          justify-content: space-between;
+          margin: 0 auto;
+          width: 100%; } }
+      .website-footer .website-footer-content .location > div address, .website-footer .website-footer-content .location > div a {
+        display: inline-block;
+        text-align: left;
+        width: 100%; }
+    .website-footer .website-footer-content .about h4 {
+      margin: 0; }
+    .website-footer .website-footer-content .about .social a {
+      color: inherit; }
+
 #homepage .main-wrapper .intro-img {
   align-items: center;
   background: #3f4e5e;
@@ -79,10 +121,12 @@
 #homepage .main-wrapper .events .content,
 #homepage .main-wrapper .news .content {
   grid-gap: 20px; }
-@media screen and (max-width: 900px) {
-  #homepage .main-wrapper .introduction .content {
-    grid-template-columns: 100%;
-    grid-template-rows: 250px auto; } }
+#homepage .main-wrapper .introduction .content {
+  min-height: 300px; }
+  @media screen and (max-width: 900px) {
+    #homepage .main-wrapper .introduction .content {
+      grid-template-columns: 100%;
+      grid-template-rows: 250px auto; } }
 #homepage .main-wrapper .introduction .img {
   background: url("../images/salle.jpg") no-repeat center; }
   @media screen and (max-width: 900px) {
@@ -179,7 +223,7 @@
   padding: 10px;
   margin-top: 30px; }
   #news .main-wrapper .content article h3 {
-    margin: 0 0 10px 0; }
+    margin: 0; }
   #news .main-wrapper .content article .news-content {
     line-height: 1.5; }
 
@@ -194,9 +238,9 @@
   line-height: 1.7; }
 
 #savate .main-wrapper .information {
-  background: rgba(221, 68, 68, 0.5);
-  border: 1px solid #9e1d1d;
+  background: #d9534f;
   border-radius: 5px;
+  color: ivory;
   line-height: 1.5;
   padding: 10px; }
 
@@ -502,10 +546,8 @@ button {
   #admin-events-list .content .left {
     grid-area: l; }
     #admin-events-list .content .left .admin-event {
-      border-left: 3px solid white;
-      padding: 0 15px; }
-      #admin-events-list .content .left .admin-event:hover {
-        border-left: 3px solid #dd4444; }
+      padding: 0;
+      margin-bottom: 30px; }
     #admin-events-list .content .left .admin-event-header h3 {
       margin: 5px 0; }
     #admin-events-list .content .left .admin-event-subscribers ul {
@@ -516,6 +558,105 @@ button {
       margin: 0; }
   #admin-events-list .content .admin-actions {
     grid-area: r; }
+
+#set-event .content form label {
+  display: inline-block;
+  margin: 5px 0;
+  min-width: 100px;
+  padding: 7px; }
+  #set-event .content form label + ul {
+    background: #d9534f;
+    color: ivory;
+    list-style: none;
+    padding: 5px;
+    margin: 0; }
+  @media screen and (max-width: 600px) {
+    #set-event .content form label {
+      margin: 0;
+      min-width: 100%; } }
+#set-event .content form input, #set-event .content form textarea {
+  margin: 10px 0;
+  min-width: calc(100% - 130px);
+  outline: none;
+  padding: 5px 10px; }
+  @media screen and (max-width: 600px) {
+    #set-event .content form input, #set-event .content form textarea {
+      margin: 0;
+      min-width: 100%; } }
+#set-event .content form textarea {
+  line-height: 1.5;
+  min-height: 150px;
+  max-height: 250px;
+  max-width: calc(100% - 130px);
+  text-align: justify;
+  vertical-align: top; }
+#set-event .content form .event-dates {
+  grid-gap: 10px;
+  grid-template-columns: repeat(12, 1fr);
+  text-align: center; }
+  @media screen and (max-width: 600px) {
+    #set-event .content form .event-dates {
+      grid-template-columns: 100%; } }
+  #set-event .content form .event-dates label {
+    margin: 0; }
+    #set-event .content form .event-dates label + ul {
+      background: #d9534f;
+      color: ivory;
+      list-style: none;
+      padding: 5px;
+      margin: 0 0 15px 0; }
+  #set-event .content form .event-dates > div {
+    margin: 10px 0 15px 0; }
+  #set-event .content form .event-dates > div:first-child {
+    grid-column: 3 / 7; }
+    @media screen and (max-width: 600px) {
+      #set-event .content form .event-dates > div:first-child {
+        grid-column: 1 / -1; } }
+  #set-event .content form .event-dates > div:last-child {
+    grid-column: 8 / -2; }
+    @media screen and (max-width: 600px) {
+      #set-event .content form .event-dates > div:last-child {
+        grid-column: 1 / -1; } }
+
+#admin-news-list h1 {
+  margin: 0 0 30px 0; }
+#admin-news-list .content {
+  grid-gap: 20px;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-areas: 'l l l l l l l l r r r r'; }
+  @media screen and (max-width: 600px) {
+    #admin-news-list .content {
+      grid-template-areas: 'r r r r r r r r r r r r' 'l l l l l l l l l l l l'; } }
+  #admin-news-list .content hr {
+    margin: 30px 0; }
+  #admin-news-list .content .left {
+    grid-area: l; }
+  #admin-news-list .content .admin-actions {
+    grid-area: r; }
+  #admin-news-list .content .admin-news .admin-news-header h3 {
+    margin: 5px 0 0 0; }
+
+#admin-news-read .content h1 {
+  font-size: 3em;
+  margin: 0; }
+
+#set-news .content form label {
+  display: inline-block;
+  margin: 5px 0;
+  min-width: 80px;
+  padding: 5px;
+  text-align: center;
+  vertical-align: top; }
+#set-news .content form input[type="text"], #set-news .content form textarea {
+  margin: 5px 0;
+  min-width: calc(100% - 80px);
+  outline: none;
+  padding: 5px; }
+#set-news .content form textarea {
+  max-width: calc(100% - 80px);
+  max-height: 400px;
+  min-height: 200px;
+  text-align: justify; }
 
 * {
   box-sizing: border-box; }

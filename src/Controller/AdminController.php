@@ -587,6 +587,8 @@ class AdminController extends AbstractController
             $this->em->remove($event);
             # Flush
             $this->em->flush();
+            # Flash message
+            $this->addFlash('notice', 'L\'évènement a bien été supprimé.');
 
             # Redirection to the redirect route
             return $this->redirectToRoute($redirectRoute);
@@ -625,6 +627,12 @@ class AdminController extends AbstractController
             $this->em->persist($event);
             # Flush
             $this->em->flush();
+
+            if ($isNewEvent) {
+                $this->addFlash('notice', 'L\'évènement a été publié.');
+            } else {
+                $this->addFlash('notice', 'L\'évènement a bien été modifié.');
+            }
 
             # Redirection to admin.event
             return $this->redirectToRoute('admin.event');
@@ -726,6 +734,8 @@ class AdminController extends AbstractController
             $this->em->remove($news);
             # Flush
             $this->em->flush();
+            # Flash message
+            $this->addFlash('notice', 'L\'actualité a bien été supprimée.');
 
             # Redirection to admin.news
             return $this->redirectToRoute('admin.news');
@@ -752,21 +762,31 @@ class AdminController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            # If news is being updated, set the updatedAt attr
             if (!$isNewNews) {
                 $news->setUpdatedAt(new \DateTime());
             }
 
+            # Persist
             $this->em->persist($news);
+            # Flush
             $this->em->flush();
 
-            return $this->redirectToRoute('admin.news_read', [
-                'id' => $news->getId(),
-            ]);
+            # Flash message
+            if ($isNewNews) {
+                $this->addFlash('notice', 'L\'actualité a été publiée.');
+            } else {
+                $this->addFlash('notice', 'L\'actualité a bien été modifiée.');
+            }
+
+            # Redirection to admin.news
+            return $this->redirectToRoute('admin.news');
         }
 
         return $this->render('admin/news/set.html.twig', [
             'form' => $form->createView(),
             'isNewNews' => $isNewNews,
+            'news' => $news
         ]);
     }
 

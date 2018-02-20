@@ -1,12 +1,19 @@
 {% extends 'admin/base.html.twig' %}
+{% block title %}Suppression de {{ event.name }} - {{ parent() }}{% endblock %}
 
 {% block admin_body %}
-    <h1>Suppression d'évènement</h1>
-    <p>Voulez-vous vraiment supprimer l'évènement &laquo; {{ event.name }} &raquo; ? Cette action est irréversible. </p>
+    <div class="main-wrapper">
+        <div class="content centered padding-left-right">
+            <h1>Suppression d'évènement</h1>
+            <p>Voulez-vous vraiment supprimer l'évènement <strong>&laquo; {{ event.name }} &raquo;</strong> ? Cette action est irréversible. </p>
 
-    {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <a href="{{ url('admin.event') }}">Retour</a>
-    <button type="submit">Supprimer</button>
-    {{ form_end(form) }}
+            {{ form_start(form) }}
+            {{ form_widget(form) }}
+            <div class="buttons text-center">
+                <a href="{{ url('admin.event') }}" class="black-action-button text-center">Retour</a>
+                <button type="submit">Supprimer</button>
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
 {% endblock %}

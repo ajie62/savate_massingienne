@@ -3,7 +3,7 @@
 {% block body_id 'event' %}
 
 {% block body %}
-    <div class="main-wrapper">
+    <main class="main-wrapper">
         {% for message in app.flashes('notice') %}
             <div class="flash-success">
                 <div class="message centered padding-left-right">{{ message|raw }}</div>
@@ -50,5 +50,5 @@
                 {% endif %}
             </div>
         </div>
-    </div>
+    </main>
 {% endblock %}

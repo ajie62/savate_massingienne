@@ -4,6 +4,9 @@
 
 {% block admin_body %}
     <main class="main-wrapper">
+        {% for message in app.flashes('notice') %}
+            <div class="flash-success">{{ message }}</div>
+        {% endfor %}
         <div class="content centered padding-left-right grid">
             <div class="left">
                 <h1>Évènements</h1>
