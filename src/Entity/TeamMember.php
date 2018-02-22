@@ -26,12 +26,20 @@ class TeamMember
     /**
      * @ORM\Column(type="string", type="string", length=50)
      * @Assert\NotBlank()
+     * @Assert\Length(
+     *     max="50",
+     *     maxMessage="Le champ doit contenir {{ limit }} maximum."
+     * )
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", type="string", length=255)
      * @Assert\NotBlank()
+     * @Assert\Length(
+     *     max="50",
+     *     maxMessage="Le champ doit contenir {{ limit }} maximum."
+     * )
      */
     private $job;
 
