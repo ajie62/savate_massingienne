@@ -73,4 +73,13 @@ class AssociationService
 
         return $this->association->getAboutUs();
     }
+
+    public function getFacebookLink()
+    {
+        if ($this->association === null) {
+            throw new LogicException('Chargez d\'abord l\'association.');
+        }
+
+        return $this->association->getFacebookLink();
+    }
 }

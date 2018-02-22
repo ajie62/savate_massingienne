@@ -34,7 +34,7 @@
                 <p class="text-justify">{{ Association.aboutUs|default('La description brève n\'existe pas encore.') }}</p>
             </div>
             <div class="social">
-                <a href="#"><i class="fab fa-facebook fa-2x"></i></a>
+                <a href="{{ Association.facebookLink ? Association.facebookLink : '#' }}"><i class="fab fa-facebook fa-2x"></i></a>
             </div>
         </div>
     </div>

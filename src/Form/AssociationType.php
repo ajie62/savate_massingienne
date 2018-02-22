@@ -15,6 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -26,14 +27,17 @@ class AssociationType extends AbstractType
             ->add('textIntro', TextareaType::class, [
                 'label' => 'Introduction',
                 'required' => false,
+                'attr' => ['placeholder' => 'L\'historique de l\'association...']
             ])
             ->add('textInfo', TextareaType::class, [
                 'label' => 'Informations',
                 'required' => false,
+                'attr' => ['placeholder' => 'Les horaires et jours d\'entraînement, etc...']
             ])
             ->add('phoneNumber', TextType::class, [
                 'label' => 'Téléphone',
                 'required' => false,
+                'attr' => ['placeholder' => '01 23 45 67 89']
             ])
             ->add('address', TextType::class, [
                 'label' => 'Adresse',
@@ -46,6 +50,12 @@ class AssociationType extends AbstractType
             ->add('aboutUs', TextareaType::class, [
                 'label' => 'À propos',
                 'required' => false,
+                'attr' => ['placeholder' => 'Décrivez brièvement le but de l\'association']
+            ])
+            ->add('facebookLink', UrlType::class, [
+                'label' => 'Page facebook',
+                'required' => false,
+                'attr' => ['placeholder' => 'http://']
             ])
         ;
     }

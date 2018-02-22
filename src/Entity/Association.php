@@ -83,6 +83,11 @@ class Association
     private $teamMembers;
 
     /**
+     * @ORM\Column(type="text", length=255, nullable=true)
+     */
+    private $facebookLink;
+
+    /**
      * Association constructor.
      */
     public function __construct()
@@ -244,4 +249,23 @@ class Association
         $this->teamMembers->add($teamMember);
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getFacebookLink()
+    {
+        return $this->facebookLink;
+    }
+
+    /**
+     * @param mixed $facebookLink
+     * @return Association
+     */
+    public function setFacebookLink($facebookLink)
+    {
+        $this->facebookLink = $facebookLink;
+        return $this;
+    }
+
 }
