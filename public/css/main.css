@@ -375,12 +375,6 @@
   #registration-page .registration-form form label {
     display: block;
     margin-top: 10px; }
-    #registration-page .registration-form form label + ul {
-      background: #d9534f;
-      color: white;
-      list-style: none;
-      margin: 5px 0 10px 0;
-      padding: 10px; }
   #registration-page .registration-form form input {
     border: 1px solid #333;
     border-radius: 10px;
@@ -587,12 +581,6 @@ button {
   margin: 5px 0;
   min-width: 100px;
   padding: 7px; }
-  #set-event .content form label + ul {
-    background: #d9534f;
-    color: ivory;
-    list-style: none;
-    padding: 5px;
-    margin: 0; }
   @media screen and (max-width: 600px) {
     #set-event .content form label {
       margin: 0;
@@ -622,12 +610,6 @@ button {
       grid-template-columns: 100%; } }
   #set-event .content form .event-dates label {
     margin: 0; }
-    #set-event .content form .event-dates label + ul {
-      background: #d9534f;
-      color: ivory;
-      list-style: none;
-      padding: 5px;
-      margin: 0 0 15px 0; }
   #set-event .content form .event-dates > div {
     margin: 10px 0 15px 0; }
   #set-event .content form .event-dates > div:first-child {
@@ -842,5 +824,12 @@ main.main-wrapper {
       background: #dd4444; }
     .admin-actions a.back {
       background: #333; }
+
+label + ul {
+  background: #d9534f;
+  color: white;
+  list-style: none;
+  margin: 5px 0 10px 0;
+  padding: 10px; }
 
 /*# sourceMappingURL=main.css.map */

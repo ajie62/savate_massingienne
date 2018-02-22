@@ -125,3 +125,11 @@ main.main-wrapper { flex: 1; }
     &.back { background: $main-black; }
   }
 }
+
+label + ul {
+  background: #d9534f;
+  color: white;
+  list-style: none;
+  margin: 5px 0 10px 0;
+  padding: 10px;
+}

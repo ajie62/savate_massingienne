@@ -59,6 +59,8 @@ class Contact
      *     message="Ce champ ne doit pas être vide."
      * )
      * @Assert\Length(
+     *     min="10",
+     *     minMessage="Ce champ doit contenir {{ limit }} caractères minimum.",
      *     max="200",
      *     maxMessage="Ce champ ne peut contenir que {{ limit }} caractères maximum."
      * )
@@ -72,6 +74,8 @@ class Contact
      *     message="Ce champ ne doit pas être vide."
      * )
      * @Assert\Length(
+     *     min="40",
+     *     minMessage="Ce champ doit contenir {{ limit }} caractères minimum.",
      *     max="1000",
      *     maxMessage="Ce champ ne peut contenir que {{ limit }} caractères maximum."
      * )
