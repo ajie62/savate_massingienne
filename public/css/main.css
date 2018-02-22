@@ -329,6 +329,29 @@
       #profile .main-wrapper .profile-content .events .events-container .profile-event:not(:last-child) {
         margin-bottom: 10px; }
 
+#update-profile h1 {
+  text-transform: uppercase; }
+  @media screen and (max-width: 600px) {
+    #update-profile h1 {
+      font-size: 1.8em; } }
+#update-profile form label {
+  color: #dd4444;
+  display: inline-block;
+  font-weight: bold;
+  min-width: 150px;
+  padding: 5px; }
+  @media screen and (max-width: 600px) {
+    #update-profile form label {
+      min-width: 100%; } }
+#update-profile form input[type="text"], #update-profile form input[type="email"] {
+  border: 1px solid #d8d8d8;
+  min-width: calc(100% - 150px);
+  outline: none;
+  padding: 5px 10px; }
+  @media screen and (max-width: 600px) {
+    #update-profile form input[type="text"], #update-profile form input[type="email"] {
+      min-width: 100%; } }
+
 #registration-page .content {
   grid-gap: 30px;
   grid-template-columns: 1fr 2fr;

@@ -104,3 +104,27 @@
     }
   }
 }
+
+#update-profile {
+  h1 {
+    text-transform: uppercase;
+    @media #{$smallPhones} { font-size: 1.8em; }
+  }
+  form {
+    label {
+      color: #dd4444;
+      display: inline-block;
+      font-weight: bold;
+      min-width: 150px;
+      padding: 5px;
+      @media #{$smallPhones} { min-width: 100%; }
+    }
+    input[type="text"], input[type="email"] {
+      border: 1px solid #d8d8d8;
+      min-width: calc(100% - 150px);
+      outline: none;
+      padding: 5px 10px;
+      @media #{$smallPhones} { min-width: 100%; }
+    }
+  }
+}

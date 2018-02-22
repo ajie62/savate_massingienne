@@ -1,10 +1,19 @@
 {% extends 'base.html.twig' %}
+{% block body_id 'update-profile' %}
+{% block title %}Mise à jour du profil - {{ parent() }}{% endblock %}
 
 {% block body %}
-    <h1>user.update</h1>
+    <main class="main-wrapper">
+        <div class="content centered padding-left-right">
+            <h1 class="text-center">Mise à jour des informations</h1>
 
-    {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button type="submit">Update</button>
-    {{ form_end(form) }}
+            {{ form_start(form) }}
+            {{ form_widget(form) }}
+            <div class="buttons text-center">
+                <a href="{{ url('user.profile') }}" class="black-action-button text-center">Retour</a>
+                <button type="submit">Mettre à jour</button>
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </main>
 {% endblock %}

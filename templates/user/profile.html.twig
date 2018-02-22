@@ -4,6 +4,9 @@
 
 {% block body %}
     <main class="main-wrapper">
+        {% for message in app.flashes('notice') %}
+            <div class="flash-success">{{ message }}</div>
+        {% endfor %}
         <section class="profile-header text-center">
             <h1>{{ user.firstname|capitalize }}</h1>
 

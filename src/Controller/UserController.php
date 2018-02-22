@@ -35,20 +35,6 @@ class UserController extends AbstractController
     }
 
     /**
-     * List website's all members
-     * @Route("/user/list", name="user.list")
-     *
-     * Only authenticated members can see the members list.
-     * @Security("is_granted('IS_AUTHENTICATED_REMEMBERED')")
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function list()
-    {
-        return $this->render('user/list.html.twig');
-    }
-
-    /**
      * User profile
      * @Route("/profile/{username}", name="user.profile", defaults={"username" = null})
      *
@@ -173,6 +159,8 @@ class UserController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             # Flush
             $em->flush();
+            # Flash message
+            $this->addFlash('notice', 'Vos informations ont été mises à jour.');
 
             # Redirection to user.profile
             return $this->redirectToRoute('user.profile', ['username' => $user->getUsername()]);
