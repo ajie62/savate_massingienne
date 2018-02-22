@@ -1,27 +1,33 @@
 {% extends 'base.html.twig' %}
+{% block body_id 'app-contact' %}
+{% block title %}Contact - {{ parent() }}{% endblock %}
 
 {% block body %}
+    <main class="main-wrapper">
+        {% for message in app.flashes('success') %}
+            <div class="flash-success">{{ message }}</div>
+        {% endfor %}
+        <div class="content centered padding-left-right">
+            <h1 class="text-center">Contact</h1>
 
-    {% for message in app.flashes('success') %}
-        {{ message }}
-    {% endfor %}
+            {% set logged = app.user %}
+            {{ form_start(form, {attr: { novalidate: true }}) }}
+            {% if logged %}
+                {{ form_row(form.firstname, { attr: {'readonly': 'true' }}) }}
+                {{ form_row(form.lastname, { attr: {'readonly': 'true' }}) }}
+                {{ form_row(form.email, { attr: {'readonly': 'true' }}) }}
+            {% else %}
+                {{ form_row(form.firstname) }}
+                {{ form_row(form.lastname) }}
+            {% endif %}
+            {{ form_rest(form) }}
 
-    <h1>Contact</h1>
-
-    {% set logged = app.user %}
-    {{ form_start(form, {attr: { novalidate: true }}) }}
-    {% if logged %}
-        {{ form_row(form.firstname, { attr: {'readonly': 'true' }}) }}
-        {{ form_row(form.lastname, { attr: {'readonly': 'true' }}) }}
-        {{ form_row(form.email, { attr: {'readonly': 'true' }}) }}
-    {% else %}
-        {{ form_row(form.firstname) }}
-        {{ form_row(form.lastname) }}
-    {% endif %}
-    {{ form_rest(form) }}
-
-    <button type="submit">Envoyer</button>
-    {{ form_end(form) }}
-
+            <div class="buttons text-center">
+                <a href="{{ url('app.index') }}" class="black-action-button text-center">Accueil</a>
+                <button type="submit">Envoyer</button>
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </main>
 {% endblock %}
 

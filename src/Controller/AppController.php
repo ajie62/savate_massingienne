@@ -108,7 +108,7 @@ class AppController extends AbstractController
 
         if ($contactForm->isSubmitted() && $contactForm->isValid()) {
             # Send the email thanks to the EmailManager Service
-            $this->emailManager->sendEmail($contact);
+            $this->emailManager->sendContactEmail($contact);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($contact);

@@ -15,6 +15,8 @@
                 </a>
             {% endif %}
 
+            <a href="{{ url('app.contact') }}">Contact</a>
+
             {% if is_granted('ROLE_ADMIN') %}
                 <a href="{{ url('admin.index') }}">Admin</a>
             {% endif %}
