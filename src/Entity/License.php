@@ -42,7 +42,11 @@ class License
     /**
      * @var null|UploadedFile
      *
-     * @Assert\File(mimeTypes={"application/pdf"}, mimeTypesMessage="Le document doit être au format .pdf.")
+     * @Assert\File(
+     *     mimeTypes={"application/pdf"}, mimeTypesMessage="Le document doit être au format .pdf.",
+     *     maxSize="5000000",
+     *     maxSizeMessage="Le taille du fichier ne peut pas être supérieure à {{ limit }}."
+     * )
      * @Assert\NotNull(message="Fichier PDF obligatoire")
      */
     private $licenseFile;
