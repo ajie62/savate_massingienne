@@ -1,6 +1,7 @@
 // Common styles: event.html.twig & archive.html.twig
 #event .main-wrapper,
 #archives .main-wrapper {
+  padding-bottom: 40px;
   h1 { text-transform: uppercase; }
   p { line-height: 1.5; }
   h2 { margin: 5px 0; }

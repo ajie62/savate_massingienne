@@ -3,7 +3,7 @@
 {% block body_id 'archives' %}
 
 {% block body %}
-    <div class="main-wrapper">
+    <main class="main-wrapper">
         <div class="content centered padding-left-right">
             <h1 class="text-center">Archives</h1>
 
@@ -25,8 +25,9 @@
                     </section>
 
                     <section class="event-footer">
+                        Ils ont participé :
                         {% for user in event.users %}
-                            {{ dump(event.users) }}
+                            {{ user.firstname|capitalize }}{% if loop.index and not loop.last %}, {% endif %}
                         {% endfor %}
                     </section>
                 </article>
@@ -47,6 +48,6 @@
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 {% endblock %}
 
