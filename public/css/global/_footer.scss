@@ -28,7 +28,6 @@
         padding: 10px;
         min-width: 250px;
         @media #{$smallPhones} {
-          justify-content: space-between;
           margin: 0 auto;
           width: 100%;
         }
