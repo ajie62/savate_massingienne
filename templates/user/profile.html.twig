@@ -93,8 +93,9 @@
                                 <ul class="list-unstyled">
                                     {% for user in event.users %}
                                         <li>
-                                            <a href="{{ path('user.profile', {'username': user.username}) }}">
+                                            <a href="{{ path('user.profile', {'username': user.username}) }}" class="tooltip">
                                                 <img src="{% if user.imagePath %}{{ asset('images/' ~ user.imagePath) }}{% else %}{{ asset('images/no-pp.jpg') }}{% endif %}" alt="Photo de {{ user.firstname }}" />
+                                                <span class="tooltiptext">{{ user.firstname|capitalize }}</span>
                                             </a>
                                         </li>
                                     {% endfor %}
