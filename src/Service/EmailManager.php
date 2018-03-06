@@ -18,20 +18,18 @@ use App\Entity\User;
  */
 class EmailManager
 {
-    private $mailer;
-
     private $twig;
+    private $data;
 
     /**
      * EmailManager constructor.
      *
-     * @param \Swift_Mailer $mailer
      * @param \Twig_Environment $twig
      */
-    public function __construct(\Swift_Mailer $mailer, \Twig_Environment $twig)
+    public function __construct(\Twig_Environment $twig)
     {
-        $this->mailer = $mailer;
         $this->twig = $twig;
+        $this->data = require_once __DIR__ . './../../config/mailer.php';
     }
 
     /**
@@ -46,13 +44,23 @@ class EmailManager
     {
         $body = $this->twig->render('emails/contact.html.twig', ['contact' => $contact]);
 
+        $transport = (new \Swift_SmtpTransport($this->data['smtp'], 587))
+            ->setUsername($this->data['username'])
+            ->setPassword($this->data['password'])
+        ;
+
+        $mailer = new \Swift_Mailer($transport);
+
+        $title = 'Nouveau message de '.htmlspecialchars($contact->getFirstname());
+
         # Create a new message to send with SwiftMailer
-        $message = (new \Swift_Message($contact->getSubject()))
-            ->setFrom($contact->getEmail())
-            ->setTo('recipient@example.com')
+        $message = (new \Swift_Message($title))
+            ->setFrom($this->data['from'])
+            ->setTo($this->data['to'])
+            ->setReplyTo($contact->getEmail())
             ->setBody($body, 'text/html');
 
-        $this->mailer->send($message);
+        $mailer->send($message);
     }
 
     /**
@@ -68,21 +76,27 @@ class EmailManager
         $body = null;
         $message = null;
 
+        $transport = (new \Swift_SmtpTransport($this->data['smtp'], 587))
+            ->setUsername($this->data['username'])
+            ->setPassword($this->data['password'])
+        ;
+
+        $mailer = new \Swift_Mailer($transport);
+
         if (!$user->isActive()) {
             $body = $this->twig->render('emails/reject_subscription.html.twig', ['user' => $user]);
             $message = (new \Swift_Message("Association Massingienne de Savate : votre inscription a été refusée !"))
-                ->setFrom('recipient@example.com')
+                ->setFrom($this->data['from'])
                 ->setTo($user->getEmail())
                 ->setBody($body, 'text/html');
-
         } else {
             $body = $this->twig->render('emails/validate_subscription.html.twig', ['user' => $user]);
             $message = (new \Swift_Message("Association Massingienne de Savate : votre inscription a été validée !"))
-                ->setFrom('recipient@example.com')
+                ->setFrom($this->data['from'])
                 ->setTo($user->getEmail())
                 ->setBody($body, 'text/html');
         }
 
-        $this->mailer->send($message);
+        $mailer->send($message);
     }
 }

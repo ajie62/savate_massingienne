@@ -45,7 +45,7 @@ services:
 
     App\Service\EmailManager:
         class: App\Service\EmailManager
-        arguments: ["@mailer", "@twig"]
+        arguments: ["@twig"]
 
     App\Service\AssociationService:
         class: App\Service\AssociationService
