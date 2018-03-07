@@ -18,5 +18,5 @@
 /public/images
 /public/media
 .DS_Store
-
 /config/mailer.php
+/config/packages/swiftmailer.yaml
