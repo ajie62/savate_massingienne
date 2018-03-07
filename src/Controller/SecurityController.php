@@ -11,6 +11,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\LoginType;
 use App\Form\RegistrationType;
+use App\Service\EmailManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -27,6 +28,18 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
  */
 class SecurityController extends AbstractController
 {
+    private $emailManager;
+
+    /**
+     * SecurityController constructor.
+     *
+     * @param EmailManager $emailManager
+     */
+    public function __construct(EmailManager $emailManager)
+    {
+        $this->emailManager = $emailManager;
+    }
+
     /**
      * Register
      * @Route("/register", name="security.register")
@@ -37,6 +50,9 @@ class SecurityController extends AbstractController
      * @param Request $request
      * @param UserPasswordEncoderInterface $passwordEncoder
      * @return RedirectResponse|Response
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
@@ -65,9 +81,11 @@ class SecurityController extends AbstractController
             # Flush
             $em->flush();
 
+            $this->emailManager->sendWelcomeEmail($user);
+
             $this->addFlash(
                 'notice',
-                'Votre inscription a été prise en compte ! Elle doit toutefois être validée par un administrateur.'
+                'Votre inscription a été prise en compte ! Vous allez recevoir un email de confirmation.'
             );
 
             # Redirection to home.index
