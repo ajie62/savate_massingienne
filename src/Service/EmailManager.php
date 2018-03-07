@@ -19,17 +19,18 @@ use App\Entity\User;
 class EmailManager
 {
     private $twig;
-    private $data;
+    private $mailer;
 
     /**
      * EmailManager constructor.
      *
+     * @param \Swift_Mailer $mailer
      * @param \Twig_Environment $twig
      */
-    public function __construct(\Twig_Environment $twig)
+    public function __construct(\Swift_Mailer $mailer, \Twig_Environment $twig)
     {
         $this->twig = $twig;
-        $this->data = require_once __DIR__ . './../../config/mailer.php';
+        $this->mailer = $mailer;
     }
 
     /**
@@ -44,23 +45,16 @@ class EmailManager
     {
         $body = $this->twig->render('emails/contact.html.twig', ['contact' => $contact]);
 
-        $transport = (new \Swift_SmtpTransport($this->data['smtp'], 587))
-            ->setUsername($this->data['username'])
-            ->setPassword($this->data['password'])
-        ;
-
-        $mailer = new \Swift_Mailer($transport);
-
         $title = 'Nouveau message de '.htmlspecialchars($contact->getFirstname());
 
         # Create a new message to send with SwiftMailer
         $message = (new \Swift_Message($title))
-            ->setFrom($this->data['from'])
-            ->setTo($this->data['to'])
+            ->setFrom('contact@jeromebutel.fr')
+            ->setTo('contact@jeromebutel.fr')
             ->setReplyTo($contact->getEmail())
             ->setBody($body, 'text/html');
 
-        $mailer->send($message);
+        $this->mailer->send($message);
     }
 
     /**
@@ -76,27 +70,20 @@ class EmailManager
         $body = null;
         $message = null;
 
-        $transport = (new \Swift_SmtpTransport($this->data['smtp'], 587))
-            ->setUsername($this->data['username'])
-            ->setPassword($this->data['password'])
-        ;
-
-        $mailer = new \Swift_Mailer($transport);
-
         if (!$user->isActive()) {
             $body = $this->twig->render('emails/reject_subscription.html.twig', ['user' => $user]);
             $message = (new \Swift_Message("Association Massingienne de Savate : votre inscription a été refusée !"))
-                ->setFrom($this->data['from'])
+                ->setFrom('contact@jeromebutel.fr')
                 ->setTo($user->getEmail())
                 ->setBody($body, 'text/html');
         } else {
             $body = $this->twig->render('emails/validate_subscription.html.twig', ['user' => $user]);
             $message = (new \Swift_Message("Association Massingienne de Savate : votre inscription a été validée !"))
-                ->setFrom($this->data['from'])
+                ->setFrom('contact@jeromebutel.fr')
                 ->setTo($user->getEmail())
                 ->setBody($body, 'text/html');
         }
 
-        $mailer->send($message);
+        $this->mailer->send($message);
     }
 }
