@@ -18,6 +18,8 @@ use App\Entity\User;
  */
 class EmailManager
 {
+    const EMAIL = "contact@jeromebutel.fr";
+
     private $twig;
     private $mailer;
 
@@ -44,14 +46,33 @@ class EmailManager
     public function sendContactEmail(Contact $contact)
     {
         $body = $this->twig->render('emails/contact.html.twig', ['contact' => $contact]);
-
         $title = 'Nouveau message de '.htmlspecialchars($contact->getFirstname());
 
-        # Create a new message to send with SwiftMailer
         $message = (new \Swift_Message($title))
-            ->setFrom('contact@jeromebutel.fr')
-            ->setTo('contact@jeromebutel.fr')
+            ->setFrom(self::EMAIL)
+            ->setTo(self::EMAIL)
             ->setReplyTo($contact->getEmail())
+            ->setBody($body, 'text/html');
+
+        $this->mailer->send($message);
+    }
+
+    /**
+     * Welcome message sent after subscription
+     *
+     * @param User $user
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
+    public function sendWelcomeEmail(User $user)
+    {
+        $body = $this->twig->render('emails/welcome.html.twig', ['user' => $user]);
+        $title = "Inscription au site de l'association massingienne de savate";
+
+        $message = (new \Swift_Message($title))
+            ->setFrom(self::EMAIL)
+            ->setTo($user->getEmail())
             ->setBody($body, 'text/html');
 
         $this->mailer->send($message);
@@ -73,13 +94,13 @@ class EmailManager
         if (!$user->isActive()) {
             $body = $this->twig->render('emails/reject_subscription.html.twig', ['user' => $user]);
             $message = (new \Swift_Message("Association Massingienne de Savate : votre inscription a été refusée !"))
-                ->setFrom('contact@jeromebutel.fr')
+                ->setFrom(self::EMAIL)
                 ->setTo($user->getEmail())
                 ->setBody($body, 'text/html');
         } else {
             $body = $this->twig->render('emails/validate_subscription.html.twig', ['user' => $user]);
             $message = (new \Swift_Message("Association Massingienne de Savate : votre inscription a été validée !"))
-                ->setFrom('contact@jeromebutel.fr')
+                ->setFrom(self::EMAIL)
                 ->setTo($user->getEmail())
                 ->setBody($body, 'text/html');
         }

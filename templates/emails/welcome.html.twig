@@ -1,0 +1,24 @@
+<h3>Bonjour {{ user.firstname|capitalize }},</h3>
+
+<p>
+    Nous avons bien pris en compte votre demande d'inscription
+    (le {{ user.subscribedAt|date('d/m/Y à H:i') }}) avec les données ci-dessous :
+</p>
+
+<ul>
+    <li><strong>Prénom :</strong> {{ user.firstname }}</li>
+    <li><strong>Nom :</strong> {{ user.lastname }}</li>
+    <li><strong>Nom d'utilisateur :</strong> {{ user.username }}</li>
+    <li><strong>Email :</strong> {{ user.email }}</li>
+</ul>
+
+<p>
+    Un administrateur va traiter votre demande dans les meilleurs délais.
+    Vous recevrez un email pour vous signaler la validation ou le rejet
+    de votre inscription.
+</p>
+
+<p>Sportivement.</p>
+
+<p>L'équipe</p>
+
