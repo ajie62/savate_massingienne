@@ -18,7 +18,7 @@ use App\Entity\User;
  */
 class EmailManager
 {
-    const EMAIL = "contact@jeromebutel.fr";
+    const EMAIL = "contact@savate-massingienne.fr";
 
     private $twig;
     private $mailer;

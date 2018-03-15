@@ -108,6 +108,9 @@
                                 {% if is_granted('ROLE_ADMIN') %}
                                     <a href="{{ url('admin.event_update', {id: event.id}) }}" class="to-admin-link">Éditer</a>
                                 {% endif %}
+                                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                    <a href="{{ url('admin.event_delete', {id: event.id}) }}" class="to-admin-link">Supprimer</a>
+                                {% endif %}
                             </small>
 
                             <p class="text-justify minimized-element">{{ event.description }}</p>

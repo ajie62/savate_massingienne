@@ -1,7 +1,10 @@
 @import 'variables', 'global/header', 'global/footer', 'index', 'event', 'news', 'savate', 'user', 'register-login', 'admin', 'contact';
 @import url('https://fonts.googleapis.com/css?family=Patua+One');
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+  word-wrap: break-word;
+}
 
 html { height: 100%; }
 
