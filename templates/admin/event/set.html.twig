@@ -1,12 +1,7 @@
 {% extends 'admin/base.html.twig' %}
 {% block body_id 'set-event' %}
 {% block title %}
-    {% if isNewEvent %}
-        Administration Création d'évènement
-    {% else %}
-        Administration Mise à jour d'évènement
-    {% endif %}
-    - {{ parent() }}
+    {% if isNewEvent %}Administration Création d'évènement{% else %}Administration Mise à jour d'évènement{% endif %} - {{ parent() }}
 {% endblock %}
 
 {% block admin_body %}

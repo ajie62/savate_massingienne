@@ -43,7 +43,7 @@
                     <a href="{{ url('app.index') }}" class="black-action-button">Accueil</a>
                     <a href="{{ url('event.archives') }}" class="black-action-button">Archives</a>
                 </div>
-                {% if is_granted('ROLE_ADMIN') %}
+                {% if is_granted('ROLE_MODERATEUR') %}
                 <div class="right">
                     <a href="{{ url('admin.event_create') }}" class="action-button">Nouvel évènement</a>
                 </div>

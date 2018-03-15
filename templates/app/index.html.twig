@@ -13,7 +13,6 @@
         </div>
 
         <div class="site-content">
-
             {# INTRODUCTION SECTION #}
             <section class="introduction">
                 <h2 class="text-center">Introduction</h2>
@@ -21,7 +20,7 @@
                     <div class="img"></div>
                     <div class="text {{ association.textIntro ? 'text-justify' : 'text-center' }}">
                         <p>{{ association.textIntro|default('L\'introduction n\'a pas encore rédigée.') }}</p>
-                        {% if is_granted('ROLE_ADMIN') %}
+                        {% if is_granted('ROLE_ADMINISTRATEUR') %}
                             <div class="text-center">
                                 <a href="{{ url('admin.content') }}" class="to-admin-button">Gestion du contenu</a>
                             </div>
@@ -36,7 +35,7 @@
                 <div class="content centered padding-left-right grid">
                     <p class="text-center">{{ association.textInfo|default("Les informations n'ont pas encore été fournies.") }}</p>
                 </div>
-                {% if is_granted('ROLE_ADMIN') %}
+                {% if is_granted('ROLE_ADMINISTRATEUR') %}
                     <div class="text-center">
                         <a href="{{ url('admin.content') }}" class="to-admin-button">Gestion du contenu</a>
                     </div>
@@ -57,7 +56,7 @@
                     {% endfor %}
                 </div>
                 <div class="text-center">
-                    {% if is_granted('ROLE_ADMIN') %}
+                    {% if is_granted('ROLE_ADMINISTRATEUR') %}
                         <p class="text-center"><a href="{{ url('admin.content') }}" class="to-admin-button">Gestion du contenu</a></p>
                     {% endif %}
                 </div>
@@ -73,8 +72,11 @@
                                 <h3>{{ news.name }}</h3>
                                 <small>
                                     Publié le {{ news.createdAt|date('d/m/Y à H:i') }}
-                                    {% if is_granted('ROLE_ADMIN') %}
-                                        <a href="{{ url('admin.news_update', {id: news.id}) }}" class="to-admin-link">Éditer</a><br>
+                                    {% if is_granted('ROLE_MODERATEUR') %}
+                                        <a href="{{ url('admin.news_update', {id: news.id}) }}" class="to-admin-link">Éditer</a>
+                                    {% endif %}
+                                    {% if is_granted('ROLE_ADMINISTRATEUR') %}
+                                        <a href="{{ url('admin.news_delete', {id: news.id}) }}" class="to-admin-link">Supprimer</a>
                                     {% endif %}
                                 </small>
                             </div>
@@ -90,7 +92,7 @@
                 </div>
                 <div class="text-center">
                     <a href="{{ url('news.index') }}" class="black-action-button">Toutes les actualités</a>
-                    {% if is_granted('ROLE_ADMIN') %}
+                    {% if is_granted('ROLE_MODERATEUR') %}
                         <a href="{{ url('admin.news_create') }}" class="to-admin-button">Publier une actualité</a>
                     {% endif %}
                 </div>
@@ -105,10 +107,10 @@
                             <h3 class="text-center">{{ event.name|length > 50 ? event.name|slice(0,50) ~ '...' : event.name }}</h3>
                             <small>
                                 Début : {{ event.startingDate|date('d/m/Y à H:i') }} - Fin : {{ event.endingDate|date('d/m/Y à H:i') }}
-                                {% if is_granted('ROLE_ADMIN') %}
+                                {% if is_granted('ROLE_MODERATEUR') %}
                                     <a href="{{ url('admin.event_update', {id: event.id}) }}" class="to-admin-link">Éditer</a>
                                 {% endif %}
-                                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                {% if is_granted('ROLE_ADMINISTRATEUR') %}
                                     <a href="{{ url('admin.event_delete', {id: event.id}) }}" class="to-admin-link">Supprimer</a>
                                 {% endif %}
                             </small>
@@ -124,7 +126,7 @@
                 <div class="text-center">
                     <a href="{{ url('event.archives') }}" class="black-action-button">Archives</a>
                     <a href="{{ url('event.index') }}" class="black-action-button">Tous les évènements</a>
-                    {% if is_granted('ROLE_ADMIN') %}
+                    {% if is_granted('ROLE_MODERATEUR') %}
                         <a href="{{ url('admin.event_create') }}" class="to-admin-button">Créer un évènement</a>
                     {% endif %}
                 </div>

@@ -11,9 +11,9 @@
                     <section class="news-header">
                         <h3>{{ news.name }}
                             <small>
-                                {% if is_granted('ROLE_ADMIN') %}
+                                {% if is_granted('ROLE_MODERATEUR') %}
                                     <a href="{{ url('admin.news_update', {id: news.id}) }}" class="black-link"><i class="fas fa-edit"></i></a>
-                                    {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                    {% if is_granted('ROLE_ADMINISTRATEUR') %}
                                         <a href="{{ path('admin.news_delete', {id: news.id}) }}" class="content-link"><i class="fas fa-trash-alt"></i></a>
                                     {% endif %}
                                 {% endif %}
@@ -41,7 +41,7 @@
                 <div class="left">
                     <a href="{{ url('app.index') }}" class="black-action-button">Accueil</a>
                 </div>
-                {% if is_granted('ROLE_ADMIN') %}
+                {% if is_granted('ROLE_MODERATEUR') %}
                     <div class="right">
                         <a href="{{ url('admin.news_create') }}" class="action-button">Nouvelle actualité</a>
                     </div>

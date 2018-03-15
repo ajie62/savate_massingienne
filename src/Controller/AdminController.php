@@ -41,20 +41,15 @@ use Symfony\Component\Security\Core\Exception\LogicException;
  */
 class AdminController extends AbstractController
 {
-    /**
-     * @var EntityManagerInterface
-     */
     private $em;
     private $licensesDir;
     private $imagesDir;
     private $teamMemberThumbnailDir;
-    /**
-     * @var EmailManager
-     */
     private $emailManager;
 
     /**
      * AdminController constructor.
+     *
      * @param EntityManagerInterface $entityManager
      * @param $licenses_dir
      * @param $images_dir
@@ -74,8 +69,7 @@ class AdminController extends AbstractController
      * Admin index
      * @Route(path="/", name="admin.index")
      *
-     * Members with ROLE_SUPER_ADMIN and ROLE_ADMIN can access this page.
-     * @Security("is_granted('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_MODERATEUR')")
      */
     public function index()
     {
@@ -86,19 +80,15 @@ class AdminController extends AbstractController
      * Admin 'members' section
      * @Route("/members", name="admin.members")
      *
-     * Members with ROLE_SUPER_ADMIN and ROLE_ADMIN can access this page.
-     * @Security("is_granted('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_MODERATEUR')")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function members()
     {
         $userRepository = $this->em->getRepository(User::class);
-
         $activeUsers = $userRepository->findByStatus(true);
         $inactiveUsers = $userRepository->findByStatus(false);
-
-        # Get the license repository
         $licensesManager = $this->em->getRepository(License::class);
 
         return $this->render('admin/members/members.html.twig', [
@@ -112,8 +102,7 @@ class AdminController extends AbstractController
      * Update members information
      * @Route("/member/{id}/update", name="admin.update_member")
      *
-     * Members with ROLE_SUPER_ADMIN and ROLE_ADMIN can update members information.
-     * @Security("is_granted('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMINISTRATEUR')")
      *
      * @param Request $request
      * @param User $user
@@ -122,18 +111,20 @@ class AdminController extends AbstractController
      */
     public function updateMember(Request $request, User $user, AuthorizationCheckerInterface $authorizationChecker)
     {
-        # Get the target user
         $targetUser = $user;
-        # Get the active user
         $activeUser = $this->getUser();
 
-        # If the active user role is ROLE_MODERATEUR and the target user's is ROLE_SUPER_ADMIN
-        if ($activeUser->getRoles()[0] == User::MODERATEUR && $targetUser->getRoles()[0] == User::ADMIN) {
-            # Throw a new exception: a ROLE_MODERATEUR can't update a ROLE_SUPER_ADMIN member
-            throw new LogicException("Cannot update admin information.");
+        if ($activeUser->getRoles()[0] == User::ADMIN) {
+            if ($targetUser->getRoles()[0] == User::MAINTENANCE) {
+                throw new LogicException();
+            }
+            if ($targetUser->getRoles()[0] == User::ADMIN) {
+                if ($targetUser !== $activeUser) {
+                    throw new LogicException();
+                }
+            }
         }
 
-        # Create form with options (used in AdminUserType)
         $form = $this->createForm(AdminUserType::class, $user, [
             'securityChecker' => $authorizationChecker,
             'user' => $this->getUser()
@@ -142,25 +133,18 @@ class AdminController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            # Check if roles field exists
             if ($form->has('roles')) {
-                # Get chosen role
                 $role = $form->get('roles')->getData();
-                # Assign role to user
                 $user->setRoles([$role]);
             }
 
-            # Set the updatedAt datetime
             $user->setUpdatedAt(new \DateTime());
-            # Flush
             $this->em->flush();
-
             $this->addFlash(
                 'notice',
                 'Les informations de '.ucfirst($user->getFirstname()).' '.ucfirst($user->getLastname()).' ont bien été mises à jour.'
             );
 
-            # Redirection to admin.index
             return $this->redirectToRoute('admin.index');
         }
 
@@ -174,8 +158,7 @@ class AdminController extends AbstractController
      * Validate a subscription
      * @Route("/member/{id}/validate", name="admin.validate_subscription")
      *
-     * Members with ROLE_SUPER_ADMIN can validate a subscription.
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     * @Security("is_granted('ROLE_ADMINISTRATEUR')")
      *
      * @param User $user
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
@@ -202,8 +185,7 @@ class AdminController extends AbstractController
      * Reject a subscription
      * @Route("member/{id}/reject", name="admin.reject_subscription", requirements={"id", "/\d+/"})
      *
-     * Members with ROLE_SUPER_ADMIN can reject a subscription.
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     * @Security("is_granted('ROLE_ADMINISTRATEUR')")
      *
      * @param User $user
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
@@ -213,11 +195,8 @@ class AdminController extends AbstractController
      */
     public function rejectSubscription(User $user)
     {
-        # Remove the user from database
         $this->em->remove($user);
-        # Send the user an email
         $this->emailManager->sendSubscriptionEmail($user);
-        # Flush
         $this->em->flush();
 
         $this->addFlash(
@@ -225,7 +204,6 @@ class AdminController extends AbstractController
             'L\'inscription de ' . ucfirst($user->getFirstname()) . ' ' . ucfirst($user->getLastname()) . ' a été rejetée.'
         );
 
-        # Redirection to admin.index
         return $this->redirectToRoute('admin.index');
     }
 
@@ -233,8 +211,7 @@ class AdminController extends AbstractController
      * Upload a license for a member
      * @Route("/member/{id}/new-license", name="admin.member.upload_license")
      *
-     * Members with ROLE_SUPER_ADMIN can upload a license for a member.
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     * @Security("is_granted('ROLE_MODERATEUR')")
      *
      * @param Request $request
      * @param User $user
@@ -242,11 +219,8 @@ class AdminController extends AbstractController
      */
     public function uploadLicense(Request $request, User $user)
     {
-        # Create a new license
         $license = new License();
-        # Gives the license a user_id
         $license->setUser($user);
-        # Form creation based on LicenseType
         $form = $this->createForm(LicenseType::class, $license);
 
         $form->handleRequest($request);
@@ -259,19 +233,14 @@ class AdminController extends AbstractController
             $license->setName(sha1(uniqid()).'.pdf');
             # Move it to the license directory with the new name
             $licenseFile->move($this->licensesDir, $license->getName());
-            # Add the license to the user
             $user->addLicense($license);
-            # Persist
             $this->em->persist($user);
-            # Flush
             $this->em->flush();
-            # Flash message
             $this->addFlash(
                 'notice',
                 'Une licence a bien été ajoutée pour '.ucfirst($user->getFirstname()).' '.ucfirst($user->getLastname()).'.'
             );
 
-            # Redirection to admin.members
             return $this->redirectToRoute('admin.members');
         }
 
@@ -285,8 +254,7 @@ class AdminController extends AbstractController
      * @Route("/members/delete-license/{id}", name="admin.member.delete_license")
      * @ParamConverter(name="license", class="App\Entity\License", options={"id" = "id"})
      *
-     * Members with ROLE_SUPER_ADMIN can delete a license.
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     * @Security("is_granted('ROLE_ADMINISTRATEUR')")
      *
      * @param License $license
      * @param Request $request
@@ -294,28 +262,18 @@ class AdminController extends AbstractController
      */
     public function deleteLicense(License $license, Request $request)
     {
-        # Confirmation form creation
         $confirmationForm = $this->createFormBuilder();
-        # Get the form
         $form = $confirmationForm->getForm();
-
         $form->handleRequest($request);
-
         $user = $license->getUser();
 
         if ($form->isSubmitted() && $form->isValid()) {
-            # Get the license filename
             $filename = $this->licensesDir.DIRECTORY_SEPARATOR.$license->getName();
-            # Remove it
             $this->em->remove($license);
-            # Flush
             $this->em->flush();
 
-            # If the file exists
-            if (file_exists($filename)) {
-                # Delete it
+            if (file_exists($filename))
                 unlink($filename);
-            }
 
             $firstname = $user->getFirstname();
             $lastname = $user->getLastname();
@@ -326,7 +284,6 @@ class AdminController extends AbstractController
                 'La licence '.$license->getYear().'/'.($license->getYear() + 1).' de '. ucfirst($firstname) .' '. ucfirst($lastname) .' a bien été supprimée.'
             );
 
-            # Redirection to admin.members
             return $this->redirectToRoute('admin.members');
         }
 
@@ -340,8 +297,7 @@ class AdminController extends AbstractController
      * Delete a member
      * @Route("/member/{id}/delete", name="admin.delete_member")
      *
-     * Members with ROLE_SUPER_ADMIN can delete a member.
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     * @Security("is_granted('ROLE_ADMINISTRATEUR')")
      *
      * @param Request $request
      * @param User $user
@@ -349,26 +305,17 @@ class AdminController extends AbstractController
      */
     public function deleteMember(Request $request, User $user)
     {
-        # Members with ROLE_SUPER_ADMIN can't delete their own account
-        if ($this->getUser() === $user) {
-            # Thus, they are redirected to admin.index
+        if ($this->getUser() === $user)
             return $this->redirectToRoute('admin.index');
-        }
 
-        # Building the delete form.
         $form = $this->createFormBuilder()->setMethod("DELETE")->getForm();
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            # Removing the user
             $this->em->remove($user);
-            # Flush
             $this->em->flush();
-            # Flash message
             $this->addFlash('notice', 'Le membre a bien été supprimé.');
 
-            # Redirection to admin.index
             return $this->redirectToRoute("admin.index");
         }
 
@@ -382,25 +329,21 @@ class AdminController extends AbstractController
      * Website's content management section
      * @Route("/content", name="admin.content")
      *
-     * Members with ROLE_SUPER_ADMIN and ROLE_ADMIN can access this page.
-     * @Security("is_granted('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMINISTRATEUR')")
      *
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function content(Request $request)
     {
-        # Fetching unique Association entity from the database
         $association = $this->em->getRepository(Association::class)->find(1);
         $teamMembers = $this->em->getRepository(TeamMember::class)->findAll();
 
         # If no Association entity were found, create one
-        if (is_null($association)) {
+        if (is_null($association))
             $association = new Association();
-        }
 
         $teamMember = new TeamMember();
-
         $formAddTeamMember = $this->createForm(TeamMemberType::class, $teamMember);
         $formAddTeamMember->handleRequest($request);
 
@@ -424,20 +367,14 @@ class AdminController extends AbstractController
             return $this->redirectToRoute('admin.content');
         }
 
-        # Form creation, based on AssociationType
         $form = $this->createForm(AssociationType::class, $association);
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            # Persist
             $this->em->persist($association);
-            # Flush
             $this->em->flush();
-            # Add a flash message
             $this->addFlash('notice', 'La mise à jour a bien été effectuée.');
 
-            # Redirection to the same page
             return $this->redirectToRoute('admin.content');
         }
 
@@ -453,35 +390,26 @@ class AdminController extends AbstractController
      * @Route("/content/{id}/delete-team-member", name="admin.delete-team-member")
      * @ParamConverter(name="teamMember", class="App\Entity\TeamMember", options={"id" = "id"})
      *
-     * Members with ROLE_SUPER_ADMIN can delete a team member.
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     * @Security("is_granted('ROLE_ADMINISTRATEUR')")
      *
      * @param TeamMember $teamMember
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function deleteTeamMember(TeamMember $teamMember)
     {
-        # Get the team member original image and cached image (thumbnail, by LiipImagineBundle)
         $originalImage = $this->imagesDir . DIRECTORY_SEPARATOR . $teamMember->getImagePath();
         $cachedImage = $this->teamMemberThumbnailDir . DIRECTORY_SEPARATOR . $teamMember->getImagePath();
 
-        # If the original image exists
-        if (file_exists($originalImage)) {
-            # Delete it
+        if (file_exists($originalImage))
             @unlink($originalImage);
-        }
 
-        # If the cached image exists
-        if(file_exists($cachedImage)) {
-            # Delete it
+        if(file_exists($cachedImage))
             @unlink($cachedImage);
-        }
 
         $this->em->remove($teamMember);
         $this->em->flush();
         $this->addFlash('notice', 'Le membre d\'équipe a bien été supprimé.');
 
-        # Redirect to admin.content
         return $this->redirectToRoute('admin.content');
     }
 
@@ -489,20 +417,15 @@ class AdminController extends AbstractController
      * List all the events
      * @Route("/event", name="admin.event")
      *
-     * Members with ROLE_SUPER_ADMIN and ROLE_ADMIN can access this page.
-     * @Security("is_granted('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_MODERATEUR')")
      *
      * @return Response
      */
     public function events()
     {
-        # Getting the EventRepository
         $eventRepository = $this->em->getRepository(Event::class);
-        # Fetching upcoming events
         $upcomingEvents = $eventRepository->getUpcomingEvents();
-        # Fetching past events
         $pastEvents = $eventRepository->getPastEvents();
-        # Fetching events in progress
         $eventsInProgress = $eventRepository->getEventsInProgress();
 
         return $this->render('admin/event/events.html.twig', [
@@ -516,8 +439,7 @@ class AdminController extends AbstractController
      * Create an event
      * @Route("/event/create", name="admin.event_create")
      *
-     * Members with ROLE_SUPER_ADMIN and ROLE_ADMIN can create an event.
-     * @Security("is_granted('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_MODERATEUR')")
      *
      * @param Request $request
      * @return Response
@@ -531,8 +453,7 @@ class AdminController extends AbstractController
      * Update an event
      * @Route("/event/{id}/update", name="admin.event_update", requirements={"id" = "\d+"})
      *
-     * Members with ROLE_SUPER_ADMIN and ROLE_ADMIN can update an event.
-     * @Security("is_granted('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_MODERATEUR')")
      *
      * @param Request $request
      * @param Event $event
@@ -540,11 +461,9 @@ class AdminController extends AbstractController
      */
     public function updateEvent(Request $request, Event $event): Response
     {
-        # If the targeted event is a past event
         if ($event->getEndingDate() < new \DateTime()) {
-            # It's impossible to edit a past event
             $this->addFlash('warning', 'Impossible d\'éditer un évènement passé.');
-            # Redirection to admin.event
+
             return $this->redirectToRoute('admin.event');
         }
 
@@ -555,8 +474,7 @@ class AdminController extends AbstractController
      * Delete an event
      * @Route("/event/{id}/delete", name="admin.event_delete", requirements={"id" = "\d+"})
      *
-     * Members with ROLE_SUPER_ADMIN can delete an event.
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     * @Security("is_granted('ROLE_ADMINISTRATEUR')")
      *
      * @Method({"GET", "DELETE"})
      * @param Request $request
@@ -565,32 +483,23 @@ class AdminController extends AbstractController
      */
     public function deleteEvent(Request $request, Event $event): Response
     {
-        # If the targeted event is a past event
         if ($event->getEndingDate() < new \DateTime()) {
-            # It's impossible to delete a past event
             $this->addFlash('warning', 'Impossible de supprimer un évènement passé.');
-            # Redirection to admin.event
+
             return $this->redirectToRoute('admin.event');
         }
 
         $availableRedirectRoutes = ['event.index', 'admin.event'];
         $redirectRoute = $request->query->get('redirect', 'admin.event');
         $redirectRoute = in_array($redirectRoute, $availableRedirectRoutes) ? $redirectRoute : $availableRedirectRoutes[0];
-
-        # Getting the delete form
         $form = $this->getDeleteForm();
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid() && $request->isMethod('DELETE')) {
-            # Remove event
             $this->em->remove($event);
-            # Flush
             $this->em->flush();
-            # Flash message
             $this->addFlash('notice', 'L\'évènement a bien été supprimé.');
 
-            # Redirection to the redirect route
             return $this->redirectToRoute($redirectRoute);
         }
 
@@ -609,32 +518,22 @@ class AdminController extends AbstractController
      */
     private function setEvent(Request $request, Event $event)
     {
-        # Check if the event (in the method argument) is new
         $isNewEvent = $event->getId() === null;
-
-        # Form creation based on EventType
         $form = $this->createForm(EventType::class, $event);
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            # When the event is updated, set its updatedAt attribute
-            if (!$isNewEvent) {
+            if (!$isNewEvent)
                 $event->setUpdatedAt(new \DateTime());
-            }
 
-            # Persist
             $this->em->persist($event);
-            # Flush
             $this->em->flush();
 
-            if ($isNewEvent) {
+            if ($isNewEvent)
                 $this->addFlash('notice', 'L\'évènement a été publié.');
-            } else {
+            else
                 $this->addFlash('notice', 'L\'évènement a bien été modifié.');
-            }
 
-            # Redirection to admin.event
             return $this->redirectToRoute('admin.event');
         }
 
@@ -649,14 +548,12 @@ class AdminController extends AbstractController
      * List all the news
      * @Route("/news", name="admin.news")
      *
-     * Members with ROLE_SUPER_ADMIN and ROLE_ADMIN can access this page.
-     * @Security("is_granted('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_MODERATEUR')")
      *
      * @return Response
      */
     public function news()
     {
-        # Fetching all the news from the database
         $news = $this->em->getRepository(News::class)->findAll();
 
         return $this->render('admin/news/news.html.twig', ['listNews' => $news]);
@@ -666,8 +563,7 @@ class AdminController extends AbstractController
      * Create a news
      * @Route("/news/create", name="admin.news_create")
      *
-     * Members with ROLE_SUPER_ADMIN and ROLE_ADMIN can create a news.
-     * @Security("is_granted('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_MODERATEUR')")
      *
      * @param Request $request
      * @return Response
@@ -681,8 +577,7 @@ class AdminController extends AbstractController
      * Read a news
      * @Route("/news/{id}", name="admin.news_read", requirements={"id" = "\d+"})
      *
-     * Members with ROLE_SUPER_ADMIN and ROLE_ADMIN can read a news.
-     * @Security("is_granted('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_MODERATEUR')")
      *
      * @param News $news
      * @return Response
@@ -696,8 +591,7 @@ class AdminController extends AbstractController
      * Update a news
      * @Route("/news/{id}/update", name="admin.news_update", requirements={"id" = "\d+"})
      *
-     * Members with ROLE_SUPER_ADMIN and ROLE_ADMIN can update a news
-     * @Security("is_granted('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_MODERATEUR')")
      *
      * @param Request $request
      * @param News $news
@@ -712,8 +606,7 @@ class AdminController extends AbstractController
      * Delete a news
      * @Route("/news/{id}/delete", name="admin.news_delete", requirements={"id" = "\d+"})
      *
-     * Members with ROLE_SUPER_ADMIN can delete a news.
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     * @Security("is_granted('ROLE_ADMINISTRATEUR')")
      *
      * @Method({"GET", "DELETE"})
      * @param Request $request
@@ -723,21 +616,14 @@ class AdminController extends AbstractController
     public function deleteNews(Request $request, News $news)
     {
         $name = $news->getName();
-
-        # Getting the delete form
         $form = $this->getDeleteForm();
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid() && $request->isMethod('DELETE')) {
-            # Remove the news
             $this->em->remove($news);
-            # Flush
             $this->em->flush();
-            # Flash message
             $this->addFlash('notice', 'L\'actualité a bien été supprimée.');
 
-            # Redirection to admin.news
             return $this->redirectToRoute('admin.news');
         }
 
@@ -757,29 +643,21 @@ class AdminController extends AbstractController
     private function setNews(Request $request, News $news)
     {
         $isNewNews = $news->getId() === null;
-
         $form = $this->createForm(NewsType::class, $news);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            # If news is being updated, set the updatedAt attr
-            if (!$isNewNews) {
+            if (!$isNewNews)
                 $news->setUpdatedAt(new \DateTime());
-            }
 
-            # Persist
             $this->em->persist($news);
-            # Flush
             $this->em->flush();
 
-            # Flash message
-            if ($isNewNews) {
+            if ($isNewNews)
                 $this->addFlash('notice', 'L\'actualité a été publiée.');
-            } else {
+            else
                 $this->addFlash('notice', 'L\'actualité a bien été modifiée.');
-            }
 
-            # Redirection to admin.news
             return $this->redirectToRoute('admin.news');
         }
 

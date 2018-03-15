@@ -25,7 +25,8 @@ class User implements AdvancedUserInterface, \Serializable
 {
     const USER = "ROLE_USER";
     const MODERATEUR = "ROLE_MODERATEUR";
-    const ADMIN = "ROLE_SUPER_ADMIN";
+    const ADMIN = "ROLE_ADMINISTRATEUR";
+    const MAINTENANCE = "ROLE_MAINTENANCE";
 
     /**
      * @ORM\Id
@@ -156,7 +157,7 @@ class User implements AdvancedUserInterface, \Serializable
         $this->subscribedAt = new \DateTime();
         $this->licenses = new ArrayCollection();
         $this->events = new ArrayCollection();
-        $this->roles === [self::ADMIN] ? $this->isActive = true : $this->isActive = false;
+        $this->roles === [self::ADMIN] || $this->roles === [self::MAINTENANCE] ? $this->isActive = true : $this->isActive = false;
     }
 
     /**
@@ -449,10 +450,7 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * String representation of object
-     * @link http://php.net/manual/en/serializable.serialize.php
-     * @return string the string representation of the object or null
-     * @since 5.1.0
+     * @return string
      */
     public function serialize()
     {
@@ -465,13 +463,7 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * Constructs the object
-     * @link http://php.net/manual/en/serializable.unserialize.php
-     * @param string $serialized <p>
-     * The string representation of the object.
-     * </p>
-     * @return void
-     * @since 5.1.0
+     * @param string $serialized
      */
     public function unserialize($serialized)
     {
@@ -485,14 +477,7 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * Checks whether the user's account has expired.
-     *
-     * Internally, if this method returns false, the authentication system
-     * will throw an AccountExpiredException and prevent login.
-     *
-     * @return bool true if the user's account is non expired, false otherwise
-     *
-     * @see AccountExpiredException
+     * @return bool
      */
     public function isAccountNonExpired()
     {
@@ -500,14 +485,7 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * Checks whether the user is locked.
-     *
-     * Internally, if this method returns false, the authentication system
-     * will throw a LockedException and prevent login.
-     *
-     * @return bool true if the user is not locked, false otherwise
-     *
-     * @see LockedException
+     * @return bool
      */
     public function isAccountNonLocked()
     {
@@ -515,14 +493,7 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * Checks whether the user's credentials (password) has expired.
-     *
-     * Internally, if this method returns false, the authentication system
-     * will throw a CredentialsExpiredException and prevent login.
-     *
-     * @return bool true if the user's credentials are non expired, false otherwise
-     *
-     * @see CredentialsExpiredException
+     * @return bool
      */
     public function isCredentialsNonExpired()
     {
@@ -530,14 +501,7 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * Checks whether the user is enabled.
-     *
-     * Internally, if this method returns false, the authentication system
-     * will throw a DisabledException and prevent login.
-     *
-     * @return bool true if the user is enabled, false otherwise
-     *
-     * @see DisabledException
+     * @return bool
      */
     public function isEnabled()
     {

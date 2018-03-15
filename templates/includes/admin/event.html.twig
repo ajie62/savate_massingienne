@@ -3,10 +3,10 @@
         <h3>
             {{ event.name }}
             <small>
-                {% if is_granted('ROLE_ADMIN') %}
+                {% if is_granted('ROLE_MODERATEUR') %}
                     {% if date('now') < date(event.endingDate) %}
                         <a href="{{ url('admin.event_update', {id: event.id}) }}" class="black-link"><i class="fas fa-edit"></i></a>
-                        {% if is_granted('ROLE_SUPER_ADMIN') %}
+                        {% if is_granted('ROLE_ADMINISTRATEUR') %}
                             <a href="{{ path('admin.event_delete', {id: event.id, redirect: 'admin.event'}) }}" class="content-link"><i class="fas fa-trash-alt"></i></a>
                         {% endif %}
                     {% endif %}
