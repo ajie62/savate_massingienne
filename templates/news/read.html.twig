@@ -20,9 +20,11 @@
                 <div class="left">
                     <a href="{{ url('news.index') }}" class="black-action-button">Retour</a>
                 </div>
-                {% if is_granted('ROLE_ADMIN') %}
+                {% if is_granted('ROLE_MODERATEUR') %}
                     <div class="right">
-                        <a href="{{ url('admin.news_delete', {id: news.id}) }}" class="action-button">Supprimer</a>
+                        {% if is_granted('ROLE_ADMINISTRATEUR') %}
+                            <a href="{{ url('admin.news_delete', {id: news.id}) }}" class="action-button">Supprimer</a>
+                        {% endif %}
                         <a href="{{ url('admin.news_update', {id: news.id}) }}" class="action-button">Éditer</a>
                     </div>
                 {% endif %}

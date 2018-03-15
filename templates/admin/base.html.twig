@@ -4,7 +4,9 @@
     <div class="admin-tabs text-center">
         <ul class="tabs centered"><!--
         --><li><a href="{{ path('admin.index') }}">Membres</a></li><!--
+        {% if is_granted('ROLE_ADMINISTRATEUR') %}
         --><li><a href="{{ path('admin.content') }}">Contenu</a></li><!--
+        {% endif %}
         --><li><a href="{{ path('admin.event') }}">Évènements</a></li><!--
         --><li><a href="{{ path('admin.news') }}">Actualités</a></li><!--
     --></ul>

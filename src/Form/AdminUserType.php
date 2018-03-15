@@ -37,7 +37,7 @@ class AdminUserType extends AbstractType
         ;
 
         # If the user's role is ROLE_SUPER_ADMIN || the targeted user is the active user
-        if ($securityChecker->isGranted('ROLE_SUPER_ADMIN') || $targetUser == $activeUser) {
+        if ($securityChecker->isGranted('ROLE_ADMINISTRATEUR') || $targetUser == $activeUser) {
             # Add two new fields: licenseNumber & email
             $builder
                 ->add('licenseNumber', TextType::class, [
@@ -51,7 +51,7 @@ class AdminUserType extends AbstractType
         }
 
         # If the user's role is ROLE_SUPER_ADMIN && the target user is different from the active user
-        if ($securityChecker->isGranted('ROLE_SUPER_ADMIN') && $activeUser !== $targetUser) {
+        if ($securityChecker->isGranted('ROLE_ADMINISTRATEUR') && $activeUser !== $targetUser) {
             # Add a roles field to the form
             $builder->add('roles', ChoiceType::class, [
                 'label' => 'Rôle',

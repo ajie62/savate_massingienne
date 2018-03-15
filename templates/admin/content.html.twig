@@ -44,7 +44,7 @@
                             <td>Photo</td>
                             <td>Prénom</td>
                             <td>Rôle</td>
-                            {% if is_granted('ROLE_SUPER_ADMIN') %}
+                            {% if is_granted('ROLE_ADMINISTRATEUR') %}
                                 <td>Action</td>
                             {% endif %}
                         </tr>
@@ -64,7 +64,7 @@
                                 </td>
                                 <td>{{ member.firstname }}</td>
                                 <td>{{ member.job }}</td>
-                                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                {% if is_granted('ROLE_ADMINISTRATEUR') %}
                                     <td>
                                         <a href="{{ path('admin.delete-team-member', {id: member.id}) }}" class="content-link">
                                             <i class="fas fa-trash-alt"></i>

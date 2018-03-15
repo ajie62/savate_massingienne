@@ -416,15 +416,12 @@
     padding: 10px 0; }
     #login-page .content .login-form label {
       display: inline-block;
-      text-align: center;
-      width: 120px; }
-      @media screen and (max-width: 600px) {
-        #login-page .content .login-form label {
-          width: 100%; } }
+      text-align: center; }
     #login-page .content .login-form input {
       outline: none;
       padding: 5px;
-      margin: 5px 0; }
+      margin: 5px 0;
+      width: 100%; }
       @media screen and (max-width: 600px) {
         #login-page .content .login-form input {
           width: 100%; } }

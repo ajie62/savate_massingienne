@@ -18,12 +18,12 @@
                     {{ form_row(form.firstname) }}
                     {{ form_row(form.lastname) }}
 
-                    {% if is_granted('ROLE_SUPER_ADMIN') %}
+                    {% if is_granted('ROLE_ADMINISTRATEUR') %}
                         {{ form_row(form.email) }}
                         {{ form_row(form.licenseNumber) }}
                     {% endif %}
 
-                    {% if form.roles is defined and is_granted('ROLE_SUPER_ADMIN') %}
+                    {% if form.roles is defined and is_granted('ROLE_ADMINISTRATEUR') %}
                         {{ form_row(form.roles) }}
                     {% endif %}
 

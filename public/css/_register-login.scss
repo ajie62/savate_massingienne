@@ -68,13 +68,12 @@
       label {
         display: inline-block;
         text-align: center;
-        width: 120px;
-        @media #{$smallPhones} { width: 100%; }
       }
       input {
         outline: none;
         padding: 5px;
         margin: 5px 0;
+        width: 100%;
         @media #{$smallPhones} { width: 100%; }
       }
       button {
